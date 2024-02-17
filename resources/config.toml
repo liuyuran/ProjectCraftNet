@@ -1,1 +1,2 @@
-﻿global = "test"
+﻿[core]
+mod_path = "/application/mods"

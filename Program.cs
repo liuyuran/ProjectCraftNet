@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using ProjectCraftNet.config;
+using ProjectCraftNet.mod;
 
 namespace ProjectCraftNet;
 
@@ -14,7 +15,7 @@ public static class Program {
         Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed(o => {
             ConfigUtil.Instance.Init(o.ConfigPath);
         });
-        Console.WriteLine("test");
+        ModManager.Instance.LoadMods();
         return -100;
     }
 }
