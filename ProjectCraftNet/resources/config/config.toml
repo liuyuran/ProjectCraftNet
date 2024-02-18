@@ -1,2 +1,7 @@
 ﻿[core]
-mod_path = "/app/mods"
+mod-path = "/app/mods"
+max-player = 20
+
+[network-tcp]
+host = "127.0.0.1"
+port = 13000

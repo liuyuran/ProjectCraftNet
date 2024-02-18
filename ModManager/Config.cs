@@ -1,11 +1,26 @@
-﻿namespace ModManager;
+﻿// ReSharper disable ClassNeverInstantiated.Global
 
-public sealed class Config
+using Tomlyn.Model;
+
+namespace ModManager;
+
+public sealed class Config : ITomlMetadataProvider
 {
-    public Config(string modPath)
-    {
-        ModPath = modPath;
-    }
+    public Core? Core { get; set; }
+    public NetworkTcp? NetworkTcp { get; set; }
+    public TomlPropertiesMetadata? PropertiesMetadata { get; set; }
+}
 
-    public string ModPath { get; private set; }
+public sealed class Core : ITomlMetadataProvider
+{
+    public required string ModPath { get; set; }
+    public required string MaxPlayer { get; set; }
+    public TomlPropertiesMetadata? PropertiesMetadata { get; set; }
+}
+
+public sealed class NetworkTcp : ITomlMetadataProvider
+{
+    public required string Host { get; set; }
+    public required int Port { get; set; }
+    public TomlPropertiesMetadata? PropertiesMetadata { get; set; }
 }

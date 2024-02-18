@@ -6,14 +6,17 @@ namespace ProjectCraftNet.config;
 
 public class ConfigUtil {
     public static ConfigUtil Instance { get; } = new();
-    public Config Config { get; private set; }
+    private Config? _config;
 
     public void Init(string configFilePath) {
         var fileContent = File.ReadAllText(configFilePath);
-        var model = Toml.ToModel(fileContent);
-        var core = (TomlTable?)model["core"];
-        if (core == null) throw new Exception("配置文件错误，缺少core段落");
-        var modPath = (string)core["mod_path"];
-        Config = new Config(modPath);
+        _config = Toml.ToModel<Config>(fileContent);
+    }
+    
+    public Config GetConfig() {
+        if (_config == null) {
+            throw new Exception("Config is not initialized.");
+        }
+        return _config;
     }
 }

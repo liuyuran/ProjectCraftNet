@@ -8,7 +8,10 @@ namespace ModManager;
 public class ModManager
 {
     private readonly ILogger _logger = SysLogger.GetLogger(typeof(ModManager));
-    private List<ModBase> _mods = new();
+
+    public List<ModBase> AllMods { get; } = [];
+
+    public List<ModBase> EnabledMods => AllMods.Where(mod => mod.IsEnabled()).ToList();
     
     public void LoadMods(string modPath) {
         var modFiles = Directory.GetDirectories(modPath)/*.SelectMany(Directory.GetFiles).Where(file => file.EndsWith(".dll"))*/;
@@ -50,7 +53,7 @@ public class ModManager
                 _logger.LogInformation("{}文件错误，无法实例化core-class字段指定的类", Path.Combine(modFile, "mod.toml"));
                 continue;
             }
-            _mods.Add(mod);
+            AllMods.Add(mod);
             mod.OnLoad();
         }
     }
