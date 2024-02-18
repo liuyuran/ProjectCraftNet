@@ -6,17 +6,24 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 # 编译主工程
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["ProjectCraftNet/ProjectCraftNet.csproj", "./"]
-RUN dotnet restore "ProjectCraftNet.csproj"
+COPY ["ModManager/ModManager.csproj", "ModManager/ModManager.csproj"]
+RUN dotnet restore "ModManager/ModManager.csproj"
+COPY ["ProjectCraftNet/ProjectCraftNet.csproj", "ProjectCraftNet/ProjectCraftNet.csproj"]
+RUN dotnet restore "ProjectCraftNet/ProjectCraftNet.csproj"
+COPY ["CoreMod/CoreMod.csproj", "CoreMod/CoreMod.csproj"]
+RUN dotnet restore "CoreMod/CoreMod.csproj"
 COPY . .
-WORKDIR "/src/"
-RUN dotnet build "ProjectCraftNet/ProjectCraftNet.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "ProjectCraftNet/ProjectCraftNet.csproj" -c $BUILD_CONFIGURATION -o /app/build/main
+RUN dotnet build "CoreMod/CoreMod.csproj" -c $BUILD_CONFIGURATION -o /app/build/core-mod
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "ProjectCraftNet/ProjectCraftNet.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "CoreMod/CoreMod.csproj" -c $BUILD_CONFIGURATION -o /app/publish/mods/core-mods /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN mkdir config;
+COPY ./ProjectCraftNet/resources .
 ENTRYPOINT ["dotnet", "ProjectCraftNet.dll"]

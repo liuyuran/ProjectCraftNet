@@ -7,7 +7,7 @@ public class ModManager {
     public static ModManager Instance { get; } = new();
     
     public void LoadMods() {
-        var modPath = ConfigUtil.Instance.modPath;
+        var modPath = ConfigUtil.Instance.ModPath;
         var modFiles = Directory.GetFiles(modPath, "*.dll");
         foreach (var modFile in modFiles) {
             var assembly = Assembly.LoadFile(modFile);

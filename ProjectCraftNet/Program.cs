@@ -6,7 +6,7 @@ namespace ProjectCraftNet;
 public static class Program {
     // ReSharper disable once ClassNeverInstantiated.Local
     private class CommandLineOptions {
-        [Option('c', "config", Required = false, HelpText = "配置文件路径", Default = "/application/config/config.toml")]
+        [Option('c', "config", Required = false, HelpText = "配置文件路径", Default = "/app/config/config.toml")]
         public required string ConfigPath { get; set; }
     }
 
