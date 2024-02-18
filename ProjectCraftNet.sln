@@ -1,6 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectCraftNet", "ProjectCraftNet.csproj", "{E517C837-1D10-4497-B8E0-73C728A9B78F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectCraftNet", "ProjectCraftNet\ProjectCraftNet.csproj", "{E517C837-1D10-4497-B8E0-73C728A9B78F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModManager", "ModManager\ModManager.csproj", "{AD3A6D60-4F72-48A1-B1D4-E37D774CF431}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreMod", "CoreMod\CoreMod.csproj", "{CCF77C80-A81F-4607-A9C0-843C19F9C0D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +16,13 @@ Global
 		{E517C837-1D10-4497-B8E0-73C728A9B78F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E517C837-1D10-4497-B8E0-73C728A9B78F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E517C837-1D10-4497-B8E0-73C728A9B78F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD3A6D60-4F72-48A1-B1D4-E37D774CF431}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD3A6D60-4F72-48A1-B1D4-E37D774CF431}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD3A6D60-4F72-48A1-B1D4-E37D774CF431}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD3A6D60-4F72-48A1-B1D4-E37D774CF431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCF77C80-A81F-4607-A9C0-843C19F9C0D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCF77C80-A81F-4607-A9C0-843C19F9C0D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCF77C80-A81F-4607-A9C0-843C19F9C0D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCF77C80-A81F-4607-A9C0-843C19F9C0D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
