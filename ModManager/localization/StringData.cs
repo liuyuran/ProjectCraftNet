@@ -1,7 +1,7 @@
 ﻿namespace ModManager.localization;
 
-public record class StringData
+public record StringData(string Category, string LocalizedString)
 {
-    public string category { get; set; }
-    public string localizedString { get; set; }
+    public required string Category { get; init; } = Category;
+    public required string LocalizedString { get; init; } = LocalizedString;
 }

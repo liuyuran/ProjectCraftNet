@@ -42,6 +42,8 @@ public class TcpServer
         var bytesRead = handler.EndReceive(ar);
         if (bytesRead <= 0) return;
         state.Sb.Append(Encoding.UTF8.GetString(state.Buffer, 0, bytesRead));
+        // Check for end-of-file tag. If it is not there, read more data
+        if (!handler.Connected) return;
         // Not all data received. Get more
         handler.BeginReceive(state.Buffer, 0, StateObject.BufferSize, 0, ReadCallback, state);
     }

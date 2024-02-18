@@ -76,6 +76,6 @@ public class LocalizationManager
             throw new KeyNotFoundException($"Key {key} not found in language {lang}.");
         }
 
-        return string.Format(value.localizedString, args);
+        return string.Format(value.LocalizedString, args);
     }
 }
