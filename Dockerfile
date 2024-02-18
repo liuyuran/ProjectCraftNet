@@ -19,7 +19,8 @@ RUN dotnet build "CoreMod/CoreMod.csproj" -c $BUILD_CONFIGURATION -o /app/build/
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "ProjectCraftNet/ProjectCraftNet.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-RUN dotnet publish "CoreMod/CoreMod.csproj" -c $BUILD_CONFIGURATION -o /app/publish/mods/core-mods /p:UseAppHost=false
+RUN dotnet publish "CoreMod/CoreMod.csproj" -c $BUILD_CONFIGURATION -o /app/publish/mods/core-mod /p:UseAppHost=false
+COPY CoreMod/mod.toml /app/publish/mods/core-mod/mod.toml
 
 FROM base AS final
 WORKDIR /app
