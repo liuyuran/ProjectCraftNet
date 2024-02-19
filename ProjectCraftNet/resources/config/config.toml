@@ -1,6 +1,7 @@
 ﻿[core]
 mod-path = "/app/mods"
 max-player = 20
+localization-path = "/app/localization"
 
 [network-tcp]
 host = "127.0.0.1"

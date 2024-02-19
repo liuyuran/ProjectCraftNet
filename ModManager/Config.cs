@@ -15,6 +15,7 @@ public sealed class Core : ITomlMetadataProvider
 {
     public required string ModPath { get; set; }
     public required string MaxPlayer { get; set; }
+    public required string LocalizationPath { get; set; }
     public TomlPropertiesMetadata? PropertiesMetadata { get; set; }
 }
 
