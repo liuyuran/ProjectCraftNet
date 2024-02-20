@@ -21,10 +21,12 @@ public class LocalizationManager
         {
             throw new ArgumentException($"Mod {modId} already exists.");
         }
+
         if (!Localization.ContainsKey(modId))
         {
             Localization[modId] = new Dictionary<string, Dictionary<string, StringData>>();
         }
+
         _modId = modId;
     }
 
@@ -87,6 +89,7 @@ public class LocalizationManager
         {
             return manager;
         }
+
         Cache[modId] = new LocalizationManager(modId);
         return Cache[modId];
     }
@@ -110,12 +113,11 @@ public class LocalizationManager
     /// </summary>
     /// /// <param name="modId">mod标识符</param>
     /// <param name="key">识别字符串</param>
-    /// <param name="lang">目标语言</param>
+    /// <param name="args">参数</param>
     /// <returns>本地化字符串</returns>
-    public static string Localize(string modId, string key, string? lang = null)
+    public static string Localize(string modId, string key, params object[] args)
     {
-        lang ??= _currentLanguage;
-        return Localize(modId, key, lang, Array.Empty<object>());
+        return Localize(modId, key, _currentLanguage, args);
     }
 
     /// <summary>
@@ -126,24 +128,19 @@ public class LocalizationManager
     /// <param name="lang">目标语言</param>
     /// <param name="args">扩展参数</param>
     /// <returns>本地化字符串</returns>
-    public static string Localize(string modId, string key, string? lang = null, params object[] args)
+    private static string Localize(string modId, string key, string? lang = null, params object[] args)
     {
         lang ??= _currentLanguage;
         if (!Localization.TryGetValue(modId, out var modLocalization))
         {
-            throw new ArgumentException($"Mod {modId} not found.");
-        }
-        var localization = modLocalization[lang];
-        if (localization == null)
-        {
-            throw new KeyNotFoundException($"Language {lang} not found.");
+            return string.Format(key, args);
         }
 
-        if (!localization.TryGetValue(key, out var value))
+        if (!modLocalization.TryGetValue(lang, out var localization))
         {
-            throw new KeyNotFoundException($"Key {key} not found in language {lang}.");
+            return string.Format(key, args);
         }
 
-        return string.Format(value.LocalizedString, args);
+        return !localization.TryGetValue(key, out var value) ? key : string.Format(value.LocalizedString, args);
     }
 }

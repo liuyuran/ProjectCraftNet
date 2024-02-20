@@ -2,6 +2,7 @@
 mod-path = "/app/mods"
 max-player = 20
 localization-path = "/app/localization"
+log-level = "debug"
 
 [network-tcp]
 host = "127.0.0.1"

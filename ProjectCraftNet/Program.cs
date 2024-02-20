@@ -1,9 +1,9 @@
 ﻿using CommandLine;
 using Microsoft.Extensions.Logging;
-using ModManager.localization;
 using ModManager.logger;
 using ProjectCraftNet.config;
 using ProjectCraftNet.server;
+using static ModManager.localization.LocalizationManager;
 
 namespace ProjectCraftNet;
 
@@ -27,16 +27,26 @@ public static class Program
             Logger.LogCritical("Config.Core is null.");
             return -100;
         }
-        LocalizationManager.GetLocalizationManager(ModId).LoadLocalization(config.Core.LocalizationPath);
+        SysLogger.SetLogLevel(config.Core.LogLevel);
+        GetLocalizationManager(ModId).LoadLocalization(config.Core.LocalizationPath);
         var manager = new ModManager.ModManager();
         manager.LoadMods(config.Core.ModPath);
         if (config.NetworkTcp == null)
         {
-            Logger.LogCritical("Config.NetworkTcp is null.");
+            Logger.LogCritical("{}", Localize(ModId, "[{0}] not found", "network-tcp"));
             return -100;
         }
         var server = new TcpServer();
-        server.StartServer(config.NetworkTcp.Host, config.NetworkTcp.Port);
-        return -100;
+        Task.Run(() => server.StartServer(config.NetworkTcp.Host, config.NetworkTcp.Port));
+        while (true)
+        {
+            var command = Console.ReadLine();
+            if (command == "exit")
+            {
+                break;
+            }
+            Console.WriteLine("Unknown command.");
+        }
+        return 0;
     }
 }

@@ -5,6 +5,9 @@ using Microsoft.Extensions.Options;
 
 namespace ModManager.logger;
 
+/// <summary>
+/// 日志格式化器
+/// </summary>
 public sealed class LogFormatter : ConsoleFormatter, IDisposable
 {
     private readonly IDisposable? _optionsReloadToken;
