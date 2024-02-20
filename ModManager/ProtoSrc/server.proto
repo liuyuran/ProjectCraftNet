@@ -1,0 +1,32 @@
+syntax = "proto3";
+option cc_enable_arenas = true;
+
+message ServerStatus {
+  string version = 1;
+  string name = 2;
+  uint64 memoryTotal = 3;
+  uint64 memoryUsed = 4;
+  uint64 maxPlayers = 5;
+  uint64 onlinePlayers = 6;
+  uint64 tps = 7;
+}
+
+message BlockDefineItem {
+  uint64 block_id = 1;
+}
+
+message BlockDefine {
+  repeated BlockDefineItem items = 1;
+}
+
+message BlockData {
+  uint64 block_id = 1;
+  uint64 sub_id = 2;
+}
+
+message ChunkData {
+  int64 x = 1;
+  int64 y = 2;
+  int64 z = 3;
+  repeated BlockData blocks = 4;
+}
