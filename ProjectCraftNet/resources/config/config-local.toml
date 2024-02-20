@@ -1,7 +1,7 @@
 ﻿[core]
-mod-path = "D:/Project/project-craft-net/CoreMod/bin/Debug"
+mod-path = "../CoreMod/bin/Debug"
 max-player = 20
-localization-path = "D:/Project/project-craft-net/ProjectCraftNet/resources/localization"
+localization-path = "./resources/localization"
 log-level = "debug"
 
 [network-tcp]
