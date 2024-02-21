@@ -18,6 +18,10 @@ public class ModManager
     public void LoadMods(string modPath) {
         var modFiles = Directory.GetDirectories(modPath);
         foreach (var modFile in modFiles) {
+            if (!File.Exists(Path.Combine(modFile, "mod.toml"))) {
+                _logger.LogInformation("{}", LocalizationManager.Localize(ModId, "{0} meta not found", Path.GetFileName(modFile)));
+                continue;
+            }
             var fileContent = File.ReadAllText(Path.Combine(modFile, "mod.toml"));
             var modDictName = Path.GetFileName(modFile);
             var config = Toml.ToModel(fileContent);
@@ -34,8 +38,9 @@ public class ModManager
             var modName = (string)coreFile;
             var modClass = (string)coreClass;
             var dllPath = Path.Combine(modFile, modName);
+            var absolutePath = Path.GetFullPath(dllPath);
             // load all classes and scan for classes extend ModBase, like spring boot
-            var assembly = Assembly.LoadFile(dllPath);
+            var assembly = Assembly.LoadFile(absolutePath);
             var targetClass = assembly.GetType(modClass);
             if (targetClass == null)
             {
