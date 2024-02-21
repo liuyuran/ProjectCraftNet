@@ -10,8 +10,12 @@ namespace ProjectCraftNet.server;
 /// </summary>
 public class TcpServer
 {
+    // 心跳包超时时间
+    private const int SocketTimeout = 5;
+
     // 连接标识符与Socket实例的映射
     private Dictionary<ulong, Socket> Sockets { get; } = new();
+
     // 连接标识符生成器
     private ulong _socketId;
 
@@ -19,7 +23,7 @@ public class TcpServer
     {
         NetworkEvents.SendEvent += SendMessage;
     }
-    
+
     /// <summary>
     /// 启动服务监听，目前每个连接都会单独开一个线程，此函数会阻塞运行，所以请在新线程中调用
     /// </summary>
@@ -35,6 +39,7 @@ public class TcpServer
             var socket = await listener.AcceptTcpClientAsync();
             var thread = new Thread(() =>
             {
+                var lastTime = DateTime.Now.Ticks;
                 socket.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
                 var client = socket.Client;
                 var socketId = Interlocked.Increment(ref _socketId);
@@ -49,19 +54,30 @@ public class TcpServer
                 {
                     if (!socket.Connected)
                     {
+                        // 连接断开
                         break;
                     }
-                    for (var i = 0; i < bytes.Length; i++) {
+
+                    if (DateTime.Now.Ticks - lastTime > SocketTimeout * 10000000)
+                    {
+                        // 心跳包超时
+                        break;
+                    }
+
+                    for (var i = 0; i < bytes.Length; i++)
+                    {
                         bytes[i] = 0;
                     }
 
                     var bytesRec = client.Receive(bytes, SocketFlags.None);
-                    if (bytesRec == 0) {
+                    if (bytesRec == 0)
+                    {
                         Thread.Sleep(1000);
                         continue;
                     }
 
-                    if (newPack) {
+                    if (newPack)
+                    {
                         // 读取包长度
                         tmp[3] = bytes[0];
                         tmp[2] = bytes[1];
@@ -78,39 +94,48 @@ public class TcpServer
                     }
 
                     // 读取字节直到抵达第一个字节所标注的长度，下一次读取需要剔除所有的0
-                    for (var i = 0; i < bytesRec; i++) {
+                    for (var i = 0; i < bytesRec; i++)
+                    {
                         msgBuffer.Add(bytes[i]);
                         if (msgBuffer.Count < packLen + 8) continue;
                         newPack = true;
-                
+
                         // 剔除前八个字节
-                        for (var j = 0; j < 8; j++) {
+                        for (var j = 0; j < 8; j++)
+                        {
                             msgBuffer.RemoveAt(0);
                         }
-                        
+
+                        if (packType == (int)PackType.Ping)
+                        {
+                            lastTime = DateTime.Now.Ticks;
+                        }
+
                         NetworkEvents.FireReceiveEvent(socketId, packType, msgBuffer.ToArray());
                         msgBuffer.Clear();
                         // 把剩下的数据塞进去
-                        for (var j = i + 1; j < bytesRec; j++) {
+                        for (var j = i + 1; j < bytesRec; j++)
+                        {
                             msgBuffer.Add(bytes[j]);
                         }
 
                         break;
                     }
                 }
+                socket.Close();
             });
             thread.Start(socket);
         }
         // ReSharper disable once FunctionNeverReturns
     }
-    
+
     /// <summary>
     /// 发送数据
     /// </summary>
     /// <param name="socketId">连接标识符</param>
     /// <param name="packType">包类型</param>
     /// <param name="data">包内容</param>
-    private async void SendMessage(ulong socketId, int packType, byte[] data)
+    private async void SendMessage(ulong socketId, PackType packType, byte[] data)
     {
         if (!Sockets.TryGetValue(socketId, out var socket))
         {
@@ -119,7 +144,7 @@ public class TcpServer
 
         var packLen = data.Length + 8;
         var lenBytes = BitConverter.GetBytes(packLen);
-        var typeBytes = BitConverter.GetBytes(packType);
+        var typeBytes = BitConverter.GetBytes((int)packType);
         var sendBytes = new byte[packLen];
         lenBytes.CopyTo(sendBytes, 0);
         typeBytes.CopyTo(sendBytes, 4);

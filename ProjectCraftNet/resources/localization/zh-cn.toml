@@ -2,3 +2,6 @@
 "{0} meta invalid" = "{0}/mod.toml内容缺失，请检查是否存在版本兼容问题"
 "{0} main class invalid" = "{0}定义的入口类加载失败，请检查是否存在版本兼容问题"
 "[{0}] not found" = "主配置文件中未找到[{0}]段落"
+"Unknown PackType: {0}" = "检测到未知的包类型编号: {0}"
+"Server shutting down" = "收到关闭指令，服务器开始关闭"
+"Server shutdown" = "结束准备阶段结束，程序终止"

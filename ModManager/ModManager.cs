@@ -9,7 +9,7 @@ namespace ModManager;
 public class ModManager
 {
     private readonly ILogger _logger = SysLogger.GetLogger(typeof(ModManager));
-    private static string ModId => "core-system";
+    public static string ModId => "core-system";
 
     public List<ModBase> AllMods { get; } = [];
 
