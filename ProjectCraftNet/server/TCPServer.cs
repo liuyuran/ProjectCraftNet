@@ -1,14 +1,30 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using System.Text;
+using ModManager.network;
 using TcpListener = System.Net.Sockets.TcpListener;
 
 namespace ProjectCraftNet.server;
 
+/// <summary>
+/// 一个简易的tcp服务器实现
+/// </summary>
 public class TcpServer
 {
-    private readonly Dictionary<ulong, Socket> _clients = new();
+    // 连接标识符与Socket实例的映射
+    private Dictionary<ulong, Socket> Sockets { get; } = new();
+    // 连接标识符生成器
+    private ulong _socketId;
+
+    public TcpServer()
+    {
+        NetworkEvents.SendEvent += SendMessage;
+    }
     
+    /// <summary>
+    /// 启动服务监听，目前每个连接都会单独开一个线程，此函数会阻塞运行，所以请在新线程中调用
+    /// </summary>
+    /// <param name="ip">绑定ip</param>
+    /// <param name="port">绑定端口</param>
     public async void StartServer(string ip, int port)
     {
         var ipAddress = IPAddress.Parse(ip);
@@ -21,6 +37,8 @@ public class TcpServer
             {
                 socket.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
                 var client = socket.Client;
+                var socketId = Interlocked.Increment(ref _socketId);
+                Sockets.Add(socketId, client);
                 var tmp = new byte[4];
                 var bytes = new byte[1024];
                 var newPack = true;
@@ -70,8 +88,7 @@ public class TcpServer
                             msgBuffer.RemoveAt(0);
                         }
                         
-                        // TODO 这里需要处理消息
-                        // ReceiveEvent?.Invoke(this, packType, msgBuffer.ToArray());
+                        NetworkEvents.FireReceiveEvent(socketId, packType, msgBuffer.ToArray());
                         msgBuffer.Clear();
                         // 把剩下的数据塞进去
                         for (var j = i + 1; j < bytesRec; j++) {
@@ -85,5 +102,28 @@ public class TcpServer
             thread.Start(socket);
         }
         // ReSharper disable once FunctionNeverReturns
+    }
+    
+    /// <summary>
+    /// 发送数据
+    /// </summary>
+    /// <param name="socketId">连接标识符</param>
+    /// <param name="packType">包类型</param>
+    /// <param name="data">包内容</param>
+    private async void SendMessage(ulong socketId, int packType, byte[] data)
+    {
+        if (!Sockets.TryGetValue(socketId, out var socket))
+        {
+            return;
+        }
+
+        var packLen = data.Length + 8;
+        var lenBytes = BitConverter.GetBytes(packLen);
+        var typeBytes = BitConverter.GetBytes(packType);
+        var sendBytes = new byte[packLen];
+        lenBytes.CopyTo(sendBytes, 0);
+        typeBytes.CopyTo(sendBytes, 4);
+        data.CopyTo(sendBytes, 8);
+        await socket.SendAsync(sendBytes, SocketFlags.None);
     }
 }
