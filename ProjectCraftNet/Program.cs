@@ -47,7 +47,6 @@ public static class Program
         Task.Run(() => gameCore.Start());
         var server = new TcpServer();
         Task.Run(() => server.StartServer(config.NetworkTcp.Host, config.NetworkTcp.Port));
-        Console.WriteLine("Press Ctrl + C to stop!");
         Console.CancelKeyPress += (_, _) =>
         {
             ClosingEvent.Set();

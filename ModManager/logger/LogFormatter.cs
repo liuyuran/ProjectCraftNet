@@ -34,7 +34,7 @@ public sealed class LogFormatter : ConsoleFormatter, IDisposable
             return;
         var now = DateTime.Now;
         var time = now.ToString(_formatterOptions.TimestampFormat ?? "yyyy-MM-dd HH:mm:ss.fff");
-        textWriter.WriteLine($"[{time}] [{logEntry.LogLevel}] {message}");
+        textWriter.WriteLine($"[{time}] [{logEntry.LogLevel}] [{logEntry.Category}] {message}");
     }
 
     public void Dispose() => _optionsReloadToken?.Dispose();

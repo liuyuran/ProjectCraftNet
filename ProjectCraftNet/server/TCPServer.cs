@@ -1,6 +1,10 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using Microsoft.Extensions.Logging;
+using ModManager.logger;
 using ModManager.network;
+using static ModManager.localization.LocalizationManager;
+using static ProjectCraftNet.Program;
 using TcpListener = System.Net.Sockets.TcpListener;
 
 namespace ProjectCraftNet.server;
@@ -10,6 +14,7 @@ namespace ProjectCraftNet.server;
 /// </summary>
 public class TcpServer
 {
+    private ILogger Logger { get; } = SysLogger.GetLogger(typeof(TcpServer));
     // 心跳包超时时间
     private const int SocketTimeout = 5;
 
@@ -34,6 +39,7 @@ public class TcpServer
         var ipAddress = IPAddress.Parse(ip);
         var listener = new TcpListener(ipAddress, port);
         listener.Start();
+        Logger.LogInformation("{}", Localize(ModId, "Server started at {0}:{1}", ip, port));
         while (true)
         {
             var socket = await listener.AcceptTcpClientAsync();

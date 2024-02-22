@@ -5,3 +5,5 @@
 "Unknown PackType: {0}" = "检测到未知的包类型编号: {0}"
 "Server shutting down" = "收到关闭指令，服务器开始关闭"
 "Server shutdown" = "结束准备阶段结束，程序终止"
+"Server started at {0}:{1}" = "主机[{0}:{1}]监听完毕"
+"Server started" = "逻辑服务器初始化完毕"

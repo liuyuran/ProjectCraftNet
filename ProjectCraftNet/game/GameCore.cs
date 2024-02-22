@@ -38,6 +38,7 @@ public class GameCore(Config config)
             new ChunkGenerateSystem(_world)
         );
         systems.Initialize();
+        Logger.LogInformation("{}", Localize(ModId, "Server started"));
         while (!_stopping)
         {
             var lastTickMillis = DateTime.Now.Ticks;
