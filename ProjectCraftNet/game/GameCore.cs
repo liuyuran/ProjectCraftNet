@@ -8,7 +8,6 @@ using ModManager.logger;
 using ModManager.network;
 using ModManager.user;
 using ProjectCraftNet.game.systems;
-using ProjectCraftNet.game.user;
 using static ModManager.localization.LocalizationManager;
 using static ProjectCraftNet.Program;
 

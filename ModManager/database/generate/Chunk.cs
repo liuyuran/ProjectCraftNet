@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ModManager.database;
+namespace ModManager.database.generate;
 
 /// <summary>
 /// 区块数据

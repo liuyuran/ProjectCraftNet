@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace ModManager.database;
+namespace ModManager.database.generate;
 
 public partial class GameContext : DbContext
 {
@@ -25,7 +25,7 @@ public partial class GameContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=127.0.0.1;Database=game;Username=postgres;Password=example");
+        => optionsBuilder.UseNpgsql("Host=192.168.18.4;Database=game;Username=postgres;Password=liuyuran");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
