@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Net.Sockets;
+using Microsoft.Extensions.Logging;
 using ModManager.logger;
 using static ModManager.localization.LocalizationManager;
 using static ModManager.ModManager;
@@ -12,13 +13,18 @@ public static class NetworkEvents
 {
     private static ILogger Logger { get; } = SysLogger.GetLogger(typeof(NetworkEvents));
     public delegate void SendEventHandler(ulong socketId, PackType packType, byte[] data);
-    public delegate void ReceiveEventHandler(ulong socketId, PackType packType, byte[] data);
+    public delegate void ReceiveEventHandler(ClientInfo info, PackType packType, byte[] data);
     // 发送数据请调用此事件
     public static event SendEventHandler? SendEvent;
     // 接收数据请监听此事件
     public static event ReceiveEventHandler? ReceiveEvent;
     
-    public static void FireReceiveEvent(ulong socketId, int packType, byte[] data)
+    public static void FireSendEvent(ulong socketId, PackType packType, byte[] data)
+    {
+        SendEvent?.Invoke(socketId, packType, data);
+    }
+    
+    public static void FireReceiveEvent(ulong socketId, int packType, byte[] data, Socket socket)
     {
         if (Enum.IsDefined(typeof(PackType), packType))
         {
@@ -30,6 +36,11 @@ public static class NetworkEvents
             // 心跳包不需要处理
             return;
         }
-        ReceiveEvent?.Invoke(socketId, (PackType) packType, data);
+        var info = new ClientInfo
+        {
+            SocketId = socketId,
+            Ip = socket.RemoteEndPoint?.ToString() ?? ""
+        };
+        ReceiveEvent?.Invoke(info, (PackType) packType, data);
     }
 }

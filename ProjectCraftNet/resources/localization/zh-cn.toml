@@ -7,3 +7,4 @@
 "Server shutdown" = "结束准备阶段结束，程序终止"
 "Server started at {0}:{1}" = "主机[{0}:{1}]监听完毕"
 "Server started" = "逻辑服务器初始化完毕"
+"Client [{0}]{1} connected" = "客户端[{0}]{1}连接已建立"

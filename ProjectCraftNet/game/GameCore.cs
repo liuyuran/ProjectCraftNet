@@ -3,9 +3,12 @@ using Arch.Core;
 using Arch.System;
 using Microsoft.Extensions.Logging;
 using ModManager;
+using ModManager.client;
 using ModManager.logger;
 using ModManager.network;
+using ModManager.user;
 using ProjectCraftNet.game.systems;
+using ProjectCraftNet.game.user;
 using static ModManager.localization.LocalizationManager;
 using static ProjectCraftNet.Program;
 
@@ -59,7 +62,7 @@ public class GameCore(Config config)
         Environment.Exit(0);
     }
 
-    private void OnNetworkEventsOnReceiveEvent(ulong socketId, PackType packType, byte[] data)
+    private void OnNetworkEventsOnReceiveEvent(ClientInfo info, PackType packType, byte[] data)
     {
         if (_stopping) return;
         switch (packType)
@@ -69,6 +72,17 @@ public class GameCore(Config config)
                 _stopping = true;
                 break;
             case PackType.Connect:
+                var connect = Connect.Parser.ParseFrom(data);
+                var clientType = (ClientType)connect.ClientType;
+                Logger.LogInformation("{}", Localize(ModId, "Client [{0}]{1} connected", clientType, info.Ip));
+                var id = UserManager.UserLogin(connect, info);
+                if (id == 0)
+                {
+                    // 登录失败，通知客户端关闭连接
+                    NetworkEvents.FireSendEvent(info.SocketId, PackType.Shutdown, Array.Empty<byte>());
+                    return;
+                }
+                NetworkEvents.FireSendEvent(info.SocketId, PackType.Connect, Array.Empty<byte>());
                 break;
             case PackType.Chat:
                 break;

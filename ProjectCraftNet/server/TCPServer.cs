@@ -117,7 +117,7 @@ public class TcpServer
                             lastTime = DateTime.Now.Ticks;
                         }
 
-                        NetworkEvents.FireReceiveEvent(socketId, packType, msgBuffer.ToArray());
+                        NetworkEvents.FireReceiveEvent(socketId, packType, msgBuffer.ToArray(), socket.Client);
                         msgBuffer.Clear();
                         // 把剩下的数据塞进去
                         for (var j = i + 1; j < bytesRec; j++)
@@ -138,11 +138,18 @@ public class TcpServer
     /// <summary>
     /// 发送数据
     /// </summary>
-    /// <param name="socketId">连接标识符</param>
+    /// <param name="socketId">连接标识符，当其为0时会触发广播</param>
     /// <param name="packType">包类型</param>
     /// <param name="data">包内容</param>
     private async void SendMessage(ulong socketId, PackType packType, byte[] data)
     {
+        if (socketId == 0)
+        {
+            foreach (var socketItem in Sockets.Where(socketItem => socketItem.Key != 0))
+            {
+                await Task.Run(() =>SendMessage(socketItem.Key, packType, data));
+            }
+        }
         if (!Sockets.TryGetValue(socketId, out var socket))
         {
             return;
