@@ -21,12 +21,16 @@ public static class NetworkEvents
     
     public static void FireSendEvent(ulong socketId, PackType packType, byte[] data)
     {
-        SendEvent?.Invoke(socketId, packType, data);
+        try {
+            SendEvent?.Invoke(socketId, packType, data);
+        } catch (Exception e) {
+            Logger.LogError("{}", Localize(ModId, "Error when sending PackType: {0}, {1}", packType, e.Message));
+        }
     }
     
     public static void FireReceiveEvent(ulong socketId, int packType, byte[] data, Socket socket)
     {
-        if (Enum.IsDefined(typeof(PackType), packType))
+        if (!Enum.IsDefined(typeof(PackType), packType))
         {
             Logger.LogError("{}", Localize(ModId, "Unknown PackType: {0}", packType));
             return;
@@ -41,6 +45,10 @@ public static class NetworkEvents
             SocketId = socketId,
             Ip = socket.RemoteEndPoint?.ToString() ?? ""
         };
-        ReceiveEvent?.Invoke(info, (PackType) packType, data);
+        try {
+            ReceiveEvent?.Invoke(info, (PackType)packType, data);
+        } catch (Exception e) {
+            Logger.LogError("{}", Localize(ModId, "Error when handling PackType: {0}, {1}", packType, e.Message));
+        }
     }
 }

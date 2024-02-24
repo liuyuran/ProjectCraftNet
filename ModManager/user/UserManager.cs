@@ -18,7 +18,7 @@ public class UserManager
         if (user == null) return 0;
         var byteData = Sm3Crypt.Signature(connect.Password);
         var hexData = BitConverter.ToString(byteData).Replace("-", "");
-        if (user.Password != hexData) return 0;
+        if (!user.Password.Equals(hexData, StringComparison.CurrentCultureIgnoreCase)) return 0;
         var id = user.Id;
         if (id <= 0) return 0;
         var userInfo = new UserInfo {

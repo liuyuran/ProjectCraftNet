@@ -75,11 +75,15 @@ public class TcpServer
                         bytes[i] = 0;
                     }
 
-                    var bytesRec = client.Receive(bytes, SocketFlags.None);
-                    if (bytesRec == 0)
-                    {
-                        Thread.Sleep(1000);
-                        continue;
+                    int bytesRec;
+                    try {
+                        bytesRec = client.Receive(bytes, SocketFlags.None);
+                        if (bytesRec == 0) {
+                            Thread.Sleep(1000);
+                            continue;
+                        }
+                    } catch (Exception) {
+                        break;
                     }
 
                     if (newPack)
@@ -130,7 +134,7 @@ public class TcpServer
                 }
                 socket.Close();
             });
-            thread.Start(socket);
+            thread.Start();
         }
         // ReSharper disable once FunctionNeverReturns
     }
