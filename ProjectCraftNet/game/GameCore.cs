@@ -86,6 +86,7 @@ public class GameCore(Config config)
             case PackType.Chat:
                 var chat = ChatAndBroadcast.Parser.ParseFrom(data);
                 Logger.LogInformation("{}", Localize(ModId, "Chat from {0}: {1}", info.Ip, chat.Msg));
+                NetworkEvents.FireSendEvent(0, PackType.Chat, data);
                 break;
             case PackType.Chunk:
                 break;

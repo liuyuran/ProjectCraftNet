@@ -145,13 +145,13 @@ public class TcpServer
     /// <param name="socketId">连接标识符，当其为0时会触发广播</param>
     /// <param name="packType">包类型</param>
     /// <param name="data">包内容</param>
-    private async void SendMessage(ulong socketId, PackType packType, byte[] data)
+    private void SendMessage(ulong socketId, PackType packType, byte[] data)
     {
         if (socketId == 0)
         {
             foreach (var socketItem in Sockets.Where(socketItem => socketItem.Key != 0))
             {
-                await Task.Run(() =>SendMessage(socketItem.Key, packType, data));
+                SendMessage(socketItem.Key, packType, data);
             }
         }
         if (!Sockets.TryGetValue(socketId, out var socket))
@@ -159,13 +159,18 @@ public class TcpServer
             return;
         }
 
-        var packLen = data.Length + 8;
+        var packLen = data.Length;
         var lenBytes = BitConverter.GetBytes(packLen);
         var typeBytes = BitConverter.GetBytes((int)packType);
-        var sendBytes = new byte[packLen];
+        var sendBytes = new byte[packLen + 8];
         lenBytes.CopyTo(sendBytes, 0);
         typeBytes.CopyTo(sendBytes, 4);
         data.CopyTo(sendBytes, 8);
-        await socket.SendAsync(sendBytes, SocketFlags.None);
+        try {
+            socket.Send(sendBytes, SocketFlags.None);
+        } catch (Exception e) {
+            Sockets.Remove(socketId);
+            Logger.LogError("{}", Localize(ModId, "Error when sending PackType: {0}, {1}", packType, e.Message));
+        }
     }
 }
