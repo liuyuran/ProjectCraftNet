@@ -101,6 +101,7 @@ public class TcpServer
                         tmp[0] = bytes[7];
                         packType = BitConverter.ToInt32(tmp, 0);
                         newPack = false;
+                        msgBuffer.Clear();
                     }
 
                     // 读取字节直到抵达第一个字节所标注的长度，下一次读取需要剔除所有的0
