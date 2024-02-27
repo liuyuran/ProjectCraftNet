@@ -39,13 +39,13 @@ public class UserManager
         return (ulong)id;
     }
     
-    public static void UserLogout(ulong id)
+    public static void UserLogout(ulong socketId)
     {
-        Instance._users.Remove(id);
+        Instance._users.Remove(socketId);
     }
     
-    public static UserInfo GetUserInfo(ulong id)
+    public static UserInfo? GetUserInfo(ulong socketId)
     {
-        return Instance._users[id];
+        return Instance._users[socketId];
     }
 }

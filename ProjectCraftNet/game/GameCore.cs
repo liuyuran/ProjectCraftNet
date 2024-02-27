@@ -4,6 +4,7 @@ using Arch.System;
 using Microsoft.Extensions.Logging;
 using ModManager;
 using ModManager.client;
+using ModManager.events;
 using ModManager.logger;
 using ModManager.network;
 using ModManager.user;
@@ -26,15 +27,6 @@ public class GameCore(Config config)
 
         // 开始监听网络事件
         NetworkEvents.ReceiveEvent += OnNetworkEventsOnReceiveEvent;
-        // for (var index = 0; index < 1000; index++) 
-        //     world.Create(new Position{ X = 0, Y = 0}, new Velocity{ Dx = 1, Dy = 1});
-        //
-        // // Query and modify entities ( There are also alternatives without lambdas ;) ) 
-        // var query = new QueryDescription().WithAll<Position,Velocity>(); // Targets entities with Position AND Velocity.
-        // world.Query(in query, (ref Position pos, ref Velocity vel) => {
-        //     pos.X += vel.Dx;
-        //     pos.Y += vel.Dy;
-        // });
         var systems = new Group<float>(
             "core-system",
             new ChunkGenerateSystem(_world)
@@ -82,11 +74,18 @@ public class GameCore(Config config)
                     return;
                 }
                 NetworkEvents.FireSendEvent(info.SocketId, PackType.Connect, Array.Empty<byte>());
+                var userInfo = UserManager.GetUserInfo(info.SocketId);
+                GameEvents.FireUserLoginEvent(info.SocketId, (UserInfo) userInfo!);
                 break;
             case PackType.Chat:
                 var chat = ChatAndBroadcast.Parser.ParseFrom(data);
+                if (UserManager.GetUserInfo(info.SocketId) == null)
+                {
+                    Logger.LogDebug("{}", Localize(ModId, "chat from unauthenticated user {0}", info.Ip));
+                    return;
+                }
                 Logger.LogInformation("{}", Localize(ModId, "Chat from {0}: {1}", info.Ip, chat.Msg));
-                NetworkEvents.FireSendEvent(0, PackType.Chat, data);
+                GameEvents.FireChatEvent(info.SocketId, chat.Msg);
                 break;
             case PackType.Chunk:
                 break;
