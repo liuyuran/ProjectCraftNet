@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf;
 using Microsoft.Extensions.Logging;
+using ModManager.command;
 using ModManager.logger;
 using ModManager.network;
 using ModManager.user;
@@ -29,6 +30,14 @@ public class GameEvents
         // 转发普通聊天栏消息
         ChatEvent += (socketId, message) =>
         {
+            if (string.IsNullOrWhiteSpace(message)) return;
+            var userInfo = UserManager.GetUserInfo(socketId);
+            if (userInfo == null) return;
+            var isCommand = CommandManager.TryParseAsCommand(
+                (UserInfo) userInfo,
+                message
+            );
+            if (isCommand) return;
             var data = new ChatAndBroadcast
             {
                 Msg = message
