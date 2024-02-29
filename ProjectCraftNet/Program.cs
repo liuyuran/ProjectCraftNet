@@ -35,8 +35,7 @@ public static class Program
 
         SysLogger.SetLogLevel(config.Core.LogLevel);
         GetLocalizationManager(ModId).LoadLocalization(config.Core.LocalizationPath);
-        var manager = new ModManager.ModManager();
-        manager.LoadMods(config.Core.ModPath);
+        ModManager.ModManager.LoadMods(config.Core.ModPath);
         if (config.NetworkTcp == null)
         {
             Logger.LogCritical("{}", Localize(ModId, "[{0}] not found", "network-tcp"));

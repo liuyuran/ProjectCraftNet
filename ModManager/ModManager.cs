@@ -8,18 +8,18 @@ namespace ModManager;
 
 public class ModManager
 {
-    private readonly ILogger _logger = SysLogger.GetLogger(typeof(ModManager));
+    private static readonly ILogger Logger = SysLogger.GetLogger(typeof(ModManager));
     public static string ModId => "core-system";
 
-    public List<ModBase> AllMods { get; } = [];
+    public static List<ModBase> AllMods { get; } = [];
 
-    public List<ModBase> EnabledMods => AllMods.Where(mod => mod.IsEnabled()).ToList();
+    public static List<ModBase> EnabledMods => AllMods.Where(mod => mod.IsEnabled()).ToList();
     
-    public void LoadMods(string modPath) {
+    public static void LoadMods(string modPath) {
         var modFiles = Directory.GetDirectories(modPath);
         foreach (var modFile in modFiles) {
             if (!File.Exists(Path.Combine(modFile, "mod.toml"))) {
-                _logger.LogInformation("{}", LocalizationManager.Localize(ModId, "{0} meta not found", Path.GetFileName(modFile)));
+                Logger.LogInformation("{}", LocalizationManager.Localize(ModId, "{0} meta not found", Path.GetFileName(modFile)));
                 continue;
             }
             var fileContent = File.ReadAllText(Path.Combine(modFile, "mod.toml"));
@@ -27,12 +27,12 @@ public class ModManager
             var config = Toml.ToModel(fileContent);
             if (!config.TryGetValue("core-file", out var coreFile))
             {
-                _logger.LogInformation("{}", LocalizationManager.Localize(ModId, "{0} meta invalid", modDictName));
+                Logger.LogInformation("{}", LocalizationManager.Localize(ModId, "{0} meta invalid", modDictName));
                 continue;
             }
             if (!config.TryGetValue("core-class", out var coreClass))
             {
-                _logger.LogInformation("{}", LocalizationManager.Localize(ModId, "{0} meta invalid", modDictName));
+                Logger.LogInformation("{}", LocalizationManager.Localize(ModId, "{0} meta invalid", modDictName));
                 continue;
             }
             var modName = (string)coreFile;
@@ -44,13 +44,13 @@ public class ModManager
             var targetClass = assembly.GetType(modClass);
             if (targetClass == null)
             {
-                _logger.LogInformation("{}", LocalizationManager.Localize(ModId, "{0} main class invalid", modDictName));
+                Logger.LogInformation("{}", LocalizationManager.Localize(ModId, "{0} main class invalid", modDictName));
                 continue;
             }
 
             if (!targetClass.IsSubclassOf(typeof(ModBase)))
             {
-                _logger.LogInformation("{}", LocalizationManager.Localize(ModId, "{0} main class invalid", modDictName));
+                Logger.LogInformation("{}", LocalizationManager.Localize(ModId, "{0} main class invalid", modDictName));
                 continue;
             }
             // just load it
@@ -58,7 +58,7 @@ public class ModManager
             // maybe it will be null
             if (mod == null)
             {
-                _logger.LogInformation("{}", LocalizationManager.Localize(ModId, "{0} main class invalid", modDictName));
+                Logger.LogInformation("{}", LocalizationManager.Localize(ModId, "{0} main class invalid", modDictName));
                 continue;
             }
             AllMods.Add(mod);

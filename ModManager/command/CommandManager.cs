@@ -17,6 +17,13 @@ public class CommandManager
     private ILogger Logger { get; } = SysLogger.GetLogger(typeof(CommandManager));
     private static CommandManager Instance { get; } = new();
     private Dictionary<string, ICommand> Commands { get; } = new();
+    
+    private CommandManager()
+    {
+        // 注册核心命令
+        RegisterCommand(new HelpCommand());
+        RegisterCommand(new ModCommand());
+    }
 
     /// <summary>
     /// 注册命令
