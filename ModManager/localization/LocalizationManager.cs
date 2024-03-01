@@ -141,6 +141,6 @@ public class LocalizationManager
             return string.Format(key, args);
         }
 
-        return !localization.TryGetValue(key, out var value) ? key : string.Format(value.LocalizedString, args);
+        return string.Format(!localization.TryGetValue(key, out var value) ? key : value.LocalizedString, args);
     }
 }

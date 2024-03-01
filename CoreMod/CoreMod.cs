@@ -4,6 +4,23 @@ namespace CoreMod;
 
 public class CoreMod: ModBase
 {
+    public override string GetName()
+    {
+        // throw new NotImplementedException();
+        return "";
+    }
+
+    public override string GetDescription()
+    {
+        // throw new NotImplementedException();
+        return "";
+    }
+
+    public override string GetVersion()
+    {
+        return "1.0.0";
+    }
+
     public override void OnInitialize()
     {
         // throw new NotImplementedException();
