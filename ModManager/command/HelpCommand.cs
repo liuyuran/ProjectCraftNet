@@ -13,12 +13,12 @@ public class HelpCommand: ICommand
         return "help";
     }
 
-    public string? GetShortDescription(UserInfo userInfo)
+    public string GetShortDescription(UserInfo userInfo)
     {
         return Localize(ModId, "Show help message");
     }
 
-    public string? GetUsage(UserInfo userInfo, string[] args)
+    public string GetUsage(UserInfo userInfo, string[] args)
     {
         return Localize(ModId, "/help [command]? [arg1]? [arg2]? ...");
     }

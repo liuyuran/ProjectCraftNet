@@ -21,9 +21,11 @@ public struct Sight
 
 public struct Player {}
 
+public struct ChunkBlockData{}
+
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
-[SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible")]
-public class Archetypes
+public static class Archetypes
 {
-    public static ComponentType[] Player = [typeof(Player), typeof(Position), typeof(Rotation), typeof(Sight)];
+    public static readonly ComponentType[] Player = [typeof(Player), typeof(Position), typeof(Rotation), typeof(Sight)];
+    public static readonly ComponentType[] Chunk = [typeof(ChunkBlockData), typeof(Position)];
 }
