@@ -9,6 +9,6 @@ namespace ModManager.database;
 public class CoreDbContext: GameContext {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         // TODO 需要把这里改为从配置文件读取
-        optionsBuilder.UseNpgsql("Host=192.168.18.4;Database=game;Username=postgres;Password=liuyuran");
+        optionsBuilder.UseNpgsql("Host=127.0.0.1;Database=game;Username=postgres;Password=example");
     }
 }

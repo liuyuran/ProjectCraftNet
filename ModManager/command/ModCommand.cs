@@ -13,12 +13,12 @@ public class ModCommand: ICommand
         return "mod";
     }
 
-    public string? GetShortDescription(UserInfo userInfo)
+    public string GetShortDescription(UserInfo userInfo)
     {
         return Localize(ModId, "Show mod information");
     }
 
-    public string? GetUsage(UserInfo userInfo, string[] args)
+    public string GetUsage(UserInfo userInfo, string[] args)
     {
         return Localize(ModId, "/mod [list|info] [modId]?");
     }
@@ -31,27 +31,30 @@ public class ModCommand: ICommand
         {
             case 0:
             {
-                // sb.AppendLine(Localize(ModId, "Available mods:"));
-                // foreach (var mod in ModManager.AllMods)
-                // {
-                //     sb.AppendLine($"{mod.Id} - {mod.Name}");
-                // }
-                // NetworkEvents.FireSendEvent(clientInfo.SocketId, PackType.Chat, Encoding.UTF8.GetBytes(sb.ToString()));
+                sb.AppendLine(Localize(ModId, "Available mods:"));
+                foreach (var mod in AllMods)
+                {
+                    sb.AppendLine($"{mod.GetName()} - {mod.GetVersion()} - enabled: {mod.IsEnabled()}");
+                    sb.AppendLine($"  {mod.GetDescription()}");
+                    sb.AppendLine("------------------------------");
+                }
+                NetworkEvents.FireSendTextEvent(clientInfo.SocketId, sb.ToString());
                 break;
             }
             case > 1:
-                // var target = args[1];
-                // var mod = ModManager.Mods.Find(m => m.Id == target);
-                // if (mod == null)
-                // {
-                //     NetworkEvents.FireSendEvent(clientInfo.SocketId, PackType.Chat, Encoding.UTF8.GetBytes(Localize(ModId, "Mod not found")));
-                //     return;
-                // }
-                // sb.AppendLine($"{mod.Name} - {mod.Description}");
-                // sb.AppendLine(Localize(ModId, "Version: {0}", mod.Version));
-                // sb.AppendLine(Localize(ModId, "Author: {0}", mod.Author));
-                // NetworkEvents.FireSendEvent(clientInfo.SocketId, PackType.Chat, Encoding.UTF8.GetBytes(sb.ToString()));
+            {
+                var modId = args[1];
+                var mod = AllMods.Find(m => m.GetName() == modId);
+                if (mod == null)
+                {
+                    NetworkEvents.FireSendTextEvent(clientInfo.SocketId, Localize(ModId, "Mod not found"));
+                    return;
+                }
+                sb.AppendLine($"{mod.GetName()} - {mod.GetVersion()}");
+                sb.AppendLine($"  {mod.GetDescription()}");
+                NetworkEvents.FireSendTextEvent(clientInfo.SocketId, sb.ToString());
                 break;
+            }
         }
     }
 }

@@ -33,13 +33,13 @@ public class HelpCommand: ICommand
                 var sb = new StringBuilder();
                 sb.AppendLine(Localize(ModId, "Available commands:"));
                 sb.AppendLine(CommandManager.GetCommandShortDescription(userInfo));
-                NetworkEvents.FireSendEvent(clientInfo.SocketId, PackType.Chat, Encoding.UTF8.GetBytes(sb.ToString()));
+                NetworkEvents.FireSendTextEvent(clientInfo.SocketId, sb.ToString());
                 break;
             }
             case > 1:
                 var target = args[1];
                 var command = CommandManager.GetCommandUsage(userInfo, target, args[2..]);
-                NetworkEvents.FireSendEvent(clientInfo.SocketId, PackType.Chat, Encoding.UTF8.GetBytes(command));
+                NetworkEvents.FireSendTextEvent(clientInfo.SocketId, command);
                 break;
         }
     }

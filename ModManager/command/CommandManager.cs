@@ -21,8 +21,22 @@ public class CommandManager
     private CommandManager()
     {
         // 注册核心命令
-        RegisterCommand(new HelpCommand());
-        RegisterCommand(new ModCommand());
+        _RegisterCommand(new HelpCommand());
+        _RegisterCommand(new ModCommand());
+    }
+    
+    /// <summary>
+    /// 注册命令
+    /// </summary>
+    /// <param name="command">命令实例</param>
+    private void _RegisterCommand(ICommand command)
+    {
+        if (Commands.ContainsKey(command.GetName()))
+        {
+            Instance.Logger.LogError("Command {} already exists", command.GetName());
+            return;
+        }
+        Commands.Add(command.GetName(), command);
     }
 
     /// <summary>
@@ -31,7 +45,7 @@ public class CommandManager
     /// <param name="command">命令实例</param>
     public static void RegisterCommand(ICommand command)
     {
-        Instance.Commands[command.GetName()] = command;
+        Instance._RegisterCommand(command);
     }
 
     /// <summary>

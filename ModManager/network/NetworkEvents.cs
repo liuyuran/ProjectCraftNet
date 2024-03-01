@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using Google.Protobuf;
 using Microsoft.Extensions.Logging;
 using ModManager.logger;
 using static ModManager.localization.LocalizationManager;
@@ -25,6 +26,21 @@ public static class NetworkEvents
             SendEvent?.Invoke(socketId, packType, data);
         } catch (Exception e) {
             Logger.LogError("{}", Localize(ModId, "Error when sending PackType: {0}, {1}", packType, e.Message));
+        }
+    }
+    
+    public static void FireSendTextEvent(ulong socketId, string text)
+    {
+        try
+        {
+            var msg = new ChatAndBroadcast
+            {
+                Msg = text
+            };
+            var data = msg.ToByteArray();
+            SendEvent?.Invoke(socketId, PackType.Chat, data);
+        } catch (Exception e) {
+            Logger.LogError("{}", Localize(ModId, "Error when sending PackType: {0}, {1}", PackType.Chat, e.Message));
         }
     }
     
