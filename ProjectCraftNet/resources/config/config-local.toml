@@ -8,3 +8,10 @@ max-tps = 20
 [network-tcp]
 host = "127.0.0.1"
 port = 13000
+
+[database]
+host = "192.168.18.4"
+port = 6543
+username = "postgres"
+password = "liuyuran"
+db = "game"

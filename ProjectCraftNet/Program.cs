@@ -1,7 +1,7 @@
 ﻿using CommandLine;
 using Microsoft.Extensions.Logging;
+using ModManager.config;
 using ModManager.logger;
-using ProjectCraftNet.config;
 using ProjectCraftNet.game;
 using ProjectCraftNet.server;
 using static ModManager.localization.LocalizationManager;
