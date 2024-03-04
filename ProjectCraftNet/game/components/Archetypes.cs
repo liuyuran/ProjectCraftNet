@@ -21,8 +21,6 @@ public struct Sight
 
 public struct Player {}
 
-public struct ChunkBlockData{}
-
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 public static class Archetypes
 {
