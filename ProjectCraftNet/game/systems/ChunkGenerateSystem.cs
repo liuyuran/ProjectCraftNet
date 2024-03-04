@@ -33,12 +33,12 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
             var chunkData = new components.BlockData[data.Length];
             for (var i = 0; i < data.Length; i++)
             {
-                chunkData[i] = new components.BlockData()
+                chunkData[i] = new components.BlockData
                 {
                     BlockId = data[i].BlockId
                 };
             }
-            _world.Set(entity, new ChunkBlockData()
+            _world.Set(entity, new ChunkBlockData
             {
                 Data = chunkData
             });

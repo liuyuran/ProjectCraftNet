@@ -11,11 +11,18 @@ public class ChunkGeneratorManager
 {
     private static ILogger Logger { get; } = SysLogger.GetLogger(typeof(ChunkGeneratorManager));
     private static ChunkGeneratorManager Instance { get; } = new();
-    private ChunkGeneratorManager() {}
+    private readonly Dictionary<ulong, IChunkGenerator> _generators = new();
+
+    private ChunkGeneratorManager()
+    {
+        _generators.Add(0, new DefaultChunkGenerator());
+    }
     
     public static BlockData[] GenerateChunkBlockData(ulong worldId, Vector3 chunkPosition)
     {
-        Logger.LogInformation("GenerateChunkBlockData");
-        return new BlockData[0];
+        if (Instance._generators.TryGetValue(worldId, out var generator))
+            return generator.GenerateChunkBlockData(worldId, chunkPosition);
+        Logger.LogWarning("No chunk generator found for world {}", worldId);
+        return Array.Empty<BlockData>();
     }
 }
