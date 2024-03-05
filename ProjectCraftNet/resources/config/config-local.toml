@@ -4,6 +4,7 @@ max-player = 20
 localization-path = "./resources/localization"
 log-level = "debug"
 max-tps = 20
+sight = 5
 
 [network-tcp]
 host = "127.0.0.1"

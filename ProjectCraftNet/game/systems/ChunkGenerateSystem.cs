@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Arch.Core;
 using Arch.System;
+using ModManager.config;
 using ModManager.generator;
 using ProjectCraftNet.game.components;
 
@@ -12,6 +13,7 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
 
     public override void Update(in float deltaTime)
     {
+        var sight = ConfigUtil.Instance.GetConfig().Core?.Sight ?? 5;
         var playerQuery = new QueryDescription().WithAll<Player, Position>();
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
         var existChunkPosition = new HashSet<Position>();
@@ -20,29 +22,39 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
         });
         _world.Query(in playerQuery, (ref Position position) =>
         {
-            var chunkPosition = new Position
+            var chunkPos = position.Val / 100;
+            for (var x = -sight; x < sight; x++)
             {
-                Val = new Vector3((float)Math.Round(position.Val.X / 100),
-                    (float)Math.Round(position.Val.Y / 100),
-                    (float)Math.Round(position.Val.Z / 100))
-            };
-            if (existChunkPosition.Contains(chunkPosition)) return;
-            var entity = _world.Create(Archetypes.Chunk);
-            _world.Set(entity, chunkPosition);
-            var data = ChunkGeneratorManager.GenerateChunkBlockData(0, chunkPosition.Val);
-            var chunkData = new components.BlockData[data.Length];
-            for (var i = 0; i < data.Length; i++)
-            {
-                chunkData[i] = new components.BlockData
+                for (var y = -sight; y < sight; y++)
                 {
-                    BlockId = data[i].BlockId
-                };
+                    for (var z = -sight; z < sight; z++)
+                    {
+                        var chunkPosition = new Position
+                        {
+                            Val = new Vector3((float)Math.Round(chunkPos.X) + x,
+                                (float)Math.Round(chunkPos.Y) + y,
+                                (float)Math.Round(chunkPos.Z) + z)
+                        };
+                        if (existChunkPosition.Contains(chunkPosition)) return;
+                        var entity = _world.Create(Archetypes.Chunk);
+                        _world.Set(entity, chunkPosition);
+                        var data = ChunkGeneratorManager.GenerateChunkBlockData(0, chunkPosition.Val);
+                        var chunkData = new components.BlockData[data.Length];
+                        for (var i = 0; i < data.Length; i++)
+                        {
+                            chunkData[i] = new components.BlockData
+                            {
+                                BlockId = data[i].BlockId
+                            };
+                        }
+                        _world.Set(entity, new ChunkBlockData
+                        {
+                            Data = chunkData
+                        });
+                        existChunkPosition.Add(chunkPosition);                
+                    }
+                }                
             }
-            _world.Set(entity, new ChunkBlockData
-            {
-                Data = chunkData
-            });
-            existChunkPosition.Add(chunkPosition);
         });
     }
 }

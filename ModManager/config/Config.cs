@@ -2,7 +2,7 @@
 
 using Tomlyn.Model;
 
-namespace ModManager;
+namespace ModManager.config;
 
 public sealed class Config : ITomlMetadataProvider {
     public Core? Core { get; set; }
@@ -17,6 +17,7 @@ public sealed class Core : ITomlMetadataProvider {
     public required string LocalizationPath { get; set; }
     public required string LogLevel { get; set; }
     public required int MaxTps { get; set; }
+    public required int Sight { get; set; }
     public TomlPropertiesMetadata? PropertiesMetadata { get; set; }
 }
 

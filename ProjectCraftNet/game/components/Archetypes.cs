@@ -19,7 +19,10 @@ public struct Sight
     public Vector3 Val;
 }
 
-public struct Player {}
+public struct Player
+{
+    public ulong SocketId;
+}
 
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 public static class Archetypes
