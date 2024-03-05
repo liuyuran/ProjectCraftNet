@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using ModManager.block;
 
 namespace ModManager.generator;
 
@@ -27,10 +28,11 @@ public class DefaultChunkGenerator: IChunkGenerator
                 var height = (uint) Math.Round(noiseData * chunkSize);
                 for (var y = 0; y < chunkSize; y++)
                 {
+                    var block = y > height ? BlockEnum.Air : BlockEnum.Dirt;
+                    var blockId = BlockManager.GetBlockId(block);
                     blockData[GetBlockIndex(x, y, z, chunkSize)] = new BlockData
                     {
-                        // TODO: 选择合适的方块ID
-                        BlockId = (ulong)(noiseData > height ? 1 : 0)
+                        BlockId = blockId
                     };
                 }
             }
