@@ -48,10 +48,24 @@ public static class Program
         Task.Run(() => server.StartServer(config.NetworkTcp.Host, config.NetworkTcp.Port));
         Console.CancelKeyPress += (_, _) =>
         {
+            CleanUp();
+            ClosingEvent.Set();
+        };
+        
+        AppDomain.CurrentDomain.ProcessExit += (_, _) =>
+        {
+            CleanUp();
             ClosingEvent.Set();
         };
 
         ClosingEvent.WaitOne();
         return 0;
+    }
+
+    private static void CleanUp()
+    {
+        Console.WriteLine("wait, cleaning");
+        Thread.Sleep(1000);
+        Console.WriteLine("cleaned up");
     }
 }
