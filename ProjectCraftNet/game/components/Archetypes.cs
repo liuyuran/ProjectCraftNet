@@ -19,11 +19,14 @@ public struct Sight
     public Vector3 Val;
 }
 
-public struct Player {}
+public struct Player
+{
+    public ulong SocketId;
+}
 
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
-[SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible")]
-public class Archetypes
+public static class Archetypes
 {
-    public static ComponentType[] Player = [typeof(Player), typeof(Position), typeof(Rotation), typeof(Sight)];
+    public static readonly ComponentType[] Player = [typeof(Player), typeof(Position), typeof(Rotation), typeof(Sight)];
+    public static readonly ComponentType[] Chunk = [typeof(ChunkBlockData), typeof(Position)];
 }

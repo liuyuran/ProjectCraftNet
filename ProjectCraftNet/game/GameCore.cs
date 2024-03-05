@@ -4,6 +4,7 @@ using Arch.System;
 using Microsoft.Extensions.Logging;
 using ModManager;
 using ModManager.client;
+using ModManager.config;
 using ModManager.events;
 using ModManager.logger;
 using ModManager.network;
@@ -29,7 +30,8 @@ public class GameCore(Config config)
         NetworkEvents.ReceiveEvent += OnNetworkEventsOnReceiveEvent;
         var systems = new Group<float>(
             "core-system",
-            new ChunkGenerateSystem(_world)
+            new ChunkGenerateSystem(_world),
+            new NetworkSyncSystem(_world)
         );
         systems.Initialize();
         Logger.LogInformation("{}", Localize(ModId, "Server started"));

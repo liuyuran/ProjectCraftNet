@@ -1,0 +1,43 @@
+image: docker:20.10.12
+services:
+  - docker:dind
+
+variables:
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+  CONTAINER_NAME: game-server
+
+stages:
+  - release
+  - deploy
+
+release-test:
+  stage: release
+  script:
+    - docker build -t $CONTAINER_RELEASE_IMAGE:nightly .
+  only:
+    - /^release\/.*$/
+
+deploy-test:
+  stage: deploy
+  script:
+    - docker container inspect $CONTAINER_NAME && docker stop $CONTAINER_NAME
+    - docker container inspect $CONTAINER_NAME && docker rm $CONTAINER_NAME
+    - docker run -d --name $CONTAINER_NAME -p 13000:13000 $CONTAINER_RELEASE_IMAGE:nightly
+  only:
+    - /^release\/.*$/
+
+release:
+  stage: release
+  script:
+    - docker build -t $CONTAINER_RELEASE_IMAGE:$CI_COMMIT_REF_NAME .
+  only:
+    - tags
+
+deploy:
+  stage: deploy
+  script:
+    - docker container inspect $CONTAINER_NAME && docker stop $CONTAINER_NAME
+    - docker container inspect $CONTAINER_NAME && docker rm $CONTAINER_NAME
+    - docker run -d --name $CONTAINER_NAME -p 13000:13000 $CONTAINER_RELEASE_IMAGE:$CI_COMMIT_REF_NAME
+  only:
+    - tags

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ModManager.config;
 using ModManager.database.generate;
 
 namespace ModManager.database;
@@ -8,7 +9,10 @@ namespace ModManager.database;
 /// </summary>
 public class CoreDbContext: GameContext {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        // TODO 需要把这里改为从配置文件读取
-        optionsBuilder.UseNpgsql("Host=127.0.0.1;Database=game;Username=postgres;Password=example");
+        var config = ConfigUtil.Instance.GetConfig();
+        if (config.Database == null) {
+            throw new Exception("Config.Database is null.");
+        }
+        optionsBuilder.UseNpgsql($"Host={config.Database.Host};Database={config.Database.Db};Username={config.Database.Username};Password={config.Database.Password}");
     }
 }
