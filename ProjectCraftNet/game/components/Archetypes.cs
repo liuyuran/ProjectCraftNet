@@ -21,7 +21,9 @@ public struct Sight
 
 public struct Player
 {
+    public ulong UserId;
     public ulong SocketId;
+    public ulong WorldId;
 }
 
 [SuppressMessage("ReSharper", "UnusedMember.Global")]

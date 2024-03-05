@@ -1,9 +1,11 @@
 ﻿#define PURE_ECS
 using Arch.Core;
 using Arch.System;
+using Google.Protobuf;
 using Microsoft.Extensions.Logging;
 using ModManager;
 using ModManager.client;
+using ModManager.command;
 using ModManager.config;
 using ModManager.events;
 using ModManager.logger;
@@ -28,10 +30,13 @@ public class GameCore(Config config)
 
         // 开始监听网络事件
         NetworkEvents.ReceiveEvent += OnNetworkEventsOnReceiveEvent;
+        GameEvents.ChatEvent += OnGameEventsOnChatEvent;
+        GameEvents.ArchiveEvent += OnGameEventsOnArchiveEvent;
         var systems = new Group<float>(
             "core-system",
             new ChunkGenerateSystem(_world),
-            new NetworkSyncSystem(_world)
+            new NetworkSyncSystem(_world),
+            new ArchiveSystem(_world)
         );
         systems.Initialize();
         Logger.LogInformation("{}", Localize(ModId, "Server started"));
@@ -49,10 +54,32 @@ public class GameCore(Config config)
                 Thread.Sleep((int) (millPerTick - elapsed));
             }
         }
-        // TODO 保存游戏
         systems.Dispose();
         Logger.LogInformation("{}", Localize(ModId, "Server shutdown"));
         Environment.Exit(0);
+    }
+
+    private void OnGameEventsOnArchiveEvent()
+    {
+        // TODO 归档
+    }
+
+    private static void OnGameEventsOnChatEvent(ulong socketId, string message)
+    {
+        if (string.IsNullOrWhiteSpace(message)) return;
+        var userInfo = UserManager.GetUserInfo(socketId);
+        if (userInfo == null) return;
+        var isCommand = CommandManager.TryParseAsCommand((UserInfo)userInfo, message);
+        if (isCommand) return;
+        var data = new ChatAndBroadcast { Msg = message };
+        var buffer = data.ToByteArray();
+        if (buffer == null)
+        {
+            Logger.LogError("{}", Localize(ModId, "Error when serializing message"));
+            return;
+        }
+
+        NetworkEvents.FireSendEvent(socketId, PackType.Chat, buffer);
     }
 
     private void OnNetworkEventsOnReceiveEvent(ClientInfo info, PackType packType, byte[] data)
