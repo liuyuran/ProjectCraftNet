@@ -4,10 +4,9 @@ namespace BlackBoxTest;
 
 public class Tests
 {
-    private readonly TcpClient _tcpClient = new("127.0.0.1", 13000);
-    private Thread _workThread;
+    private Thread _workThread = null!;
 
-    [SetUp]
+    [OneTimeSetUp]
     public void StartServer()
     {
         _workThread = new Thread(() =>
@@ -19,17 +18,24 @@ public class Tests
         _workThread.Start();
         Thread.Sleep(1000);
     }
-    
-    [TearDown]
+
+    [OneTimeTearDown]
     public void TearDown()
     {
         _workThread.Join(1000);
         if (_workThread.IsAlive) _workThread.Interrupt();
     }
+
+    private static TcpClient GetClient()
+    {
+        return new TcpClient("127.0.0.1", 13000);
+    }
     
     [Test]
-    public async Task Test1()
+    public async Task LoginAndLogout()
     {
-        await _tcpClient.Connect();
+        var tcpClient = GetClient();
+        await tcpClient.Connect();
+        await tcpClient.Disconnect();
     }
 }

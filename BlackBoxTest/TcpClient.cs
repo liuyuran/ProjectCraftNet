@@ -27,13 +27,12 @@ public class TcpClient(string hostName, int port) {
         _keepAliveThread.Start();
     }
 
-    [Obsolete("Obsolete")]
     public async Task Disconnect() {
         if (_client is null)
             return;
         await _client.DisconnectAsync(true);
-        _thread?.Abort();
-        _keepAliveThread?.Abort();
+        _thread?.Interrupt();
+        _keepAliveThread?.Interrupt();
     }
 
     public async Task Send(int type, byte[] message) {
@@ -61,7 +60,15 @@ public class TcpClient(string hostName, int port) {
         while (true)
         {
             Thread.Sleep(1000);
-            await Send(3, Array.Empty<byte>());
+            if (!_client.Connected) return;
+            try
+            {
+                await Send(3, Array.Empty<byte>());
+            }
+            catch (SocketException)
+            {
+                return;
+            }
         }
     }
 
@@ -79,8 +86,15 @@ public class TcpClient(string hostName, int port) {
             for (var i = 0; i < bytes.Length; i++) {
                 bytes[i] = 0;
             }
-
-            var bytesRec = await _client.ReceiveAsync(bytes, SocketFlags.None).ConfigureAwait(false);
+            
+            int bytesRec;
+            try
+            {
+                bytesRec = await _client.ReceiveAsync(bytes, SocketFlags.None).ConfigureAwait(false);
+            } catch (SocketException)
+            {
+                break;
+            }
             if (bytesRec == 0) {
                 Thread.Sleep(1000);
                 continue;
