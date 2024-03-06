@@ -1,4 +1,5 @@
-﻿using EasilyNET.Security;
+﻿using System.Numerics;
+using EasilyNET.Security;
 using Microsoft.Extensions.Logging;
 using ModManager.database;
 using ModManager.logger;
@@ -32,7 +33,9 @@ public class UserManager
         var id = user.Id;
         if (id <= 0) return 0;
         var userInfo = new UserInfo {
-            ClientInfo = info
+            ClientInfo = info,
+            WorldId = user.WorldId,
+            Position = new Vector3(user.PosX, user.PosY, user.PosZ)
         };
         Instance._users.Add(info.SocketId, userInfo);
         Logger.LogInformation("{}", Localize(ModId, "User {0} login", connect.Username));

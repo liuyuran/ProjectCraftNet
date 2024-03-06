@@ -1,12 +1,17 @@
 ﻿using System.Numerics;
+using System.Text.Json;
 using Arch.Core;
 using Microsoft.Extensions.Logging;
 using ModManager.database;
 using ModManager.logger;
 using ProjectCraftNet.game.components;
+using Chunk = ModManager.database.generate.Chunk;
 
 namespace ProjectCraftNet.game.archive;
 
+/// <summary>
+/// 存档管理器，用来处理数据库存档交互
+/// </summary>
 public class ArchiveManager
 {
     private static readonly ILogger Logger = SysLogger.GetLogger(typeof(ArchiveManager));
@@ -48,7 +53,7 @@ public class ArchiveManager
         ts.Commit();
     }
 
-    public static void SaveChunkInfo(World world, params Vector3[] chunkPos)
+    public static void SaveChunkInfo(World world, long worldId, params Vector3[] chunkPos)
     {
         using var dbContext = new CoreDbContext();
         using var ts = dbContext.Database.BeginTransaction();
@@ -58,6 +63,7 @@ public class ArchiveManager
         {
             var component = position;
             if (chunkPos.All(pos => pos != component.Val)) return;
+            if (data.WorldId != worldId) return;
             changed.Add(new ChunkChanged
             {
                 Pos = component.Val,
@@ -67,17 +73,45 @@ public class ArchiveManager
         });
         foreach (var item in changed)
         {
-            var chunk = dbContext.Chunks.Find(item.Pos);
-            if (chunk == null)
-            {
-                Logger.LogError("Chunk not found: {}", item.Pos);
-                continue;
-            }
-
+            // Define the multi-rule query
+            var query = from chunkItem in dbContext.Chunks
+                where chunkItem.PosX == (int)item.Pos.X
+                      && chunkItem.PosY == (int)item.Pos.Y
+                      && chunkItem.PosZ == (int)item.Pos.Z
+                      && chunkItem.WorldId == item.WorldId
+                select chunkItem;
+            var chunk = query.FirstOrDefault();
+            var created = chunk == null;
+            chunk ??= new Chunk();
             chunk.WorldId = item.WorldId;
-            // chunk.Data = item.Data;
-            chunk.Data = "";
+            chunk.PosX = (int)item.Pos.X;
+            chunk.PosY = (int)item.Pos.Y;
+            chunk.PosZ = (int)item.Pos.Z;
+            var jsonData = JsonSerializer.Serialize(item.Data);
+            chunk.Data = jsonData;
+            if (created)
+            {
+                dbContext.Chunks.Add(chunk);
+            }
+            else
+            {
+                dbContext.Chunks.Update(chunk);
+            }
         }
+
         ts.Commit();
+    }
+    
+    public static components.BlockData[]? TryGetChunkData(long worldId, Vector3 chunkPos)
+    {
+        using var dbContext = new CoreDbContext();
+        var query = from chunk in dbContext.Chunks
+            where chunk.PosX == (int)chunkPos.X
+                  && chunk.PosY == (int)chunkPos.Y
+                  && chunk.PosZ == (int)chunkPos.Z
+                  && chunk.WorldId == worldId
+            select chunk;
+        var chunkData = query.FirstOrDefault();
+        return chunkData == null ? null : JsonSerializer.Deserialize<components.BlockData[]>(chunkData.Data);
     }
 }

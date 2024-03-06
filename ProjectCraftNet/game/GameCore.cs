@@ -1,4 +1,5 @@
 ﻿#define PURE_ECS
+using System.Numerics;
 using Arch.Core;
 using Arch.System;
 using Google.Protobuf;
@@ -11,6 +12,7 @@ using ModManager.logger;
 using ModManager.network;
 using ModManager.user;
 using ProjectCraftNet.game.archive;
+using ProjectCraftNet.game.components;
 using ProjectCraftNet.game.systems;
 using static ModManager.localization.LocalizationManager;
 using static ProjectCraftNet.Program;
@@ -62,6 +64,22 @@ public class GameCore(Config config)
     private void OnGameEventsOnArchiveEvent()
     {
         ArchiveManager.SaveUserInfo(_world);
+        var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
+        var existChunkPosition = new Dictionary<long, List<Vector3>>();
+        _world.Query(in chunkQuery, (ref ChunkBlockData data, ref Position position) => {
+            var worldId = data.WorldId;
+            if (!existChunkPosition.TryGetValue(worldId, out var value))
+            {
+                value = [];
+                existChunkPosition[worldId] = value;
+            }
+
+            value.Add(position.Val);
+        });
+        foreach (var (worldId, chunkPos) in existChunkPosition)
+        {
+            ArchiveManager.SaveChunkInfo(_world, worldId, chunkPos.ToArray());
+        }
     }
 
     private static void OnGameEventsOnChatEvent(long socketId, string message)
