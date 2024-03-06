@@ -1,0 +1,18 @@
+﻿[core]
+mod-path = "../../../../CoreMod/bin/Debug"
+max-player = 20
+localization-path = "../../../../ProjectCraftNet/resources/localization"
+log-level = "debug"
+max-tps = 20
+sight = 5
+
+[network-tcp]
+host = "127.0.0.1"
+port = 13000
+
+[database]
+host = "127.0.0.1"
+port = 6543
+username = "postgres"
+password = "example"
+db = "game"
