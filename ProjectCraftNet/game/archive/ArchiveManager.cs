@@ -31,7 +31,7 @@ public class ArchiveManager
                 Y = (long)position.Val.Y,
                 Z = (long)position.Val.Z,
                 WorldId = player.WorldId,
-                GameMode = player.GameMode
+                GameMode = (int) player.GameMode
             });
         });
         foreach (var item in changed)

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using ModManager.client;
 using ModManager.command;
 using ModManager.config;
+using ModManager.core;
 using ModManager.events;
 using ModManager.logger;
 using ModManager.network;
@@ -48,6 +49,18 @@ public class GameCore(Config config)
             systems.BeforeUpdate(in deltaTime);
             systems.Update(in deltaTime);
             systems.AfterUpdate(in deltaTime);
+            while (UserManager.WaitToJoin.Count > 0)
+            {
+                var entity = _world.Create(Archetypes.Player);
+                var userId = UserManager.WaitToJoin.Dequeue();
+                var userInfo = UserManager.GetUserInfo(userId);
+                if (userInfo == null) continue;
+                var position = userInfo.Value.Position;
+                var gameMod = userInfo.Value.GameMode;
+                _world.Set(entity, new Position { Val = position });
+                _world.Set(entity, new Player { UserId = userId, GameMode = gameMod });
+                
+            }
             // 调节逻辑帧率，等待下一个Tick
             var now = DateTime.Now.Ticks;
             var elapsed = now - lastTickMillis;

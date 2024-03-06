@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using EasilyNET.Security;
 using Microsoft.Extensions.Logging;
+using ModManager.core;
 using ModManager.database;
 using ModManager.logger;
 using ModManager.network;
@@ -14,6 +15,7 @@ public class UserManager
     private static ILogger Logger { get; } = SysLogger.GetLogger(typeof(UserManager));
     private readonly Dictionary<long, UserInfo> _users = new();
     private static readonly UserManager Instance = new();
+    public static readonly Queue<long> WaitToJoin = new();
     
     public static long UserLogin(Connect connect, ClientInfo info) {
         using var dbContext = new CoreDbContext();
@@ -35,11 +37,12 @@ public class UserManager
         var userInfo = new UserInfo {
             ClientInfo = info,
             WorldId = user.WorldId,
-            Position = new Vector3(user.PosX, user.PosY, user.PosZ)
+            Position = new Vector3(user.PosX, user.PosY, user.PosZ),
+            GameMode = (GameMode) user.GameMode
         };
         Instance._users.Add(info.SocketId, userInfo);
         Logger.LogInformation("{}", Localize(ModId, "User {0} login", connect.Username));
-        // TODO 往ECS里加入用户对象
+        WaitToJoin.Enqueue(info.SocketId);
         return id;
     }
     
