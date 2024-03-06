@@ -24,11 +24,11 @@ public static partial class ServerReflection {
         string.Concat(
           "ChVQcm90b1NyYy9zZXJ2ZXIucHJvdG8ijgEKDFNlcnZlclN0YXR1cxIPCgd2",
           "ZXJzaW9uGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLbWVtb3J5VG90YWwYAyAB",
-          "KAQSEgoKbWVtb3J5VXNlZBgEIAEoBBISCgptYXhQbGF5ZXJzGAUgASgEEhUK",
-          "DW9ubGluZVBsYXllcnMYBiABKAQSCwoDdHBzGAcgASgEIiMKD0Jsb2NrRGVm",
-          "aW5lSXRlbRIQCghibG9ja19pZBgBIAEoBCIuCgtCbG9ja0RlZmluZRIfCgVp",
+          "KAMSEgoKbWVtb3J5VXNlZBgEIAEoAxISCgptYXhQbGF5ZXJzGAUgASgDEhUK",
+          "DW9ubGluZVBsYXllcnMYBiABKAMSCwoDdHBzGAcgASgDIiMKD0Jsb2NrRGVm",
+          "aW5lSXRlbRIQCghibG9ja19pZBgBIAEoAyIuCgtCbG9ja0RlZmluZRIfCgVp",
           "dGVtcxgBIAMoCzIQLkJsb2NrRGVmaW5lSXRlbSItCglCbG9ja0RhdGESEAoI",
-          "YmxvY2tfaWQYASABKAQSDgoGc3ViX2lkGAIgASgEIkgKCUNodW5rRGF0YRIJ",
+          "YmxvY2tfaWQYASABKAMSDgoGc3ViX2lkGAIgASgDIkgKCUNodW5rRGF0YRIJ",
           "CgF4GAEgASgDEgkKAXkYAiABKAMSCQoBehgDIAEoAxIaCgZibG9ja3MYBCAD",
           "KAsyCi5CbG9ja0RhdGFCA/gBAWIGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
@@ -121,10 +121,10 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
 
   /// <summary>Field number for the "memoryTotal" field.</summary>
   public const int MemoryTotalFieldNumber = 3;
-  private ulong memoryTotal_;
+  private long memoryTotal_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public ulong MemoryTotal {
+  public long MemoryTotal {
     get { return memoryTotal_; }
     set {
       memoryTotal_ = value;
@@ -133,10 +133,10 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
 
   /// <summary>Field number for the "memoryUsed" field.</summary>
   public const int MemoryUsedFieldNumber = 4;
-  private ulong memoryUsed_;
+  private long memoryUsed_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public ulong MemoryUsed {
+  public long MemoryUsed {
     get { return memoryUsed_; }
     set {
       memoryUsed_ = value;
@@ -145,10 +145,10 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
 
   /// <summary>Field number for the "maxPlayers" field.</summary>
   public const int MaxPlayersFieldNumber = 5;
-  private ulong maxPlayers_;
+  private long maxPlayers_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public ulong MaxPlayers {
+  public long MaxPlayers {
     get { return maxPlayers_; }
     set {
       maxPlayers_ = value;
@@ -157,10 +157,10 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
 
   /// <summary>Field number for the "onlinePlayers" field.</summary>
   public const int OnlinePlayersFieldNumber = 6;
-  private ulong onlinePlayers_;
+  private long onlinePlayers_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public ulong OnlinePlayers {
+  public long OnlinePlayers {
     get { return onlinePlayers_; }
     set {
       onlinePlayers_ = value;
@@ -169,10 +169,10 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
 
   /// <summary>Field number for the "tps" field.</summary>
   public const int TpsFieldNumber = 7;
-  private ulong tps_;
+  private long tps_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public ulong Tps {
+  public long Tps {
     get { return tps_; }
     set {
       tps_ = value;
@@ -210,11 +210,11 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
     int hash = 1;
     if (Version.Length != 0) hash ^= Version.GetHashCode();
     if (Name.Length != 0) hash ^= Name.GetHashCode();
-    if (MemoryTotal != 0UL) hash ^= MemoryTotal.GetHashCode();
-    if (MemoryUsed != 0UL) hash ^= MemoryUsed.GetHashCode();
-    if (MaxPlayers != 0UL) hash ^= MaxPlayers.GetHashCode();
-    if (OnlinePlayers != 0UL) hash ^= OnlinePlayers.GetHashCode();
-    if (Tps != 0UL) hash ^= Tps.GetHashCode();
+    if (MemoryTotal != 0L) hash ^= MemoryTotal.GetHashCode();
+    if (MemoryUsed != 0L) hash ^= MemoryUsed.GetHashCode();
+    if (MaxPlayers != 0L) hash ^= MaxPlayers.GetHashCode();
+    if (OnlinePlayers != 0L) hash ^= OnlinePlayers.GetHashCode();
+    if (Tps != 0L) hash ^= Tps.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -241,25 +241,25 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
       output.WriteRawTag(18);
       output.WriteString(Name);
     }
-    if (MemoryTotal != 0UL) {
+    if (MemoryTotal != 0L) {
       output.WriteRawTag(24);
-      output.WriteUInt64(MemoryTotal);
+      output.WriteInt64(MemoryTotal);
     }
-    if (MemoryUsed != 0UL) {
+    if (MemoryUsed != 0L) {
       output.WriteRawTag(32);
-      output.WriteUInt64(MemoryUsed);
+      output.WriteInt64(MemoryUsed);
     }
-    if (MaxPlayers != 0UL) {
+    if (MaxPlayers != 0L) {
       output.WriteRawTag(40);
-      output.WriteUInt64(MaxPlayers);
+      output.WriteInt64(MaxPlayers);
     }
-    if (OnlinePlayers != 0UL) {
+    if (OnlinePlayers != 0L) {
       output.WriteRawTag(48);
-      output.WriteUInt64(OnlinePlayers);
+      output.WriteInt64(OnlinePlayers);
     }
-    if (Tps != 0UL) {
+    if (Tps != 0L) {
       output.WriteRawTag(56);
-      output.WriteUInt64(Tps);
+      output.WriteInt64(Tps);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -279,25 +279,25 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
       output.WriteRawTag(18);
       output.WriteString(Name);
     }
-    if (MemoryTotal != 0UL) {
+    if (MemoryTotal != 0L) {
       output.WriteRawTag(24);
-      output.WriteUInt64(MemoryTotal);
+      output.WriteInt64(MemoryTotal);
     }
-    if (MemoryUsed != 0UL) {
+    if (MemoryUsed != 0L) {
       output.WriteRawTag(32);
-      output.WriteUInt64(MemoryUsed);
+      output.WriteInt64(MemoryUsed);
     }
-    if (MaxPlayers != 0UL) {
+    if (MaxPlayers != 0L) {
       output.WriteRawTag(40);
-      output.WriteUInt64(MaxPlayers);
+      output.WriteInt64(MaxPlayers);
     }
-    if (OnlinePlayers != 0UL) {
+    if (OnlinePlayers != 0L) {
       output.WriteRawTag(48);
-      output.WriteUInt64(OnlinePlayers);
+      output.WriteInt64(OnlinePlayers);
     }
-    if (Tps != 0UL) {
+    if (Tps != 0L) {
       output.WriteRawTag(56);
-      output.WriteUInt64(Tps);
+      output.WriteInt64(Tps);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
@@ -315,20 +315,20 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
     if (Name.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
     }
-    if (MemoryTotal != 0UL) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt64Size(MemoryTotal);
+    if (MemoryTotal != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(MemoryTotal);
     }
-    if (MemoryUsed != 0UL) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt64Size(MemoryUsed);
+    if (MemoryUsed != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(MemoryUsed);
     }
-    if (MaxPlayers != 0UL) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt64Size(MaxPlayers);
+    if (MaxPlayers != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(MaxPlayers);
     }
-    if (OnlinePlayers != 0UL) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt64Size(OnlinePlayers);
+    if (OnlinePlayers != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(OnlinePlayers);
     }
-    if (Tps != 0UL) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt64Size(Tps);
+    if (Tps != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(Tps);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -348,19 +348,19 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
     if (other.Name.Length != 0) {
       Name = other.Name;
     }
-    if (other.MemoryTotal != 0UL) {
+    if (other.MemoryTotal != 0L) {
       MemoryTotal = other.MemoryTotal;
     }
-    if (other.MemoryUsed != 0UL) {
+    if (other.MemoryUsed != 0L) {
       MemoryUsed = other.MemoryUsed;
     }
-    if (other.MaxPlayers != 0UL) {
+    if (other.MaxPlayers != 0L) {
       MaxPlayers = other.MaxPlayers;
     }
-    if (other.OnlinePlayers != 0UL) {
+    if (other.OnlinePlayers != 0L) {
       OnlinePlayers = other.OnlinePlayers;
     }
-    if (other.Tps != 0UL) {
+    if (other.Tps != 0L) {
       Tps = other.Tps;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -387,23 +387,23 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
           break;
         }
         case 24: {
-          MemoryTotal = input.ReadUInt64();
+          MemoryTotal = input.ReadInt64();
           break;
         }
         case 32: {
-          MemoryUsed = input.ReadUInt64();
+          MemoryUsed = input.ReadInt64();
           break;
         }
         case 40: {
-          MaxPlayers = input.ReadUInt64();
+          MaxPlayers = input.ReadInt64();
           break;
         }
         case 48: {
-          OnlinePlayers = input.ReadUInt64();
+          OnlinePlayers = input.ReadInt64();
           break;
         }
         case 56: {
-          Tps = input.ReadUInt64();
+          Tps = input.ReadInt64();
           break;
         }
       }
@@ -430,23 +430,23 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
           break;
         }
         case 24: {
-          MemoryTotal = input.ReadUInt64();
+          MemoryTotal = input.ReadInt64();
           break;
         }
         case 32: {
-          MemoryUsed = input.ReadUInt64();
+          MemoryUsed = input.ReadInt64();
           break;
         }
         case 40: {
-          MaxPlayers = input.ReadUInt64();
+          MaxPlayers = input.ReadInt64();
           break;
         }
         case 48: {
-          OnlinePlayers = input.ReadUInt64();
+          OnlinePlayers = input.ReadInt64();
           break;
         }
         case 56: {
-          Tps = input.ReadUInt64();
+          Tps = input.ReadInt64();
           break;
         }
       }
@@ -502,10 +502,10 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
 
   /// <summary>Field number for the "block_id" field.</summary>
   public const int BlockIdFieldNumber = 1;
-  private ulong blockId_;
+  private long blockId_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public ulong BlockId {
+  public long BlockId {
     get { return blockId_; }
     set {
       blockId_ = value;
@@ -535,7 +535,7 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override int GetHashCode() {
     int hash = 1;
-    if (BlockId != 0UL) hash ^= BlockId.GetHashCode();
+    if (BlockId != 0L) hash ^= BlockId.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -554,9 +554,9 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     output.WriteRawMessage(this);
   #else
-    if (BlockId != 0UL) {
+    if (BlockId != 0L) {
       output.WriteRawTag(8);
-      output.WriteUInt64(BlockId);
+      output.WriteInt64(BlockId);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -568,9 +568,9 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-    if (BlockId != 0UL) {
+    if (BlockId != 0L) {
       output.WriteRawTag(8);
-      output.WriteUInt64(BlockId);
+      output.WriteInt64(BlockId);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
@@ -582,8 +582,8 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public int CalculateSize() {
     int size = 0;
-    if (BlockId != 0UL) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt64Size(BlockId);
+    if (BlockId != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(BlockId);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -597,7 +597,7 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
     if (other == null) {
       return;
     }
-    if (other.BlockId != 0UL) {
+    if (other.BlockId != 0L) {
       BlockId = other.BlockId;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -616,7 +616,7 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
         case 8: {
-          BlockId = input.ReadUInt64();
+          BlockId = input.ReadInt64();
           break;
         }
       }
@@ -635,7 +635,7 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
           break;
         case 8: {
-          BlockId = input.ReadUInt64();
+          BlockId = input.ReadInt64();
           break;
         }
       }
@@ -870,10 +870,10 @@ public sealed partial class BlockData : pb::IMessage<BlockData>
 
   /// <summary>Field number for the "block_id" field.</summary>
   public const int BlockIdFieldNumber = 1;
-  private ulong blockId_;
+  private long blockId_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public ulong BlockId {
+  public long BlockId {
     get { return blockId_; }
     set {
       blockId_ = value;
@@ -882,10 +882,10 @@ public sealed partial class BlockData : pb::IMessage<BlockData>
 
   /// <summary>Field number for the "sub_id" field.</summary>
   public const int SubIdFieldNumber = 2;
-  private ulong subId_;
+  private long subId_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public ulong SubId {
+  public long SubId {
     get { return subId_; }
     set {
       subId_ = value;
@@ -916,8 +916,8 @@ public sealed partial class BlockData : pb::IMessage<BlockData>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override int GetHashCode() {
     int hash = 1;
-    if (BlockId != 0UL) hash ^= BlockId.GetHashCode();
-    if (SubId != 0UL) hash ^= SubId.GetHashCode();
+    if (BlockId != 0L) hash ^= BlockId.GetHashCode();
+    if (SubId != 0L) hash ^= SubId.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -936,13 +936,13 @@ public sealed partial class BlockData : pb::IMessage<BlockData>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     output.WriteRawMessage(this);
   #else
-    if (BlockId != 0UL) {
+    if (BlockId != 0L) {
       output.WriteRawTag(8);
-      output.WriteUInt64(BlockId);
+      output.WriteInt64(BlockId);
     }
-    if (SubId != 0UL) {
+    if (SubId != 0L) {
       output.WriteRawTag(16);
-      output.WriteUInt64(SubId);
+      output.WriteInt64(SubId);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -954,13 +954,13 @@ public sealed partial class BlockData : pb::IMessage<BlockData>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-    if (BlockId != 0UL) {
+    if (BlockId != 0L) {
       output.WriteRawTag(8);
-      output.WriteUInt64(BlockId);
+      output.WriteInt64(BlockId);
     }
-    if (SubId != 0UL) {
+    if (SubId != 0L) {
       output.WriteRawTag(16);
-      output.WriteUInt64(SubId);
+      output.WriteInt64(SubId);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
@@ -972,11 +972,11 @@ public sealed partial class BlockData : pb::IMessage<BlockData>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public int CalculateSize() {
     int size = 0;
-    if (BlockId != 0UL) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt64Size(BlockId);
+    if (BlockId != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(BlockId);
     }
-    if (SubId != 0UL) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt64Size(SubId);
+    if (SubId != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(SubId);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -990,10 +990,10 @@ public sealed partial class BlockData : pb::IMessage<BlockData>
     if (other == null) {
       return;
     }
-    if (other.BlockId != 0UL) {
+    if (other.BlockId != 0L) {
       BlockId = other.BlockId;
     }
-    if (other.SubId != 0UL) {
+    if (other.SubId != 0L) {
       SubId = other.SubId;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -1012,11 +1012,11 @@ public sealed partial class BlockData : pb::IMessage<BlockData>
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
         case 8: {
-          BlockId = input.ReadUInt64();
+          BlockId = input.ReadInt64();
           break;
         }
         case 16: {
-          SubId = input.ReadUInt64();
+          SubId = input.ReadInt64();
           break;
         }
       }
@@ -1035,11 +1035,11 @@ public sealed partial class BlockData : pb::IMessage<BlockData>
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
           break;
         case 8: {
-          BlockId = input.ReadUInt64();
+          BlockId = input.ReadInt64();
           break;
         }
         case 16: {
-          SubId = input.ReadUInt64();
+          SubId = input.ReadInt64();
           break;
         }
       }

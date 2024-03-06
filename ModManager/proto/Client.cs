@@ -25,9 +25,9 @@ public static partial class ClientReflection {
           "ChVQcm90b1NyYy9jbGllbnQucHJvdG8iWwoKUGxheWVyTW92ZRIJCgF4GAEg",
           "ASgCEgkKAXkYAiABKAISCQoBehgDIAEoAhILCgN5YXcYBCABKAISDQoFcGl0",
           "Y2gYBSABKAISEAoIaGVhZF95YXcYBiABKAIiWAoSUGxheWVyQ29udHJvbEJs",
-          "b2NrEgwKBHR5cGUYASABKA0SEAoIdGFyZ2V0X3gYAiABKAISEAoIdGFyZ2V0",
+          "b2NrEgwKBHR5cGUYASABKAUSEAoIdGFyZ2V0X3gYAiABKAISEAoIdGFyZ2V0",
           "X3kYAyABKAISEAoIdGFyZ2V0X3oYBCABKAIiNgoTUGxheWVyQ29udHJvbEVu",
-          "dGl0eRIMCgR0eXBlGAEgASgNEhEKCXRhcmdldF9pZBgCIAEoBEID+AEBYgZw",
+          "dGl0eRIMCgR0eXBlGAEgASgFEhEKCXRhcmdldF9pZBgCIAEoA0ID+AEBYgZw",
           "cm90bzM="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
@@ -464,10 +464,10 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
 
   /// <summary>Field number for the "type" field.</summary>
   public const int TypeFieldNumber = 1;
-  private uint type_;
+  private int type_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public uint Type {
+  public int Type {
     get { return type_; }
     set {
       type_ = value;
@@ -560,7 +560,7 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
   #else
     if (Type != 0) {
       output.WriteRawTag(8);
-      output.WriteUInt32(Type);
+      output.WriteInt32(Type);
     }
     if (TargetX != 0F) {
       output.WriteRawTag(21);
@@ -586,7 +586,7 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
   void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
     if (Type != 0) {
       output.WriteRawTag(8);
-      output.WriteUInt32(Type);
+      output.WriteInt32(Type);
     }
     if (TargetX != 0F) {
       output.WriteRawTag(21);
@@ -611,7 +611,7 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
   public int CalculateSize() {
     int size = 0;
     if (Type != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Type);
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(Type);
     }
     if (TargetX != 0F) {
       size += 1 + 4;
@@ -662,7 +662,7 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
         case 8: {
-          Type = input.ReadUInt32();
+          Type = input.ReadInt32();
           break;
         }
         case 21: {
@@ -693,7 +693,7 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
           break;
         case 8: {
-          Type = input.ReadUInt32();
+          Type = input.ReadInt32();
           break;
         }
         case 21: {
@@ -762,10 +762,10 @@ public sealed partial class PlayerControlEntity : pb::IMessage<PlayerControlEnti
 
   /// <summary>Field number for the "type" field.</summary>
   public const int TypeFieldNumber = 1;
-  private uint type_;
+  private int type_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public uint Type {
+  public int Type {
     get { return type_; }
     set {
       type_ = value;
@@ -774,10 +774,10 @@ public sealed partial class PlayerControlEntity : pb::IMessage<PlayerControlEnti
 
   /// <summary>Field number for the "target_id" field.</summary>
   public const int TargetIdFieldNumber = 2;
-  private ulong targetId_;
+  private long targetId_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public ulong TargetId {
+  public long TargetId {
     get { return targetId_; }
     set {
       targetId_ = value;
@@ -809,7 +809,7 @@ public sealed partial class PlayerControlEntity : pb::IMessage<PlayerControlEnti
   public override int GetHashCode() {
     int hash = 1;
     if (Type != 0) hash ^= Type.GetHashCode();
-    if (TargetId != 0UL) hash ^= TargetId.GetHashCode();
+    if (TargetId != 0L) hash ^= TargetId.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -830,11 +830,11 @@ public sealed partial class PlayerControlEntity : pb::IMessage<PlayerControlEnti
   #else
     if (Type != 0) {
       output.WriteRawTag(8);
-      output.WriteUInt32(Type);
+      output.WriteInt32(Type);
     }
-    if (TargetId != 0UL) {
+    if (TargetId != 0L) {
       output.WriteRawTag(16);
-      output.WriteUInt64(TargetId);
+      output.WriteInt64(TargetId);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -848,11 +848,11 @@ public sealed partial class PlayerControlEntity : pb::IMessage<PlayerControlEnti
   void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
     if (Type != 0) {
       output.WriteRawTag(8);
-      output.WriteUInt32(Type);
+      output.WriteInt32(Type);
     }
-    if (TargetId != 0UL) {
+    if (TargetId != 0L) {
       output.WriteRawTag(16);
-      output.WriteUInt64(TargetId);
+      output.WriteInt64(TargetId);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
@@ -865,10 +865,10 @@ public sealed partial class PlayerControlEntity : pb::IMessage<PlayerControlEnti
   public int CalculateSize() {
     int size = 0;
     if (Type != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Type);
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(Type);
     }
-    if (TargetId != 0UL) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt64Size(TargetId);
+    if (TargetId != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(TargetId);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -885,7 +885,7 @@ public sealed partial class PlayerControlEntity : pb::IMessage<PlayerControlEnti
     if (other.Type != 0) {
       Type = other.Type;
     }
-    if (other.TargetId != 0UL) {
+    if (other.TargetId != 0L) {
       TargetId = other.TargetId;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -904,11 +904,11 @@ public sealed partial class PlayerControlEntity : pb::IMessage<PlayerControlEnti
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
         case 8: {
-          Type = input.ReadUInt32();
+          Type = input.ReadInt32();
           break;
         }
         case 16: {
-          TargetId = input.ReadUInt64();
+          TargetId = input.ReadInt64();
           break;
         }
       }
@@ -927,11 +927,11 @@ public sealed partial class PlayerControlEntity : pb::IMessage<PlayerControlEnti
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
           break;
         case 8: {
-          Type = input.ReadUInt32();
+          Type = input.ReadInt32();
           break;
         }
         case 16: {
-          TargetId = input.ReadUInt64();
+          TargetId = input.ReadInt64();
           break;
         }
       }

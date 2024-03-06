@@ -13,7 +13,7 @@ public class ChunkGeneratorManager
 {
     private static ILogger Logger { get; } = SysLogger.GetLogger(typeof(ChunkGeneratorManager));
     private static ChunkGeneratorManager Instance { get; } = new();
-    private readonly Dictionary<ulong, IChunkGenerator> _generators = new();
+    private readonly Dictionary<long, IChunkGenerator> _generators = new();
 
     private ChunkGeneratorManager()
     {
@@ -26,7 +26,7 @@ public class ChunkGeneratorManager
     /// </summary>
     /// <param name="worldId">世界编码</param>
     /// <param name="generator">生成器实例</param>
-    public static void AddChunkGenerator(ulong worldId, IChunkGenerator generator)
+    public static void AddChunkGenerator(long worldId, IChunkGenerator generator)
     {
         if (Instance._generators.TryAdd(worldId, generator)) return;
         Logger.LogWarning("{}", Localize(ModId, "Chunk generator for world {0} already exists, override it", worldId));
@@ -37,7 +37,7 @@ public class ChunkGeneratorManager
     /// 删除区块生成器
     /// </summary>
     /// <param name="worldId">世界编码</param>
-    public static void RemoveChunkGenerator(ulong worldId)
+    public static void RemoveChunkGenerator(long worldId)
     {
         if (Instance._generators.Remove(worldId)) return;
         Logger.LogWarning("{}", Localize(ModId, "Chunk generator for world {0} not found", worldId));
@@ -49,7 +49,7 @@ public class ChunkGeneratorManager
     /// <param name="worldId">世界编码</param>
     /// <param name="chunkPosition">区块坐标，以1为单位</param>
     /// <returns>区块数据</returns>
-    public static BlockData[] GenerateChunkBlockData(ulong worldId, Vector3 chunkPosition)
+    public static BlockData[] GenerateChunkBlockData(long worldId, Vector3 chunkPosition)
     {
         if (Instance._generators.TryGetValue(worldId, out var generator))
             return generator.GenerateChunkBlockData( 64, chunkPosition);

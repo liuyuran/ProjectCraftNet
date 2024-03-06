@@ -1,6 +1,7 @@
 ﻿using CommandLine;
 using Microsoft.Extensions.Logging;
 using ModManager.config;
+using ModManager.events;
 using ModManager.logger;
 using ProjectCraftNet.game;
 using ProjectCraftNet.server;
@@ -48,10 +49,24 @@ public static class Program
         Task.Run(() => server.StartServer(config.NetworkTcp.Host, config.NetworkTcp.Port));
         Console.CancelKeyPress += (_, _) =>
         {
+            CleanUp();
+            ClosingEvent.Set();
+        };
+        
+        AppDomain.CurrentDomain.ProcessExit += (_, _) =>
+        {
+            CleanUp();
             ClosingEvent.Set();
         };
 
         ClosingEvent.WaitOne();
         return 0;
+    }
+
+    private static void CleanUp()
+    {
+        Logger.LogInformation("{}", Localize(ModId, "saving..."));
+        GameEvents.FireArchiveEvent();
+        Logger.LogInformation("{}", Localize(ModId, "saved."));
     }
 }

@@ -2,10 +2,11 @@
 
 public struct BlockData
 {
-    public ulong BlockId;
+    public long BlockId;
 }
 
 public struct ChunkBlockData
 {
+    public long WorldId;
     public BlockData[] Data;
 }

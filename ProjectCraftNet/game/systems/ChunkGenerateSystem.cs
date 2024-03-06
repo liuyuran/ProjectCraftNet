@@ -3,6 +3,7 @@ using Arch.Core;
 using Arch.System;
 using ModManager.config;
 using ModManager.generator;
+using ProjectCraftNet.game.archive;
 using ProjectCraftNet.game.components;
 
 namespace ProjectCraftNet.game.systems;
@@ -38,6 +39,19 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
                         if (existChunkPosition.Contains(chunkPosition)) return;
                         var entity = _world.Create(Archetypes.Chunk);
                         _world.Set(entity, chunkPosition);
+                        // 尝试获取存档
+                        var existChunk = ArchiveManager.TryGetChunkData(0, chunkPosition.Val);
+                        if (existChunk != null)
+                        {
+                            _world.Set(entity, new ChunkBlockData
+                            {
+                                WorldId = 0,
+                                Data = existChunk
+                            });
+                            existChunkPosition.Add(chunkPosition);
+                            continue;
+                        }
+                        // 获取不成功则继续生成
                         var data = ChunkGeneratorManager.GenerateChunkBlockData(0, chunkPosition.Val);
                         var chunkData = new components.BlockData[data.Length];
                         for (var i = 0; i < data.Length; i++)
@@ -49,6 +63,7 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
                         }
                         _world.Set(entity, new ChunkBlockData
                         {
+                            WorldId = 0,
                             Data = chunkData
                         });
                         existChunkPosition.Add(chunkPosition);                

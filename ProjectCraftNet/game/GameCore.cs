@@ -1,14 +1,18 @@
 ﻿#define PURE_ECS
+using System.Numerics;
 using Arch.Core;
 using Arch.System;
+using Google.Protobuf;
 using Microsoft.Extensions.Logging;
-using ModManager;
 using ModManager.client;
+using ModManager.command;
 using ModManager.config;
 using ModManager.events;
 using ModManager.logger;
 using ModManager.network;
 using ModManager.user;
+using ProjectCraftNet.game.archive;
+using ProjectCraftNet.game.components;
 using ProjectCraftNet.game.systems;
 using static ModManager.localization.LocalizationManager;
 using static ProjectCraftNet.Program;
@@ -28,10 +32,13 @@ public class GameCore(Config config)
 
         // 开始监听网络事件
         NetworkEvents.ReceiveEvent += OnNetworkEventsOnReceiveEvent;
+        GameEvents.ChatEvent += OnGameEventsOnChatEvent;
+        GameEvents.ArchiveEvent += OnGameEventsOnArchiveEvent;
         var systems = new Group<float>(
             "core-system",
             new ChunkGenerateSystem(_world),
-            new NetworkSyncSystem(_world)
+            new NetworkSyncSystem(_world),
+            new ArchiveSystem(_world)
         );
         systems.Initialize();
         Logger.LogInformation("{}", Localize(ModId, "Server started"));
@@ -49,10 +56,48 @@ public class GameCore(Config config)
                 Thread.Sleep((int) (millPerTick - elapsed));
             }
         }
-        // TODO 保存游戏
         systems.Dispose();
         Logger.LogInformation("{}", Localize(ModId, "Server shutdown"));
         Environment.Exit(0);
+    }
+
+    private void OnGameEventsOnArchiveEvent()
+    {
+        ArchiveManager.SaveUserInfo(_world);
+        var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
+        var existChunkPosition = new Dictionary<long, List<Vector3>>();
+        _world.Query(in chunkQuery, (ref ChunkBlockData data, ref Position position) => {
+            var worldId = data.WorldId;
+            if (!existChunkPosition.TryGetValue(worldId, out var value))
+            {
+                value = [];
+                existChunkPosition[worldId] = value;
+            }
+
+            value.Add(position.Val);
+        });
+        foreach (var (worldId, chunkPos) in existChunkPosition)
+        {
+            ArchiveManager.SaveChunkInfo(_world, worldId, chunkPos.ToArray());
+        }
+    }
+
+    private static void OnGameEventsOnChatEvent(long socketId, string message)
+    {
+        if (string.IsNullOrWhiteSpace(message)) return;
+        var userInfo = UserManager.GetUserInfo(socketId);
+        if (userInfo == null) return;
+        var isCommand = CommandManager.TryParseAsCommand((UserInfo)userInfo, message);
+        if (isCommand) return;
+        var data = new ChatAndBroadcast { Msg = message };
+        var buffer = data.ToByteArray();
+        if (buffer == null)
+        {
+            Logger.LogError("{}", Localize(ModId, "Error when serializing message"));
+            return;
+        }
+
+        NetworkEvents.FireSendEvent(socketId, PackType.Chat, buffer);
     }
 
     private void OnNetworkEventsOnReceiveEvent(ClientInfo info, PackType packType, byte[] data)
