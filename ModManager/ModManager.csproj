@@ -16,8 +16,8 @@
       <PackageReference Include="Arch.System" Version="1.0.5" />
       <PackageReference Include="Arch.System.SourceGenerator" Version="1.1.4" />
       <PackageReference Include="EasilyNET.Security" Version="2.1.9" />
-      <PackageReference Include="Google.Protobuf" Version="3.26.0-rc2" />
-      <PackageReference Include="Google.Protobuf.Tools" Version="3.26.0-rc2" />
+      <PackageReference Include="Google.Protobuf" Version="3.26.0-rc3" />
+      <PackageReference Include="Google.Protobuf.Tools" Version="3.26.0-rc3" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0-preview.1.24081.2">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -49,6 +49,7 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
                         }
                         _world.Set(entity, new ChunkBlockData
                         {
+                            WorldId = 0,
                             Data = chunkData
                         });
                         existChunkPosition.Add(chunkPosition);                

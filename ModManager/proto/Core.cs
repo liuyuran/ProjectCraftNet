@@ -23,7 +23,7 @@ public static partial class CoreReflection {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
           "ChNQcm90b1NyYy9jb3JlLnByb3RvIkIKB0Nvbm5lY3QSEwoLY2xpZW50X3R5",
-          "cGUYASABKA0SEAoIdXNlcm5hbWUYAiABKAkSEAoIcGFzc3dvcmQYAyABKAki",
+          "cGUYASABKAUSEAoIdXNlcm5hbWUYAiABKAkSEAoIcGFzc3dvcmQYAyABKAki",
           "HwoQQ2hhdEFuZEJyb2FkY2FzdBILCgNtc2cYASABKAlCA/gBAWIGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
@@ -84,13 +84,13 @@ public sealed partial class Connect : pb::IMessage<Connect>
 
   /// <summary>Field number for the "client_type" field.</summary>
   public const int ClientTypeFieldNumber = 1;
-  private uint clientType_;
+  private int clientType_;
   /// <summary>
   /// 1: 正常客户端, 2: 命令行客户端
   /// </summary>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public uint ClientType {
+  public int ClientType {
     get { return clientType_; }
     set {
       clientType_ = value;
@@ -169,7 +169,7 @@ public sealed partial class Connect : pb::IMessage<Connect>
   #else
     if (ClientType != 0) {
       output.WriteRawTag(8);
-      output.WriteUInt32(ClientType);
+      output.WriteInt32(ClientType);
     }
     if (Username.Length != 0) {
       output.WriteRawTag(18);
@@ -191,7 +191,7 @@ public sealed partial class Connect : pb::IMessage<Connect>
   void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
     if (ClientType != 0) {
       output.WriteRawTag(8);
-      output.WriteUInt32(ClientType);
+      output.WriteInt32(ClientType);
     }
     if (Username.Length != 0) {
       output.WriteRawTag(18);
@@ -212,7 +212,7 @@ public sealed partial class Connect : pb::IMessage<Connect>
   public int CalculateSize() {
     int size = 0;
     if (ClientType != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ClientType);
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(ClientType);
     }
     if (Username.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(Username);
@@ -257,7 +257,7 @@ public sealed partial class Connect : pb::IMessage<Connect>
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
         case 8: {
-          ClientType = input.ReadUInt32();
+          ClientType = input.ReadInt32();
           break;
         }
         case 18: {
@@ -284,7 +284,7 @@ public sealed partial class Connect : pb::IMessage<Connect>
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
           break;
         case 8: {
-          ClientType = input.ReadUInt32();
+          ClientType = input.ReadInt32();
           break;
         }
         case 18: {

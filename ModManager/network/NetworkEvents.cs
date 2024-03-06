@@ -13,14 +13,14 @@ namespace ModManager.network;
 public static class NetworkEvents
 {
     private static ILogger Logger { get; } = SysLogger.GetLogger(typeof(NetworkEvents));
-    public delegate void SendEventHandler(ulong socketId, PackType packType, byte[] data);
+    public delegate void SendEventHandler(long socketId, PackType packType, byte[] data);
     public delegate void ReceiveEventHandler(ClientInfo info, PackType packType, byte[] data);
     // 发送数据请调用此事件
     public static event SendEventHandler? SendEvent;
     // 接收数据请监听此事件
     public static event ReceiveEventHandler? ReceiveEvent;
     
-    public static void FireSendEvent(ulong socketId, PackType packType, byte[] data)
+    public static void FireSendEvent(long socketId, PackType packType, byte[] data)
     {
         try {
             SendEvent?.Invoke(socketId, packType, data);
@@ -29,7 +29,7 @@ public static class NetworkEvents
         }
     }
     
-    public static void FireSendTextEvent(ulong socketId, string text)
+    public static void FireSendTextEvent(long socketId, string text)
     {
         try
         {
@@ -44,7 +44,7 @@ public static class NetworkEvents
         }
     }
     
-    public static void FireReceiveEvent(ulong socketId, int packType, byte[] data, Socket socket)
+    public static void FireReceiveEvent(long socketId, int packType, byte[] data, Socket socket)
     {
         if (!Enum.IsDefined(typeof(PackType), packType))
         {

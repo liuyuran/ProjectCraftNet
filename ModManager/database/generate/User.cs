@@ -31,7 +31,7 @@ public partial class User
     /// <summary>
     /// 所在世界id
     /// </summary>
-    public int WorldId { get; set; }
+    public long WorldId { get; set; }
 
     /// <summary>
     /// x坐标

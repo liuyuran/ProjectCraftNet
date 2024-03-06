@@ -4,15 +4,15 @@ option cc_enable_arenas = true;
 message ServerStatus {
   string version = 1;
   string name = 2;
-  uint64 memoryTotal = 3;
-  uint64 memoryUsed = 4;
-  uint64 maxPlayers = 5;
-  uint64 onlinePlayers = 6;
-  uint64 tps = 7;
+  int64 memoryTotal = 3;
+  int64 memoryUsed = 4;
+  int64 maxPlayers = 5;
+  int64 onlinePlayers = 6;
+  int64 tps = 7;
 }
 
 message BlockDefineItem {
-  uint64 block_id = 1;
+  int64 block_id = 1;
 }
 
 message BlockDefine {
@@ -20,8 +20,8 @@ message BlockDefine {
 }
 
 message BlockData {
-  uint64 block_id = 1;
-  uint64 sub_id = 2;
+  int64 block_id = 1;
+  int64 sub_id = 2;
 }
 
 message ChunkData {

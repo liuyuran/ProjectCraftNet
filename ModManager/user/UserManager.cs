@@ -11,10 +11,10 @@ namespace ModManager.user;
 public class UserManager
 {
     private static ILogger Logger { get; } = SysLogger.GetLogger(typeof(UserManager));
-    private readonly Dictionary<ulong, UserInfo> _users = new();
+    private readonly Dictionary<long, UserInfo> _users = new();
     private static readonly UserManager Instance = new();
     
-    public static ulong UserLogin(Connect connect, ClientInfo info) {
+    public static long UserLogin(Connect connect, ClientInfo info) {
         using var dbContext = new CoreDbContext();
         var user = dbContext.Users.FirstOrDefault(b => b.Username == connect.Username);
         if (user == null)
@@ -36,15 +36,16 @@ public class UserManager
         };
         Instance._users.Add(info.SocketId, userInfo);
         Logger.LogInformation("{}", Localize(ModId, "User {0} login", connect.Username));
-        return (ulong)id;
+        // TODO 往ECS里加入用户对象
+        return id;
     }
     
-    public static void UserLogout(ulong socketId)
+    public static void UserLogout(long socketId)
     {
         Instance._users.Remove(socketId);
     }
     
-    public static UserInfo? GetUserInfo(ulong socketId)
+    public static UserInfo? GetUserInfo(long socketId)
     {
         return Instance._users[socketId];
     }

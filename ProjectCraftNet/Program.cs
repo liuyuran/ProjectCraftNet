@@ -1,6 +1,7 @@
 ﻿using CommandLine;
 using Microsoft.Extensions.Logging;
 using ModManager.config;
+using ModManager.events;
 using ModManager.logger;
 using ProjectCraftNet.game;
 using ProjectCraftNet.server;
@@ -64,8 +65,8 @@ public static class Program
 
     private static void CleanUp()
     {
-        Console.WriteLine("wait, cleaning");
-        Thread.Sleep(1000);
-        Console.WriteLine("cleaned up");
+        Logger.LogInformation("{}", Localize(ModId, "saving..."));
+        GameEvents.FireArchiveEvent();
+        Logger.LogInformation("{}", Localize(ModId, "saved."));
     }
 }

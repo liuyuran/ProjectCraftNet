@@ -3,7 +3,6 @@ using Arch.Core;
 using Arch.System;
 using Google.Protobuf;
 using Microsoft.Extensions.Logging;
-using ModManager;
 using ModManager.client;
 using ModManager.command;
 using ModManager.config;
@@ -11,6 +10,7 @@ using ModManager.events;
 using ModManager.logger;
 using ModManager.network;
 using ModManager.user;
+using ProjectCraftNet.game.archive;
 using ProjectCraftNet.game.systems;
 using static ModManager.localization.LocalizationManager;
 using static ProjectCraftNet.Program;
@@ -61,10 +61,10 @@ public class GameCore(Config config)
 
     private void OnGameEventsOnArchiveEvent()
     {
-        // TODO 归档
+        ArchiveManager.SaveUserInfo(_world);
     }
 
-    private static void OnGameEventsOnChatEvent(ulong socketId, string message)
+    private static void OnGameEventsOnChatEvent(long socketId, string message)
     {
         if (string.IsNullOrWhiteSpace(message)) return;
         var userInfo = UserManager.GetUserInfo(socketId);

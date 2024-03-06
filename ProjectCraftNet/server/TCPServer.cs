@@ -19,10 +19,10 @@ public class TcpServer
     private const int SocketTimeout = 5;
 
     // 连接标识符与Socket实例的映射
-    private Dictionary<ulong, Socket> Sockets { get; } = new();
+    private Dictionary<long, Socket> Sockets { get; } = new();
 
     // 连接标识符生成器
-    private ulong _socketId;
+    private long _socketId;
 
     public TcpServer()
     {
@@ -146,7 +146,7 @@ public class TcpServer
     /// <param name="socketId">连接标识符，当其为0时会触发广播</param>
     /// <param name="packType">包类型</param>
     /// <param name="data">包内容</param>
-    private void SendMessage(ulong socketId, PackType packType, byte[] data)
+    private void SendMessage(long socketId, PackType packType, byte[] data)
     {
         if (socketId == 0)
         {

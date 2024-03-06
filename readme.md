@@ -11,3 +11,4 @@ protoc --csharp_out=$pwd/proto ./ProtoSrc/*
 数据库代码生成
 --
 dotnet ef dbcontext scaffold "Host=192.168.18.4;Database=game;Username=postgres;Password=liuyuran" Npgsql.EntityFrameworkCore.PostgreSQL -f -o database/generate
+dotnet ef dbcontext scaffold "Host=127.0.0.1;Database=game;Username=postgres;Password=example" Npgsql.EntityFrameworkCore.PostgreSQL -f -o database/generate

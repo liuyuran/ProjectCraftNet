@@ -2,5 +2,5 @@
 
 public struct BlockData
 {
-    public ulong BlockId;
+    public long BlockId;
 }

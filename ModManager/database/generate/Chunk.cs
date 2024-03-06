@@ -8,7 +8,7 @@ namespace ModManager.database.generate;
 /// </summary>
 public partial class Chunk
 {
-    public int WorldId { get; set; }
+    public long WorldId { get; set; }
 
     /// <summary>
     /// X轴坐标

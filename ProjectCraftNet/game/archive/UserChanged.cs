@@ -1,4 +1,4 @@
-namespace ModManager.archive;
+namespace ProjectCraftNet.game.archive;
 
 public struct UserChanged
 {
@@ -6,5 +6,6 @@ public struct UserChanged
     public long X;
     public long Y;
     public long Z;
-    public int WorldId;
+    public long WorldId;
+    public int GameMode;
 }
