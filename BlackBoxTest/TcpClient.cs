@@ -1,0 +1,127 @@
+using System.Net;
+using System.Net.Sockets;
+
+namespace BlackBoxTest;
+
+public delegate void ReceiveEventHandler(object sender, int type, byte[] e);
+
+public class TcpClient(string hostName, int port) {
+    public ReceiveEventHandler? ReceiveEvent;
+    private Socket? _client;
+    private Thread? _thread;
+    private Thread? _keepAliveThread;
+    private string HostName { get; } = hostName;
+    private int Port { get; } = port;
+
+    public async Task Connect() {
+        var ipAddress = IPAddress.Parse(HostName);
+        var ipEndPoint = new IPEndPoint(ipAddress, Port);
+        _client = new Socket(
+            ipEndPoint.AddressFamily,
+            SocketType.Stream,
+            ProtocolType.Tcp);
+        await _client.ConnectAsync(ipEndPoint);
+        _thread = new Thread(Receive);
+        _thread.Start();
+        _keepAliveThread = new Thread(KeepAlive);
+        _keepAliveThread.Start();
+    }
+
+    [Obsolete("Obsolete")]
+    public async Task Disconnect() {
+        if (_client is null)
+            return;
+        await _client.DisconnectAsync(true);
+        _thread?.Abort();
+        _keepAliveThread?.Abort();
+    }
+
+    public async Task Send(int type, byte[] message) {
+        if (_client is null)
+            return;
+        var packLen = message.Length;
+        var packType = BitConverter.GetBytes(type);
+        var packLenBytes = BitConverter.GetBytes(packLen);
+        packLenBytes = packLenBytes.Reverse().ToArray();
+        packType = packType.Reverse().ToArray();
+        var pack = new byte[packLen + 8];
+        for (var i = 0; i < pack.Length; i++) {
+            pack[i] = 0;
+        }
+        packLenBytes.CopyTo(pack, 0);
+        packType.CopyTo(pack, 4);
+        message.CopyTo(pack, 8);
+        await _client.SendAsync(pack, SocketFlags.None);
+    }
+
+    private async void KeepAlive()
+    {
+        if (_client is null)
+            return;
+        while (true)
+        {
+            Thread.Sleep(1000);
+            await Send(3, Array.Empty<byte>());
+        }
+    }
+
+    private async void Receive() {
+        if (_client is null)
+            return;
+        var tmp = new byte[4];
+        var bytes = new byte[1024];
+        var newPack = true;
+        var packLen = 0;
+        var packType = 0;
+        var msgBuffer = new List<byte>();
+        while (true) {
+            // 置零
+            for (var i = 0; i < bytes.Length; i++) {
+                bytes[i] = 0;
+            }
+
+            var bytesRec = await _client.ReceiveAsync(bytes, SocketFlags.None).ConfigureAwait(false);
+            if (bytesRec == 0) {
+                Thread.Sleep(1000);
+                continue;
+            }
+
+            if (newPack) {
+                // 读取包长度
+                tmp[0] = bytes[0];
+                tmp[1] = bytes[1];
+                tmp[2] = bytes[2];
+                tmp[3] = bytes[3];
+                packLen = BitConverter.ToInt32(tmp, 0);
+                // 读取包类型
+                tmp[0] = bytes[4];
+                tmp[1] = bytes[5];
+                tmp[2] = bytes[6];
+                tmp[3] = bytes[7];
+                packType = BitConverter.ToInt32(tmp, 0);
+                newPack = false;
+            }
+
+            // 读取字节直到抵达第一个字节所标注的长度，下一次读取需要剔除所有的0
+            for (var i = 0; i < bytesRec; i++) {
+                msgBuffer.Add(bytes[i]);
+                if (msgBuffer.Count < packLen + 8) continue;
+                newPack = true;
+                
+                // 剔除前八个字节
+                for (var j = 0; j < 8; j++) {
+                    msgBuffer.RemoveAt(0);
+                }
+
+                ReceiveEvent?.Invoke(this, packType, msgBuffer.ToArray());
+                msgBuffer.Clear();
+                // 把剩下的数据塞进去
+                for (var j = i + 1; j < bytesRec; j++) {
+                    msgBuffer.Add(bytes[j]);
+                }
+
+                break;
+            }
+        }
+    }
+}
