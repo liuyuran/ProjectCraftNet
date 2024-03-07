@@ -5,8 +5,8 @@ namespace BlackBoxTest;
 
 public delegate void ReceiveEventHandler(object sender, int type, byte[] e);
 
-public class TcpClient(string hostName, int port) {
-    public ReceiveEventHandler? ReceiveEvent;
+public partial class TcpClient(string hostName, int port) {
+    public event ReceiveEventHandler? ReceiveEvent;
     private Socket? _client;
     private Thread? _thread;
     private Thread? _keepAliveThread;
@@ -35,7 +35,7 @@ public class TcpClient(string hostName, int port) {
         _keepAliveThread?.Interrupt();
     }
 
-    public async Task Send(int type, byte[] message) {
+    private async Task Send(int type, byte[] message) {
         if (_client is null)
             return;
         var packLen = message.Length;
