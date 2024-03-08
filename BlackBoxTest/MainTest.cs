@@ -1,3 +1,4 @@
+using ModManager.user;
 using ProjectCraftNet;
 
 namespace BlackBoxTest;
@@ -35,7 +36,19 @@ public class Tests
     public async Task LoginAndLogout()
     {
         var tcpClient = GetClient();
+        // 成功的场合
         await tcpClient.Connect();
+        await tcpClient.Login("kamoeth", "123456");
+        Thread.Sleep(1000);
+        Assert.That(UserManager.GetOnlineUserCount(), Is.EqualTo(1));
+        await tcpClient.Logout();
+        Thread.Sleep(1000);
+        Assert.That(UserManager.GetOnlineUserCount(), Is.EqualTo(0));
+        // 失败的场合
+        await tcpClient.Connect();
+        await tcpClient.Login("kamoeth", "12341111156");
+        Thread.Sleep(1000);
+        Assert.That(UserManager.GetOnlineUserCount(), Is.EqualTo(0));
         await tcpClient.Disconnect();
     }
 }

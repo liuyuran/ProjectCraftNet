@@ -23,5 +23,7 @@ public enum PackType
     // 服务器状态
     ServerStatus = 8,
     // 在线用户列表
-    OnlineList = 9
+    OnlineList = 9,
+    // 断开连接
+    Disconnect = 10
 }

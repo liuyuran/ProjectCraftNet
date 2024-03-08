@@ -55,4 +55,9 @@ public class UserManager
     {
         return Instance._users[socketId];
     }
+    
+    public static int GetOnlineUserCount()
+    {
+        return Instance._users.Count;
+    }
 }

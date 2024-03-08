@@ -137,6 +137,10 @@ public class GameCore(Config config)
                 var userInfo = UserManager.GetUserInfo(info.SocketId);
                 GameEvents.FireUserLoginEvent(info.SocketId, (UserInfo) userInfo!);
                 break;
+            case PackType.Disconnect:
+                GameEvents.FireUserLogoutEvent(info.SocketId, (UserInfo) UserManager.GetUserInfo(info.SocketId)!);
+                UserManager.UserLogout(info.SocketId);
+                break;
             case PackType.Chat:
                 var chat = ChatAndBroadcast.Parser.ParseFrom(data);
                 if (UserManager.GetUserInfo(info.SocketId) == null)

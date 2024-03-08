@@ -10,11 +10,13 @@ namespace ModManager.events;
 public class GameEvents
 {
     private ILogger Logger { get; } = SysLogger.GetLogger(typeof(GameEvents));
-    public delegate void UserLoginEventHandler(long socketId, UserInfo info);
+    public delegate void UserLoginAndLogoutEventHandler(long socketId, UserInfo info);
     public delegate void ChatEventHandler(long socketId, string message);
     public delegate void ArchiveEventHandler();
     // 用户登录事件
-    public static event UserLoginEventHandler? UserLoginEvent;
+    public static event UserLoginAndLogoutEventHandler? UserLoginEvent;
+    // 用户登出事件
+    public static event UserLoginAndLogoutEventHandler? UserLogoutEvent;
     // 接收聊天栏消息请监听此事件
     public static event ChatEventHandler? ChatEvent;
     // 用户数据归档事件
@@ -23,6 +25,11 @@ public class GameEvents
     public static void FireUserLoginEvent(long socketId, UserInfo info)
     {
         UserLoginEvent?.Invoke(socketId, info);
+    }
+    
+    public static void FireUserLogoutEvent(long socketId, UserInfo info)
+    {
+        UserLogoutEvent?.Invoke(socketId, info);
     }
     
     public static void FireChatEvent(long socketId, string message)
