@@ -11,15 +11,37 @@ namespace ProjectCraftNet.game.systems;
 public class NetworkSyncSystem(World world) : BaseSystem<World, float>(world)
 {
     private readonly World _world = world;
+    private readonly ChunkData _msgTemplate = new();
 
     public override void Update(in float deltaTime)
     {
         var sight = ConfigUtil.Instance.GetConfig().Core?.Sight ?? 5;
         var playerQuery = new QueryDescription().WithAll<Player, Position>();
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
-        var existChunkPosition = new Dictionary<Vector3, ChunkBlockData>();
-        _world.Query(in chunkQuery, (ref Position position, ref ChunkBlockData data) => {
-            existChunkPosition.Add(position.Val, data);
+        var existChunkPosition = new Dictionary<Vector3, byte[]>();
+        _world.Query(in chunkQuery, (ref Position position, ref ChunkBlockData data) =>
+        {
+            _msgTemplate.X = (long)position.Val.X;
+            _msgTemplate.Y = (long)position.Val.Y;
+            _msgTemplate.Z = (long)position.Val.Z;
+            for (var index = 0; index < data.Data.Length; index++)
+            {
+                var item = data.Data[index];
+                var itemData = new BlockData
+                {
+                    BlockId = item.BlockId
+                };
+                if (_msgTemplate.Blocks.Count <= index)
+                {
+                    _msgTemplate.Blocks.Add(itemData);
+                }
+                else
+                {
+                    _msgTemplate.Blocks[index] = itemData;
+                }
+            }
+
+            existChunkPosition.Add(position.Val, _msgTemplate.ToByteArray());
         });
         _world.Query(in playerQuery, (ref Player player, ref Position position) =>
         {
@@ -34,21 +56,7 @@ public class NetworkSyncSystem(World world) : BaseSystem<World, float>(world)
                             (float)Math.Round(chunkPos.Y) + y,
                             (float)Math.Round(chunkPos.Z) + z);
                         if (!existChunkPosition.TryGetValue(chunkPosition, out var value)) return;
-                        var chunkMsg = new ChunkData
-                        {
-                            X = (long)chunkPosition.X,
-                            Y = (long)chunkPosition.Y,
-                            Z = (long)chunkPosition.Z
-                        };
-                        foreach (var item in value.Data)
-                        {
-                            var itemData = new BlockData
-                            {
-                                BlockId = item.BlockId
-                            };
-                            chunkMsg.Blocks.Add(itemData);
-                        }
-                        NetworkEvents.FireSendEvent(player.SocketId, PackType.Chunk, chunkMsg.ToByteArray());
+                        NetworkEvents.FireSendEvent(player.SocketId, PackType.Chunk, value);
                     }
                 }
             }

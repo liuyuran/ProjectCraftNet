@@ -80,6 +80,8 @@ public class GameCore(Config config)
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
         var existChunkPosition = new Dictionary<long, List<Vector3>>();
         _world.Query(in chunkQuery, (ref ChunkBlockData data, ref Position position) => {
+            if (!data.Changed) return;
+            data.Changed = false;
             var worldId = data.WorldId;
             if (!existChunkPosition.TryGetValue(worldId, out var value))
             {

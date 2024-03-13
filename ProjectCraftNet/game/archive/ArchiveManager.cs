@@ -56,7 +56,6 @@ public class ArchiveManager
     public static void SaveChunkInfo(World world, long worldId, params Vector3[] chunkPos)
     {
         using var dbContext = new CoreDbContext();
-        using var ts = dbContext.Database.BeginTransaction();
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
         var changed = new List<ChunkChanged>();
         world.Query(in chunkQuery, (ref ChunkBlockData data, ref Position position) =>
@@ -91,15 +90,16 @@ public class ArchiveManager
             chunk.Data = jsonData;
             if (created)
             {
+                Logger.LogDebug("Create new chunk: [{}, {}, {}]", chunk.PosX, chunk.PosY, chunk.PosZ);
                 dbContext.Chunks.Add(chunk);
             }
             else
             {
+                Logger.LogDebug("Update chunk: [{}, {}, {}]", chunk.PosX, chunk.PosY, chunk.PosZ);
                 dbContext.Chunks.Update(chunk);
             }
         }
-
-        ts.Commit();
+        dbContext.SaveChanges();
     }
     
     public static components.BlockData[]? TryGetChunkData(long worldId, Vector3 chunkPos)
