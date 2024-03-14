@@ -1,8 +1,10 @@
 ﻿using System.Numerics;
 using EasilyNET.Security;
 using Microsoft.Extensions.Logging;
+using ModManager.client;
 using ModManager.core;
 using ModManager.database;
+using ModManager.events;
 using ModManager.logger;
 using ModManager.network;
 using static ModManager.localization.LocalizationManager;
@@ -16,7 +18,17 @@ public class UserManager
     private readonly Dictionary<long, UserInfo> _users = new();
     private static readonly UserManager Instance = new();
     public static readonly Queue<long> WaitToJoin = new();
-    
+
+    private UserManager()
+    {
+        GameEvents.UserLogoutEvent += UserLogout;
+    }
+
+    private static void UserLogout(long socketId, UserInfo info)
+    {
+        UserLogout(socketId);
+    }
+
     public static long UserLogin(Connect connect, ClientInfo info) {
         using var dbContext = new CoreDbContext();
         var user = dbContext.Users.FirstOrDefault(b => b.Username == connect.Username);
@@ -35,6 +47,7 @@ public class UserManager
         var id = user.Id;
         if (id <= 0) return 0;
         var userInfo = new UserInfo {
+            UserId = user.Id,
             ClientInfo = info,
             WorldId = user.WorldId,
             Position = new Vector3(user.PosX, user.PosY, user.PosZ),
@@ -42,7 +55,15 @@ public class UserManager
         };
         Instance._users.Add(info.SocketId, userInfo);
         Logger.LogInformation("{}", Localize(ModId, "User {0} login", connect.Username));
-        WaitToJoin.Enqueue(info.SocketId);
+        if (connect.ClientType == (int)ClientType.CommandLine)
+        {
+            userInfo.IsCommandLine = true;
+        }
+        else
+        {
+            userInfo.IsCommandLine = false;
+            WaitToJoin.Enqueue(info.SocketId);
+        }
         return id;
     }
     

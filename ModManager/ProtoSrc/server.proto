@@ -4,8 +4,8 @@ option cc_enable_arenas = true;
 message ServerStatus {
   string version = 1;
   string name = 2;
-  int64 memoryTotal = 3;
-  int64 memoryUsed = 4;
+  uint64 memoryTotal = 3;
+  uint64 memoryUsed = 4;
   int64 maxPlayers = 5;
   int64 onlinePlayers = 6;
   int64 tps = 7;

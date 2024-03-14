@@ -1,8 +1,10 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
+using ModManager.events;
 using ModManager.logger;
 using ModManager.network;
+using ModManager.user;
 using static ModManager.localization.LocalizationManager;
 using static ProjectCraftNet.Program;
 using TcpListener = System.Net.Sockets.TcpListener;
@@ -39,6 +41,7 @@ public class TcpServer
         var ipAddress = IPAddress.Parse(ip);
         var listener = new TcpListener(ipAddress, port);
         listener.Start();
+        listener.Server.ReceiveTimeout = 5000;
         Logger.LogInformation("{}", Localize(ModId, "Server started at {0}:{1}", ip, port));
         while (true)
         {
@@ -79,8 +82,7 @@ public class TcpServer
                     try {
                         bytesRec = client.Receive(bytes, SocketFlags.None);
                         if (bytesRec == 0) {
-                            Thread.Sleep(1000);
-                            continue;
+                            break;
                         }
                     } catch (Exception) {
                         break;
@@ -133,6 +135,12 @@ public class TcpServer
                         break;
                     }
                 }
+                var user = UserManager.GetUserInfo(socketId);
+                if (user != null)
+                {
+                    GameEvents.FireUserLogoutEvent(socketId, user.Value);
+                }
+                Sockets.Remove(socketId);
                 socket.Close();
             });
             thread.Start();
