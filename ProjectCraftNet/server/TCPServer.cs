@@ -138,7 +138,7 @@ public class TcpServer
                 var user = UserManager.GetUserInfo(socketId);
                 if (user != null)
                 {
-                    GameEvents.FireUserLogoutEvent(socketId, user.Value);
+                    GameEvents.FireUserLogoutEvent(socketId, user);
                 }
 
                 Logger.LogInformation("{}",

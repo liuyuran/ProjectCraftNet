@@ -60,10 +60,10 @@ public class GameCore(Config config)
                 var sockId = UserManager.WaitToJoin.Dequeue();
                 var userInfo = UserManager.GetUserInfo(sockId);
                 if (userInfo == null) continue;
-                var position = userInfo.Value.Position;
-                var gameMod = userInfo.Value.GameMode;
+                var position = userInfo.Position;
+                var gameMod = userInfo.GameMode;
                 _world.Set(entity, new Position { Val = position });
-                _world.Set(entity, new Player { UserId = userInfo?.UserId ?? 0, GameMode = gameMod });
+                _world.Set(entity, new Player { UserId = userInfo.UserId, GameMode = gameMod });
                 
             }
             // 调节逻辑帧率，等待下一个Tick
@@ -112,7 +112,7 @@ public class GameCore(Config config)
         if (string.IsNullOrWhiteSpace(message)) return;
         var userInfo = UserManager.GetUserInfo(socketId);
         if (userInfo == null) return;
-        var isCommand = CommandManager.TryParseAsCommand((UserInfo)userInfo, message);
+        var isCommand = CommandManager.TryParseAsCommand(userInfo, message);
         if (isCommand) return;
         var data = new ChatAndBroadcast { Msg = message };
         var buffer = data.ToByteArray();
@@ -131,10 +131,12 @@ public class GameCore(Config config)
         switch (packType)
         {
             case PackType.Shutdown:
+                // 关闭服务器
                 Logger.LogInformation("{}", Localize(ModId, "Server shutting down"));
                 _stopping = true;
                 break;
             case PackType.Connect:
+                // 用户连接
                 var connect = Connect.Parser.ParseFrom(data);
                 var clientType = (ClientType)connect.ClientType;
                 Logger.LogInformation("{}", Localize(ModId, "Client [{0}]{1} connected", clientType, info.Ip));
@@ -147,13 +149,15 @@ public class GameCore(Config config)
                 }
                 NetworkEvents.FireSendEvent(info.SocketId, PackType.Connect, Array.Empty<byte>());
                 var userInfo = UserManager.GetUserInfo(info.SocketId);
-                GameEvents.FireUserLoginEvent(info.SocketId, (UserInfo) userInfo!);
+                GameEvents.FireUserLoginEvent(info.SocketId, userInfo!);
                 break;
             case PackType.Disconnect:
-                GameEvents.FireUserLogoutEvent(info.SocketId, (UserInfo) UserManager.GetUserInfo(info.SocketId)!);
+                // 断开连接
+                GameEvents.FireUserLogoutEvent(info.SocketId, UserManager.GetUserInfo(info.SocketId)!);
                 UserManager.UserLogout(info.SocketId);
                 break;
             case PackType.Chat:
+                // 聊天消息
                 var chat = ChatAndBroadcast.Parser.ParseFrom(data);
                 if (UserManager.GetUserInfo(info.SocketId) == null)
                 {
@@ -164,6 +168,7 @@ public class GameCore(Config config)
                 GameEvents.FireChatEvent(info.SocketId, chat.Msg);
                 break;
             case PackType.ServerStatus:
+                // 发送服务器状态
                 var currentProcess = Process.GetCurrentProcess();
                 var status = new ServerStatus
                 {
@@ -173,7 +178,8 @@ public class GameCore(Config config)
                     MemoryTotal = Memory.TotalMemorySize * 1073741824UL,
                     MaxPlayers = config.Core!.MaxPlayer,
                     OnlinePlayers = UserManager.GetOnlineUserCount(),
-                    Tps = (long)Math.Floor(_tickPerSecond)
+                    Tps = (long)Math.Floor(_tickPerSecond),
+                    Ping = UserManager.GetUserInfo(info.SocketId)?.ClientInfo?.Ping ?? 0
                 };
                 NetworkEvents.FireSendEvent(info.SocketId, PackType.ServerStatus, status.ToByteArray());
                 break;
@@ -184,6 +190,18 @@ public class GameCore(Config config)
             case PackType.Move:
                 break;
             case PackType.OnlineList:
+                // 发送在线用户列表
+                var onlineList = new OnlineList();
+                foreach (var user in UserManager.GetOnlineUsers())
+                {
+                    onlineList.Players.Add(new PlayerItem
+                    {
+                        Id = user.UserId,
+                        Name = user.NickName,
+                        Ping = user.ClientInfo.Ping
+                    });
+                }
+                NetworkEvents.FireSendEvent(info.SocketId, PackType.OnlineList, onlineList.ToByteArray());
                 break;
             case PackType.Chunk:
             case PackType.Ping:

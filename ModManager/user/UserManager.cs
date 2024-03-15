@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Collections;
+using System.Numerics;
 using EasilyNET.Security;
 using Microsoft.Extensions.Logging;
 using ModManager.client;
@@ -48,6 +49,7 @@ public class UserManager
         if (id <= 0) return 0;
         var userInfo = new UserInfo {
             UserId = user.Id,
+            NickName = user.Nickname,
             ClientInfo = info,
             WorldId = user.WorldId,
             Position = new Vector3(user.PosX, user.PosY, user.PosZ),
@@ -80,5 +82,16 @@ public class UserManager
     public static int GetOnlineUserCount()
     {
         return Instance._users.Count;
+    }
+    
+    public static void SetClientPing(long socketId, uint ping)
+    {
+        var userInfo = GetUserInfo(socketId);
+        if (userInfo != null) userInfo.ClientInfo.Ping = ping;
+    }
+
+    public static List<UserInfo> GetOnlineUsers()
+    {
+        return Instance._users.Values.ToList();
     }
 }

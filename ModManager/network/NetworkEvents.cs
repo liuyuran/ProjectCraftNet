@@ -2,6 +2,7 @@
 using Google.Protobuf;
 using Microsoft.Extensions.Logging;
 using ModManager.logger;
+using ModManager.user;
 using static ModManager.localization.LocalizationManager;
 using static ModManager.ModManager;
 
@@ -54,6 +55,11 @@ public static class NetworkEvents
         if (packType == (int) PackType.Ping)
         {
             // 心跳包不需要处理
+            var now = DateTimeOffset.Now;
+            var nowTimestamp = now.ToUnixTimeMilliseconds();
+            var timestamp = BitConverter.ToUInt32(data, 0);
+            var ping = (uint)(nowTimestamp - timestamp);
+            UserManager.SetClientPing(socketId, ping);
             return;
         }
         var info = new ClientInfo
