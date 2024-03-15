@@ -1,4 +1,5 @@
 ﻿#define PURE_ECS
+using System.Diagnostics;
 using System.Numerics;
 using Arch.Core;
 using Arch.System;
@@ -14,6 +15,7 @@ using ModManager.user;
 using ProjectCraftNet.game.archive;
 using ProjectCraftNet.game.components;
 using ProjectCraftNet.game.systems;
+using SysInfo;
 using static ModManager.localization.LocalizationManager;
 using static ProjectCraftNet.Program;
 
@@ -24,11 +26,14 @@ public class GameCore(Config config)
     private static ILogger Logger { get; } = SysLogger.GetLogger(typeof(GameCore));
     private bool _stopping;
     private readonly World _world = World.Create();
+    private float _tickPerSecond = 0f;
 
     public void Start()
     {
         var deltaTime = 0.05f;
-        var millPerTick = 1000 / config.Core!.MaxTps;
+        var millPerTick = 10000000 / config.Core!.MaxTps;
+        var tickPerSecond = 0;
+        var baseMillis = DateTime.Now.Ticks;
 
         // 开始监听网络事件
         NetworkEvents.ReceiveEvent += OnNetworkEventsOnReceiveEvent;
@@ -48,13 +53,30 @@ public class GameCore(Config config)
             systems.BeforeUpdate(in deltaTime);
             systems.Update(in deltaTime);
             systems.AfterUpdate(in deltaTime);
+            while (UserManager.WaitToJoin.Count > 0)
+            {
+                var entity = _world.Create(Archetypes.Player);
+                var sockId = UserManager.WaitToJoin.Dequeue();
+                var userInfo = UserManager.GetUserInfo(sockId);
+                if (userInfo == null) continue;
+                var position = userInfo.Value.Position;
+                var gameMod = userInfo.Value.GameMode;
+                _world.Set(entity, new Position { Val = position });
+                _world.Set(entity, new Player { UserId = userInfo?.UserId ?? 0, GameMode = gameMod });
+                
+            }
             // 调节逻辑帧率，等待下一个Tick
             var now = DateTime.Now.Ticks;
             var elapsed = now - lastTickMillis;
             if (elapsed < millPerTick)
             {
-                Thread.Sleep((int) (millPerTick - elapsed));
+                Thread.Sleep((int) (millPerTick - elapsed) / 10000);
             }
+            tickPerSecond++;
+            if (now - baseMillis <= 10000000) continue;
+            _tickPerSecond = tickPerSecond;
+            tickPerSecond = 0;
+            baseMillis = now;
         }
         systems.Dispose();
         Logger.LogInformation("{}", Localize(ModId, "Server shutdown"));
@@ -67,6 +89,8 @@ public class GameCore(Config config)
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
         var existChunkPosition = new Dictionary<long, List<Vector3>>();
         _world.Query(in chunkQuery, (ref ChunkBlockData data, ref Position position) => {
+            if (!data.Changed) return;
+            data.Changed = false;
             var worldId = data.WorldId;
             if (!existChunkPosition.TryGetValue(worldId, out var value))
             {
@@ -124,6 +148,10 @@ public class GameCore(Config config)
                 var userInfo = UserManager.GetUserInfo(info.SocketId);
                 GameEvents.FireUserLoginEvent(info.SocketId, (UserInfo) userInfo!);
                 break;
+            case PackType.Disconnect:
+                GameEvents.FireUserLogoutEvent(info.SocketId, (UserInfo) UserManager.GetUserInfo(info.SocketId)!);
+                UserManager.UserLogout(info.SocketId);
+                break;
             case PackType.Chat:
                 var chat = ChatAndBroadcast.Parser.ParseFrom(data);
                 if (UserManager.GetUserInfo(info.SocketId) == null)
@@ -134,7 +162,19 @@ public class GameCore(Config config)
                 Logger.LogInformation("{}", Localize(ModId, "Chat from {0}: {1}", info.Ip, chat.Msg));
                 GameEvents.FireChatEvent(info.SocketId, chat.Msg);
                 break;
-            case PackType.Chunk:
+            case PackType.ServerStatus:
+                var currentProcess = Process.GetCurrentProcess();
+                var status = new ServerStatus
+                {
+                    Version = "1.0.0",
+                    Name = "啥",
+                    MemoryUsed = (ulong)currentProcess.WorkingSet64,
+                    MemoryTotal = Memory.TotalMemorySize * 1073741824UL,
+                    MaxPlayers = config.Core!.MaxPlayer,
+                    OnlinePlayers = UserManager.GetOnlineUserCount(),
+                    Tps = (long)Math.Floor(_tickPerSecond)
+                };
+                NetworkEvents.FireSendEvent(info.SocketId, PackType.ServerStatus, status.ToByteArray());
                 break;
             case PackType.ControlBlock:
                 break;
@@ -142,10 +182,9 @@ public class GameCore(Config config)
                 break;
             case PackType.Move:
                 break;
-            case PackType.ServerStatus:
-                break;
             case PackType.OnlineList:
                 break;
+            case PackType.Chunk:
             case PackType.Ping:
             case PackType.Unknown:
             default:

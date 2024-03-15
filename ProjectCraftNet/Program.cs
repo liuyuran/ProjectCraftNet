@@ -43,10 +43,11 @@ public static class Program
             return -100;
         }
 
+        var cts = new CancellationTokenSource();
         var gameCore = new GameCore(config);
-        Task.Run(() => gameCore.Start());
+        Task.Run(() => gameCore.Start(), cts.Token);
         var server = new TcpServer();
-        Task.Run(() => server.StartServer(config.NetworkTcp.Host, config.NetworkTcp.Port));
+        Task.Run(() => server.StartServer(config.NetworkTcp.Host, config.NetworkTcp.Port), cts.Token);
         Console.CancelKeyPress += (_, _) =>
         {
             CleanUp();
@@ -59,7 +60,19 @@ public static class Program
             ClosingEvent.Set();
         };
 
-        ClosingEvent.WaitOne();
+        try
+        {
+            ClosingEvent.WaitOne();
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "{}", Localize(ModId, "Error occurred."));
+            return -1;
+        }
+        finally
+        {
+            cts.Cancel(false);
+        }
         return 0;
     }
 

@@ -13,7 +13,7 @@ public sealed class Config : ITomlMetadataProvider {
 
 public sealed class Core : ITomlMetadataProvider {
     public required string ModPath { get; set; }
-    public required string MaxPlayer { get; set; }
+    public required int MaxPlayer { get; set; }
     public required string LocalizationPath { get; set; }
     public required string LogLevel { get; set; }
     public required int MaxTps { get; set; }

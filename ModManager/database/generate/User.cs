@@ -11,7 +11,7 @@ public partial class User
     /// <summary>
     /// 主键
     /// </summary>
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     /// <summary>
     /// 登录所用的用户名

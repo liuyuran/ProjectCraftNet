@@ -24,7 +24,7 @@ public static partial class ServerReflection {
         string.Concat(
           "ChVQcm90b1NyYy9zZXJ2ZXIucHJvdG8ijgEKDFNlcnZlclN0YXR1cxIPCgd2",
           "ZXJzaW9uGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLbWVtb3J5VG90YWwYAyAB",
-          "KAMSEgoKbWVtb3J5VXNlZBgEIAEoAxISCgptYXhQbGF5ZXJzGAUgASgDEhUK",
+          "KAQSEgoKbWVtb3J5VXNlZBgEIAEoBBISCgptYXhQbGF5ZXJzGAUgASgDEhUK",
           "DW9ubGluZVBsYXllcnMYBiABKAMSCwoDdHBzGAcgASgDIiMKD0Jsb2NrRGVm",
           "aW5lSXRlbRIQCghibG9ja19pZBgBIAEoAyIuCgtCbG9ja0RlZmluZRIfCgVp",
           "dGVtcxgBIAMoCzIQLkJsb2NrRGVmaW5lSXRlbSItCglCbG9ja0RhdGESEAoI",
@@ -121,10 +121,10 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
 
   /// <summary>Field number for the "memoryTotal" field.</summary>
   public const int MemoryTotalFieldNumber = 3;
-  private long memoryTotal_;
+  private ulong memoryTotal_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public long MemoryTotal {
+  public ulong MemoryTotal {
     get { return memoryTotal_; }
     set {
       memoryTotal_ = value;
@@ -133,10 +133,10 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
 
   /// <summary>Field number for the "memoryUsed" field.</summary>
   public const int MemoryUsedFieldNumber = 4;
-  private long memoryUsed_;
+  private ulong memoryUsed_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public long MemoryUsed {
+  public ulong MemoryUsed {
     get { return memoryUsed_; }
     set {
       memoryUsed_ = value;
@@ -210,8 +210,8 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
     int hash = 1;
     if (Version.Length != 0) hash ^= Version.GetHashCode();
     if (Name.Length != 0) hash ^= Name.GetHashCode();
-    if (MemoryTotal != 0L) hash ^= MemoryTotal.GetHashCode();
-    if (MemoryUsed != 0L) hash ^= MemoryUsed.GetHashCode();
+    if (MemoryTotal != 0UL) hash ^= MemoryTotal.GetHashCode();
+    if (MemoryUsed != 0UL) hash ^= MemoryUsed.GetHashCode();
     if (MaxPlayers != 0L) hash ^= MaxPlayers.GetHashCode();
     if (OnlinePlayers != 0L) hash ^= OnlinePlayers.GetHashCode();
     if (Tps != 0L) hash ^= Tps.GetHashCode();
@@ -241,13 +241,13 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
       output.WriteRawTag(18);
       output.WriteString(Name);
     }
-    if (MemoryTotal != 0L) {
+    if (MemoryTotal != 0UL) {
       output.WriteRawTag(24);
-      output.WriteInt64(MemoryTotal);
+      output.WriteUInt64(MemoryTotal);
     }
-    if (MemoryUsed != 0L) {
+    if (MemoryUsed != 0UL) {
       output.WriteRawTag(32);
-      output.WriteInt64(MemoryUsed);
+      output.WriteUInt64(MemoryUsed);
     }
     if (MaxPlayers != 0L) {
       output.WriteRawTag(40);
@@ -279,13 +279,13 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
       output.WriteRawTag(18);
       output.WriteString(Name);
     }
-    if (MemoryTotal != 0L) {
+    if (MemoryTotal != 0UL) {
       output.WriteRawTag(24);
-      output.WriteInt64(MemoryTotal);
+      output.WriteUInt64(MemoryTotal);
     }
-    if (MemoryUsed != 0L) {
+    if (MemoryUsed != 0UL) {
       output.WriteRawTag(32);
-      output.WriteInt64(MemoryUsed);
+      output.WriteUInt64(MemoryUsed);
     }
     if (MaxPlayers != 0L) {
       output.WriteRawTag(40);
@@ -315,11 +315,11 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
     if (Name.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
     }
-    if (MemoryTotal != 0L) {
-      size += 1 + pb::CodedOutputStream.ComputeInt64Size(MemoryTotal);
+    if (MemoryTotal != 0UL) {
+      size += 1 + pb::CodedOutputStream.ComputeUInt64Size(MemoryTotal);
     }
-    if (MemoryUsed != 0L) {
-      size += 1 + pb::CodedOutputStream.ComputeInt64Size(MemoryUsed);
+    if (MemoryUsed != 0UL) {
+      size += 1 + pb::CodedOutputStream.ComputeUInt64Size(MemoryUsed);
     }
     if (MaxPlayers != 0L) {
       size += 1 + pb::CodedOutputStream.ComputeInt64Size(MaxPlayers);
@@ -348,10 +348,10 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
     if (other.Name.Length != 0) {
       Name = other.Name;
     }
-    if (other.MemoryTotal != 0L) {
+    if (other.MemoryTotal != 0UL) {
       MemoryTotal = other.MemoryTotal;
     }
-    if (other.MemoryUsed != 0L) {
+    if (other.MemoryUsed != 0UL) {
       MemoryUsed = other.MemoryUsed;
     }
     if (other.MaxPlayers != 0L) {
@@ -387,11 +387,11 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
           break;
         }
         case 24: {
-          MemoryTotal = input.ReadInt64();
+          MemoryTotal = input.ReadUInt64();
           break;
         }
         case 32: {
-          MemoryUsed = input.ReadInt64();
+          MemoryUsed = input.ReadUInt64();
           break;
         }
         case 40: {
@@ -430,11 +430,11 @@ public sealed partial class ServerStatus : pb::IMessage<ServerStatus>
           break;
         }
         case 24: {
-          MemoryTotal = input.ReadInt64();
+          MemoryTotal = input.ReadUInt64();
           break;
         }
         case 32: {
-          MemoryUsed = input.ReadInt64();
+          MemoryUsed = input.ReadUInt64();
           break;
         }
         case 40: {

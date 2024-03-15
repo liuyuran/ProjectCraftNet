@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModManager", "ModManager\Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreMod", "CoreMod\CoreMod.csproj", "{CCF77C80-A81F-4607-A9C0-843C19F9C0D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackBoxTest", "BlackBoxTest\BlackBoxTest.csproj", "{6A2AA519-B531-478E-8065-AAD4274D5668}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{CCF77C80-A81F-4607-A9C0-843C19F9C0D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCF77C80-A81F-4607-A9C0-843C19F9C0D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCF77C80-A81F-4607-A9C0-843C19F9C0D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A2AA519-B531-478E-8065-AAD4274D5668}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A2AA519-B531-478E-8065-AAD4274D5668}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A2AA519-B531-478E-8065-AAD4274D5668}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A2AA519-B531-478E-8065-AAD4274D5668}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

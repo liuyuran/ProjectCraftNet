@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Arch.Core.Utils;
+using ModManager.core;
 
 namespace ProjectCraftNet.game.components;
 
@@ -24,7 +25,7 @@ public struct Player
     public long UserId;
     public long SocketId;
     public long WorldId;
-    public int GameMode;
+    public GameMode GameMode;
 }
 
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
