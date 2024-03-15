@@ -1,6 +1,7 @@
 ﻿#define PURE_ECS
 using System.Diagnostics;
 using System.Numerics;
+using System.Reflection;
 using Arch.Core;
 using Arch.System;
 using Google.Protobuf;
@@ -26,7 +27,7 @@ public class GameCore(Config config)
     private static ILogger Logger { get; } = SysLogger.GetLogger(typeof(GameCore));
     private bool _stopping;
     private readonly World _world = World.Create();
-    private float _tickPerSecond = 0f;
+    private float _tickPerSecond;
 
     public void Start()
     {
@@ -166,8 +167,8 @@ public class GameCore(Config config)
                 var currentProcess = Process.GetCurrentProcess();
                 var status = new ServerStatus
                 {
-                    Version = "1.0.0",
-                    Name = "啥",
+                    Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "unknown",
+                    Name = config.Core!.Title,
                     MemoryUsed = (ulong)currentProcess.WorkingSet64,
                     MemoryTotal = Memory.TotalMemorySize * 1073741824UL,
                     MaxPlayers = config.Core!.MaxPlayer,

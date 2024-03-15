@@ -140,6 +140,10 @@ public class TcpServer
                 {
                     GameEvents.FireUserLogoutEvent(socketId, user.Value);
                 }
+
+                Logger.LogInformation("{}",
+                    Localize(ModId, "Client [{0}] disconnected",
+                        socket.Client.RemoteEndPoint?.ToString() ?? "unknown"));
                 Sockets.Remove(socketId);
                 socket.Close();
             });
