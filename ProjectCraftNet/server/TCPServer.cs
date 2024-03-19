@@ -2,10 +2,10 @@
 using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
 using ModManager.events;
+using ModManager.game.user;
 using ModManager.logger;
 using ModManager.network;
-using ModManager.user;
-using static ModManager.localization.LocalizationManager;
+using static ModManager.game.localization.LocalizationManager;
 using static ProjectCraftNet.Program;
 using TcpListener = System.Net.Sockets.TcpListener;
 

@@ -1,4 +1,4 @@
-﻿namespace ModManager.block;
+﻿namespace ModManager.game.block;
 
 public struct BlockMeta
 {

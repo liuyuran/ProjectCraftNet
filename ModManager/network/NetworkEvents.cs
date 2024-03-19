@@ -1,10 +1,10 @@
 ﻿using System.Net.Sockets;
 using Google.Protobuf;
 using Microsoft.Extensions.Logging;
+using ModManager.game.user;
 using ModManager.logger;
-using ModManager.user;
-using static ModManager.localization.LocalizationManager;
-using static ModManager.ModManager;
+using static ModManager.game.localization.LocalizationManager;
+using static ModManager.mod.ModManager;
 
 namespace ModManager.network;
 

@@ -2,13 +2,13 @@
 using Arch.Core;
 using Arch.System;
 using Microsoft.Extensions.Logging;
+using ModManager.archive;
 using ModManager.config;
-using ModManager.generator;
+using ModManager.ecs.components;
+using ModManager.game.generator;
 using ModManager.logger;
-using ProjectCraftNet.game.archive;
-using ProjectCraftNet.game.components;
 
-namespace ProjectCraftNet.game.systems;
+namespace ModManager.ecs.systems;
 
 public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
 {

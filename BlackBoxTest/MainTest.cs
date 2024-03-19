@@ -1,4 +1,4 @@
-using ModManager.user;
+using ModManager.game.user;
 using ProjectCraftNet;
 
 namespace BlackBoxTest;

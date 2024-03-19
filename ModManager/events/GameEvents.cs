@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using ModManager.game.user;
 using ModManager.logger;
-using ModManager.user;
 
 namespace ModManager.events;
 

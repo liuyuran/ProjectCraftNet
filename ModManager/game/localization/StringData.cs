@@ -1,4 +1,4 @@
-﻿namespace ModManager.localization;
+﻿namespace ModManager.game.localization;
 
 /// <summary>
 /// 本地化字符串单元

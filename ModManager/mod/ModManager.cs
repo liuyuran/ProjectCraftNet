@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.Logging;
-using ModManager.localization;
+using ModManager.game.localization;
 using ModManager.logger;
 using Tomlyn;
 
-namespace ModManager;
+namespace ModManager.mod;
 
 public class ModManager
 {

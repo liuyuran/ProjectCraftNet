@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace ModManager.generator;
+namespace ModManager.game.generator;
 
 /// <summary>
 /// 区块生成器接口

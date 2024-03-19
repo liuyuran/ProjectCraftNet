@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Arch.Core.Utils;
-using ModManager.core;
+using ModManager.game.client;
 
-namespace ProjectCraftNet.game.components;
+namespace ModManager.ecs.components;
 
 public struct Position
 {

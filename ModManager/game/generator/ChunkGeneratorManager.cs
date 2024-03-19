@@ -1,10 +1,10 @@
 ﻿using System.Numerics;
 using Microsoft.Extensions.Logging;
 using ModManager.logger;
-using static ModManager.localization.LocalizationManager;
-using static ModManager.ModManager;
+using static ModManager.game.localization.LocalizationManager;
+using static ModManager.mod.ModManager;
 
-namespace ModManager.generator;
+namespace ModManager.game.generator;
 
 /// <summary>
 /// 区块生成器，用于进行世界生成

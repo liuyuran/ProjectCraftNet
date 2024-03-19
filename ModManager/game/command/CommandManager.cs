@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using ModManager.game.user;
 using ModManager.logger;
-using ModManager.user;
-using static ModManager.localization.LocalizationManager;
-using static ModManager.ModManager;
+using static ModManager.game.localization.LocalizationManager;
+using static ModManager.mod.ModManager;
 
-namespace ModManager.command;
+namespace ModManager.game.command;
 
 /// <summary>
 /// 聊天栏命令管理器

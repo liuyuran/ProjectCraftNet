@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using ModManager.logger;
-using static ModManager.localization.LocalizationManager;
-using static ModManager.ModManager;
+using static ModManager.game.localization.LocalizationManager;
+using static ModManager.mod.ModManager;
 
-namespace ModManager.block;
+namespace ModManager.game.block;
 
 /// <summary>
 /// 方块管理器，用于注册各种方块

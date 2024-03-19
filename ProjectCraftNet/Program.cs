@@ -5,7 +5,7 @@ using ModManager.events;
 using ModManager.logger;
 using ProjectCraftNet.game;
 using ProjectCraftNet.server;
-using static ModManager.localization.LocalizationManager;
+using static ModManager.game.localization.LocalizationManager;
 
 namespace ProjectCraftNet;
 
@@ -36,7 +36,7 @@ public static class Program
 
         SysLogger.SetLogLevel(config.Core.LogLevel);
         GetLocalizationManager(ModId).LoadLocalization(config.Core.LocalizationPath);
-        ModManager.ModManager.LoadMods(config.Core.ModPath);
+        ModManager.mod.ModManager.LoadMods(config.Core.ModPath);
         if (config.NetworkTcp == null)
         {
             Logger.LogCritical("{}", Localize(ModId, "[{0}] not found", "network-tcp"));

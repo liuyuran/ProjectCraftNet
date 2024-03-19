@@ -1,8 +1,8 @@
 ﻿using System.Numerics;
-using ModManager.core;
+using ModManager.game.client;
 using ModManager.network;
 
-namespace ModManager.user;
+namespace ModManager.game.user;
 
 public class UserInfo
 {

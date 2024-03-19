@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using ModManager.events;
 using ModManager.logger;
 
-namespace ProjectCraftNet.game.systems;
+namespace ModManager.ecs.systems;
 
 public class ArchiveSystem(World world) : BaseSystem<World, float>(world)
 {

@@ -1,4 +1,4 @@
-﻿namespace ProjectCraftNet.game.components;
+﻿namespace ModManager.ecs.components;
 
 public struct BlockData
 {

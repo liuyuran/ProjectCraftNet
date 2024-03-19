@@ -3,10 +3,10 @@ using Arch.Core;
 using Arch.System;
 using Google.Protobuf;
 using ModManager.config;
+using ModManager.ecs.components;
 using ModManager.network;
-using ProjectCraftNet.game.components;
 
-namespace ProjectCraftNet.game.systems;
+namespace ModManager.ecs.systems;
 
 public class NetworkSyncSystem(World world) : BaseSystem<World, float>(world)
 {

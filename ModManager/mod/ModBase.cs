@@ -1,4 +1,4 @@
-﻿namespace ModManager;
+﻿namespace ModManager.mod;
 
 public abstract class ModBase {
     public abstract string GetName();

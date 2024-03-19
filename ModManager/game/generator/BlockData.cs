@@ -1,4 +1,4 @@
-﻿namespace ModManager.generator;
+﻿namespace ModManager.game.generator;
 
 public struct BlockData
 {

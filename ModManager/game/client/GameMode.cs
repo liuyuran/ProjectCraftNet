@@ -1,4 +1,4 @@
-﻿namespace ModManager.core;
+﻿namespace ModManager.game.client;
 
 public enum GameMode
 {

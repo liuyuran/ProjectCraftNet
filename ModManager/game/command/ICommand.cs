@@ -1,6 +1,6 @@
-﻿using ModManager.user;
+﻿using ModManager.game.user;
 
-namespace ModManager.command;
+namespace ModManager.game.command;
 
 public interface ICommand
 {

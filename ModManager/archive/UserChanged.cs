@@ -1,4 +1,4 @@
-namespace ProjectCraftNet.game.archive;
+namespace ModManager.archive;
 
 public struct UserChanged
 {

@@ -1,7 +1,7 @@
 ﻿using Tomlyn;
 using Tomlyn.Model;
 
-namespace ModManager.localization;
+namespace ModManager.game.localization;
 
 /// <summary>
 /// 本地化管理器，用于加载和管理本地化文件

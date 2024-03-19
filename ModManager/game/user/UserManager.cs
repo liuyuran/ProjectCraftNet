@@ -1,17 +1,15 @@
-﻿using System.Collections;
-using System.Numerics;
+﻿using System.Numerics;
 using EasilyNET.Security;
 using Microsoft.Extensions.Logging;
-using ModManager.client;
-using ModManager.core;
 using ModManager.database;
 using ModManager.events;
+using ModManager.game.client;
 using ModManager.logger;
 using ModManager.network;
-using static ModManager.localization.LocalizationManager;
-using static ModManager.ModManager;
+using static ModManager.game.localization.LocalizationManager;
+using static ModManager.mod.ModManager;
 
-namespace ModManager.user;
+namespace ModManager.game.user;
 
 public class UserManager
 {

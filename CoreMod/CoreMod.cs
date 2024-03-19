@@ -1,4 +1,5 @@
 ﻿using ModManager;
+using ModManager.mod;
 
 namespace CoreMod;
 

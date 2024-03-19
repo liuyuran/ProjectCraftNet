@@ -3,11 +3,11 @@ using System.Text.Json;
 using Arch.Core;
 using Microsoft.Extensions.Logging;
 using ModManager.database;
+using ModManager.ecs.components;
 using ModManager.logger;
-using ProjectCraftNet.game.components;
 using Chunk = ModManager.database.generate.Chunk;
 
-namespace ProjectCraftNet.game.archive;
+namespace ModManager.archive;
 
 /// <summary>
 /// 存档管理器，用来处理数据库存档交互
@@ -102,7 +102,7 @@ public class ArchiveManager
         dbContext.SaveChanges();
     }
     
-    public static components.BlockData[]? TryGetChunkData(long worldId, Vector3 chunkPos)
+    public static ecs.components.BlockData[]? TryGetChunkData(long worldId, Vector3 chunkPos)
     {
         using var dbContext = new CoreDbContext();
         var query = from chunk in dbContext.Chunks
@@ -112,6 +112,6 @@ public class ArchiveManager
                   && chunk.WorldId == worldId
             select chunk;
         var chunkData = query.FirstOrDefault();
-        return chunkData == null ? null : JsonSerializer.Deserialize<components.BlockData[]>(chunkData.Data);
+        return chunkData == null ? null : JsonSerializer.Deserialize<ecs.components.BlockData[]>(chunkData.Data);
     }
 }

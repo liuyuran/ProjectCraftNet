@@ -1,7 +1,8 @@
 ﻿using System.Numerics;
-using ModManager.block;
+using ModManager.game.block;
+using ModManager.utils;
 
-namespace ModManager.generator;
+namespace ModManager.game.generator;
 
 /// <summary>
 /// 初始世界区块生成器

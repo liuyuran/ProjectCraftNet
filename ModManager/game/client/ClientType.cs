@@ -1,4 +1,4 @@
-﻿namespace ModManager.client;
+﻿namespace ModManager.game.client;
 
 public enum ClientType
 {

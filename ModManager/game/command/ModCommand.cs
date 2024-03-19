@@ -1,10 +1,10 @@
 ﻿using System.Text;
+using ModManager.game.user;
 using ModManager.network;
-using ModManager.user;
-using static ModManager.localization.LocalizationManager;
-using static ModManager.ModManager;
+using static ModManager.game.localization.LocalizationManager;
+using static ModManager.mod.ModManager;
 
-namespace ModManager.command;
+namespace ModManager.game.command;
 
 public class ModCommand: ICommand
 {
