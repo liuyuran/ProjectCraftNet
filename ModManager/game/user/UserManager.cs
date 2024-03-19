@@ -2,7 +2,8 @@
 using EasilyNET.Security;
 using Microsoft.Extensions.Logging;
 using ModManager.database;
-using ModManager.events;
+using ModManager.eventBus;
+using ModManager.eventBus.events;
 using ModManager.game.client;
 using ModManager.logger;
 using ModManager.network;
@@ -20,12 +21,11 @@ public class UserManager
 
     private UserManager()
     {
-        GameEvents.UserLogoutEvent += UserLogout;
-    }
-
-    private static void UserLogout(long socketId, UserInfo info)
-    {
-        UserLogout(socketId);
+        EventBus.Subscribe<UserLogoutEvent>(evt =>
+        {
+            UserLogout(evt.SocketId);
+            return false;
+        });
     }
 
     public static long UserLogin(Connect connect, ClientInfo info) {
@@ -72,7 +72,7 @@ public class UserManager
         Instance._users.Remove(socketId);
     }
     
-    public static UserInfo? GetUserInfo(long socketId)
+    public static UserInfo GetUserInfo(long socketId)
     {
         return Instance._users[socketId];
     }
@@ -85,7 +85,7 @@ public class UserManager
     public static void SetClientPing(long socketId, uint ping)
     {
         var userInfo = GetUserInfo(socketId);
-        if (userInfo != null) userInfo.ClientInfo.Ping = ping;
+        userInfo.ClientInfo.Ping = ping;
     }
 
     public static List<UserInfo> GetOnlineUsers()

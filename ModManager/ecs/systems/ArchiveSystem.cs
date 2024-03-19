@@ -1,7 +1,8 @@
 ﻿using Arch.Core;
 using Arch.System;
 using Microsoft.Extensions.Logging;
-using ModManager.events;
+using ModManager.eventBus;
+using ModManager.eventBus.events;
 using ModManager.logger;
 
 namespace ModManager.ecs.systems;
@@ -16,7 +17,7 @@ public class ArchiveSystem(World world) : BaseSystem<World, float>(world)
     public override void Update(in float deltaTime)
     {
         if (_lastArchiveTime + ArchiveInterval > DateTime.Now.Ticks) return;
-        GameEvents.FireArchiveEvent();
+        EventBus.Trigger(new ArchiveEvent());
         _lastArchiveTime = DateTime.Now.Ticks;
     }
 }

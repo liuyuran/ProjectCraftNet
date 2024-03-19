@@ -10,7 +10,8 @@ using ModManager.archive;
 using ModManager.config;
 using ModManager.ecs.components;
 using ModManager.ecs.systems;
-using ModManager.events;
+using ModManager.eventBus;
+using ModManager.eventBus.events;
 using ModManager.game.client;
 using ModManager.game.command;
 using ModManager.game.user;
@@ -38,8 +39,8 @@ public class GameCore(Config config)
 
         // 开始监听网络事件
         NetworkEvents.ReceiveEvent += OnNetworkEventsOnReceiveEvent;
-        GameEvents.ChatEvent += OnGameEventsOnChatEvent;
-        GameEvents.ArchiveEvent += OnGameEventsOnArchiveEvent;
+        EventBus.Subscribe<ChatEvent>(OnGameEventsOnChatEvent);
+        EventBus.Subscribe<ArchiveEvent>(OnGameEventsOnArchiveEvent);
         var systems = new Group<float>(
             "core-system",
             new ChunkGenerateSystem(_world),
@@ -59,7 +60,6 @@ public class GameCore(Config config)
                 var entity = _world.Create(Archetypes.Player);
                 var sockId = UserManager.WaitToJoin.Dequeue();
                 var userInfo = UserManager.GetUserInfo(sockId);
-                if (userInfo == null) continue;
                 var position = userInfo.Position;
                 var gameMod = userInfo.GameMode;
                 _world.Set(entity, new Position { Val = position });
@@ -84,7 +84,7 @@ public class GameCore(Config config)
         Environment.Exit(0);
     }
 
-    private void OnGameEventsOnArchiveEvent()
+    private bool OnGameEventsOnArchiveEvent(ArchiveEvent @event)
     {
         ArchiveManager.SaveUserInfo(_world);
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
@@ -105,24 +105,28 @@ public class GameCore(Config config)
         {
             ArchiveManager.SaveChunkInfo(_world, worldId, chunkPos.ToArray());
         }
+
+        return true;
     }
 
-    private static void OnGameEventsOnChatEvent(long socketId, string message)
+    private static bool OnGameEventsOnChatEvent(ChatEvent @event)
     {
-        if (string.IsNullOrWhiteSpace(message)) return;
+        var socketId = @event.SocketId;
+        var message = @event.Message;
+        if (string.IsNullOrWhiteSpace(message)) return false;
         var userInfo = UserManager.GetUserInfo(socketId);
-        if (userInfo == null) return;
         var isCommand = CommandManager.TryParseAsCommand(userInfo, message);
-        if (isCommand) return;
+        if (isCommand) return false;
         var data = new ChatAndBroadcast { Msg = message };
         var buffer = data.ToByteArray();
         if (buffer == null)
         {
             Logger.LogError("{}", Localize(ModId, "Error when serializing message"));
-            return;
+            return false;
         }
 
         NetworkEvents.FireSendEvent(socketId, PackType.Chat, buffer);
+        return true;
     }
 
     private void OnNetworkEventsOnReceiveEvent(ClientInfo info, PackType packType, byte[] data)
@@ -148,24 +152,21 @@ public class GameCore(Config config)
                     return;
                 }
                 NetworkEvents.FireSendEvent(info.SocketId, PackType.Connect, Array.Empty<byte>());
-                var userInfo = UserManager.GetUserInfo(info.SocketId);
-                GameEvents.FireUserLoginEvent(info.SocketId, userInfo!);
+                EventBus.Trigger(info.SocketId, new UserLoginEvent());
                 break;
             case PackType.Disconnect:
                 // 断开连接
-                GameEvents.FireUserLogoutEvent(info.SocketId, UserManager.GetUserInfo(info.SocketId)!);
+                EventBus.Trigger(info.SocketId, new UserLogoutEvent());
                 UserManager.UserLogout(info.SocketId);
                 break;
             case PackType.Chat:
                 // 聊天消息
                 var chat = ChatAndBroadcast.Parser.ParseFrom(data);
-                if (UserManager.GetUserInfo(info.SocketId) == null)
-                {
-                    Logger.LogDebug("{}", Localize(ModId, "chat from unauthenticated user {0}", info.Ip));
-                    return;
-                }
                 Logger.LogInformation("{}", Localize(ModId, "Chat from {0}: {1}", info.Ip, chat.Msg));
-                GameEvents.FireChatEvent(info.SocketId, chat.Msg);
+                EventBus.Trigger(info.SocketId, new ChatEvent
+                {
+                    Message = chat.Msg
+                });
                 break;
             case PackType.ServerStatus:
                 // 发送服务器状态
@@ -179,7 +180,7 @@ public class GameCore(Config config)
                     MaxPlayers = config.Core!.MaxPlayer,
                     OnlinePlayers = UserManager.GetOnlineUserCount(),
                     Tps = (long)Math.Floor(_tickPerSecond),
-                    Ping = UserManager.GetUserInfo(info.SocketId)?.ClientInfo?.Ping ?? 0
+                    Ping = UserManager.GetUserInfo(info.SocketId).ClientInfo.Ping
                 };
                 NetworkEvents.FireSendEvent(info.SocketId, PackType.ServerStatus, status.ToByteArray());
                 break;

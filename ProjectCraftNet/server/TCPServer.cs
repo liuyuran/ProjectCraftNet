@@ -1,7 +1,8 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
-using ModManager.events;
+using ModManager.eventBus;
+using ModManager.eventBus.events;
 using ModManager.game.user;
 using ModManager.logger;
 using ModManager.network;
@@ -138,7 +139,7 @@ public class TcpServer
                 var user = UserManager.GetUserInfo(socketId);
                 if (user != null)
                 {
-                    GameEvents.FireUserLogoutEvent(socketId, user);
+                    EventBus.Trigger(socketId, new UserLogoutEvent());
                 }
 
                 Logger.LogInformation("{}",

@@ -1,7 +1,8 @@
 ﻿using CommandLine;
 using Microsoft.Extensions.Logging;
 using ModManager.config;
-using ModManager.events;
+using ModManager.eventBus;
+using ModManager.eventBus.events;
 using ModManager.logger;
 using ProjectCraftNet.game;
 using ProjectCraftNet.server;
@@ -79,7 +80,7 @@ public static class Program
     private static void CleanUp()
     {
         Logger.LogInformation("{}", Localize(ModId, "saving..."));
-        GameEvents.FireArchiveEvent();
+        EventBus.Trigger(new ArchiveEvent());
         Logger.LogInformation("{}", Localize(ModId, "saved."));
     }
 }
