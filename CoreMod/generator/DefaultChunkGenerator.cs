@@ -1,8 +1,10 @@
 ﻿using System.Numerics;
+using CoreMod.blocks;
 using ModManager.game.block;
+using ModManager.game.generator;
 using ModManager.utils;
 
-namespace ModManager.game.generator;
+namespace CoreMod.generator;
 
 /// <summary>
 /// 初始世界区块生成器
@@ -18,7 +20,7 @@ public class DefaultChunkGenerator: IChunkGenerator
         return z * size * size + y * size + x;
     }
 
-    private void GenerateMainWorld(ref BlockData[] blockData, int chunkSize, Vector3 chunkPosition)
+    private void GenerateMainWorld(ref ModManager.game.generator.BlockData[] blockData, int chunkSize, Vector3 chunkPosition)
     {
         for (var x = 0; x < chunkSize; x++)
         {
@@ -29,9 +31,8 @@ public class DefaultChunkGenerator: IChunkGenerator
                 var height = (uint) Math.Round(noiseData * chunkSize);
                 for (var y = 0; y < chunkSize; y++)
                 {
-                    var block = y > height ? BlockEnum.Air : BlockEnum.Dirt;
-                    var blockId = BlockManager.GetBlockId(block);
-                    blockData[GetBlockIndex(x, y, z, chunkSize)] = new BlockData
+                    var blockId = y > height ? BlockManager.GetBlockId<Air>() : BlockManager.GetBlockId<Dirt>();
+                    blockData[GetBlockIndex(x, y, z, chunkSize)] = new ModManager.game.generator.BlockData
                     {
                         BlockId = blockId
                     };
@@ -40,11 +41,11 @@ public class DefaultChunkGenerator: IChunkGenerator
         }        
     }
     
-    public BlockData[] GenerateChunkBlockData(int chunkSize, Vector3 chunkPosition)
+    public ModManager.game.generator.BlockData[] GenerateChunkBlockData(int chunkSize, Vector3 chunkPosition)
     {
         _noise.SetSeed(DateTime.Now.Millisecond);
         _noise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
-        var blockData = new BlockData[chunkSize * chunkSize * chunkSize];
+        var blockData = new ModManager.game.generator.BlockData[chunkSize * chunkSize * chunkSize];
         GenerateMainWorld(ref blockData, chunkSize, chunkPosition);
         return blockData;
     }

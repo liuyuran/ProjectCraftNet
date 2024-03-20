@@ -1,4 +1,7 @@
-﻿using ModManager;
+﻿using CoreMod.blocks;
+using CoreMod.generator;
+using ModManager.game.block;
+using ModManager.game.generator;
 using ModManager.mod;
 
 namespace CoreMod;
@@ -7,14 +10,12 @@ public class CoreMod: ModBase
 {
     public override string GetName()
     {
-        // throw new NotImplementedException();
-        return "";
+        return "失落大地";
     }
 
     public override string GetDescription()
     {
-        // throw new NotImplementedException();
-        return "";
+        return "游戏默认mod，如果没有其他mod明确表示可以替代它，务必不要取消加载";
     }
 
     public override string GetVersion()
@@ -24,22 +25,25 @@ public class CoreMod: ModBase
 
     public override void OnInitialize()
     {
-        // throw new NotImplementedException();
+        OnLoad();
     }
 
     public override void OnLoad()
     {
-        // throw new NotImplementedException();
+        ChunkGeneratorManager.AddChunkGenerator(0, new DefaultChunkGenerator());
+        BlockManager.RegisterBlock<Air>();
+        BlockManager.RegisterBlock<Dirt>();
     }
 
     public override void OnUnload()
     {
-        // throw new NotImplementedException();
+        ChunkGeneratorManager.RemoveChunkGenerator(0);
+        BlockManager.UnregisterBlock<Air>();
+        BlockManager.UnregisterBlock<Dirt>();
     }
 
     public override bool IsEnabled()
     {
-        // throw new NotImplementedException();
         return true;
     }
 }

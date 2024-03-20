@@ -14,12 +14,6 @@ public class ChunkGeneratorManager
     private static ILogger Logger { get; } = SysLogger.GetLogger(typeof(ChunkGeneratorManager));
     private static ChunkGeneratorManager Instance { get; } = new();
     private readonly Dictionary<long, IChunkGenerator> _generators = new();
-
-    private ChunkGeneratorManager()
-    {
-        // 仅注册主世界的区块生成器
-        _generators.Add(0, new DefaultChunkGenerator());
-    }
     
     /// <summary>
     /// 注册区块生成器

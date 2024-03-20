@@ -31,7 +31,6 @@
 
     <ItemGroup>
       <Folder Include="ecs\" />
-      <Folder Include="game\" />
       <Folder Include="proto\" />
     </ItemGroup>
 

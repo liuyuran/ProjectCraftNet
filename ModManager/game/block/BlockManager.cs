@@ -13,46 +13,36 @@ public class BlockManager
     private static readonly ILogger Logger = SysLogger.GetLogger(typeof(BlockManager));
     private static BlockManager Instance { get; } = new();
     private readonly Dictionary<long, BlockMeta> _blockMeta = new();
-    private readonly Dictionary<string, long> _link = new();
+    private readonly Dictionary<Type, long> _link = new();
     private long _idGenerator;
-
-    private BlockManager()
-    {
-        _RegisterBlock(new BlockMeta
-        {
-            BlockId = BlockEnum.Air,
-            Material = ""
-        });
-        _RegisterBlock(new BlockMeta
-        {
-            BlockId = BlockEnum.Dirt,
-            Material = "core/dirt.png"
-        });
-    }
     
-    private void _RegisterBlock(BlockMeta meta)
-    {
-        var id = _idGenerator++;
-        _blockMeta.Add(id, meta);
-        _link.Add(meta.BlockId, id);
-    }
-    
-    public static long RegisterBlock(BlockMeta meta)
+    public static void RegisterBlock<T>() where T: Block
     {
         var id = Instance._idGenerator++;
+        var block = Activator.CreateInstance<T>();
+        var meta = new BlockMeta
+        {
+            BlockId = block.Id,
+            Material = block.Material
+        };
         Instance._blockMeta.Add(id, meta);
-        Instance._link.Add(meta.BlockId, id);
-        Logger.LogInformation("{}", Localize(ModId, "Block registered: {0}", meta.BlockId));
-        return id;
+        Instance._link.Add(typeof(T), id);
+        Logger.LogInformation("{}", Localize(ModId, "Block registered: {0}", block.Id));
     }
     
-    public static long GetBlockId(string blockName)
+    public static long GetBlockId<T>() where T: Block
     {
-        return Instance._link.TryGetValue(blockName, out var id) ? id : 0;
+        return Instance._link.GetValueOrDefault(typeof(T), 0);
     }
     
-    public static void RemoveBlock(long id)
+    public static void UnregisterBlock<T>() where T: Block
     {
+        var id = Instance._link.GetValueOrDefault(typeof(T), 0);
+        if (id == 0)
+        {
+            Logger.LogWarning("{}", Localize(ModId, "Block not found: {0}", typeof(T).Name));
+            return;
+        }
         Instance._blockMeta.Remove(id);
         Logger.LogInformation("{}", Localize(ModId, "Block removed: {0}", id));
     }
