@@ -1,4 +1,5 @@
 ﻿[core]
+title = "就爱听相声"
 mod-path = "/app/mods"
 max-player = 20
 localization-path = "/app/localization"

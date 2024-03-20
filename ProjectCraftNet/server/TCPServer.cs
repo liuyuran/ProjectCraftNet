@@ -1,11 +1,12 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
-using ModManager.events;
+using ModManager.eventBus;
+using ModManager.eventBus.events;
+using ModManager.game.user;
 using ModManager.logger;
 using ModManager.network;
-using ModManager.user;
-using static ModManager.localization.LocalizationManager;
+using static ModManager.game.localization.LocalizationManager;
 using static ProjectCraftNet.Program;
 using TcpListener = System.Net.Sockets.TcpListener;
 
@@ -138,8 +139,12 @@ public class TcpServer
                 var user = UserManager.GetUserInfo(socketId);
                 if (user != null)
                 {
-                    GameEvents.FireUserLogoutEvent(socketId, user.Value);
+                    EventBus.Trigger(socketId, new UserLogoutEvent());
                 }
+
+                Logger.LogInformation("{}",
+                    Localize(ModId, "Client [{0}] disconnected",
+                        socket.Client.RemoteEndPoint?.ToString() ?? "unknown"));
                 Sockets.Remove(socketId);
                 socket.Close();
             });

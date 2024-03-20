@@ -30,6 +30,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="ecs\" />
       <Folder Include="proto\" />
     </ItemGroup>
 

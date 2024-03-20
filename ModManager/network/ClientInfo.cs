@@ -1,7 +1,8 @@
 ﻿namespace ModManager.network;
 
-public struct ClientInfo
+public class ClientInfo
 {
-    public long SocketId { get; set; }
-    public string Ip { get; set; }
+    public required long SocketId { get; init; }
+    public required string Ip { get; init; }
+    public uint Ping { get; set; }
 }
