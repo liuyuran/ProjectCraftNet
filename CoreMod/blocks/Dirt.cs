@@ -7,7 +7,7 @@ public class Dirt: Block, IItemProvider
 {
     public override string Id => "core:dirt";
     public override string Name => "泥土";
-    public override string Material => "core/dirt";
+    public override string Material => "core:blocks/dirt";
     public override BlockType BlockType => BlockType.Solid;
 
     public Item AsItem()

@@ -190,13 +190,16 @@ public class GameCore(Config config)
                 NetworkEvents.FireSendEvent(info.SocketId, PackType.ServerStatus, status.ToByteArray());
                 break;
             case PackType.ControlBlock:
+                // TODO 方块交互
                 break;
             case PackType.ControlEntity:
+                // TODO 实体交互
                 break;
             case PackType.Move:
                 // 用户移动
                 var move = PlayerMove.Parser.ParseFrom(data);
                 var userInfo = UserManager.GetUserInfo(info.SocketId);
+                // TODO 俺寻思这里得加个判断防止穿墙，又或者维持君子协定？
                 userInfo.Position = new Vector3(move.X, move.Y, move.Z);
                 var entity = userInfo.PlayerEntity;
                 if (entity == null) break;

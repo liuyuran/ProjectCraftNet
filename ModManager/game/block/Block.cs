@@ -2,8 +2,8 @@
 
 public abstract class Block
 {
-    public virtual string Id => throw new NotImplementedException();
-    public virtual string Name => throw new NotImplementedException();
+    public virtual string Id => "";
+    public virtual string Name => "";
     public virtual string Material => "";
-    public virtual BlockType BlockType => throw new NotImplementedException();
+    public virtual BlockType BlockType => BlockType.Gas;
 }
