@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Arch.Core;
 using EasilyNET.Security;
 using Microsoft.Extensions.Logging;
 using ModManager.database;
@@ -18,6 +19,7 @@ public class UserManager
     private readonly Dictionary<long, UserInfo> _users = new();
     private static readonly UserManager Instance = new();
     public static readonly Queue<long> WaitToJoin = new();
+    public static readonly Queue<Entity> WaitToLeave = new();
 
     private UserManager()
     {
@@ -51,7 +53,8 @@ public class UserManager
             ClientInfo = info,
             WorldId = user.WorldId,
             Position = new Vector3(user.PosX, user.PosY, user.PosZ),
-            GameMode = (GameMode) user.GameMode
+            GameMode = (GameMode) user.GameMode,
+            PlayerEntity = null
         };
         Instance._users.Add(info.SocketId, userInfo);
         Logger.LogInformation("{}", Localize(ModId, "User {0} login", connect.Username));
@@ -69,6 +72,11 @@ public class UserManager
     
     public static void UserLogout(long socketId)
     {
+        if (!Instance._users.TryGetValue(socketId, out var value)) return;
+        if (value.PlayerEntity != null)
+        {
+            WaitToLeave.Enqueue(value.PlayerEntity.Value);
+        }
         Instance._users.Remove(socketId);
     }
     

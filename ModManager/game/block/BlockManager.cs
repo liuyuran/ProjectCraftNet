@@ -27,7 +27,7 @@ public class BlockManager
         };
         Instance._blockMeta.Add(id, meta);
         Instance._link.Add(typeof(T), id);
-        Logger.LogInformation("{}", Localize(ModId, "Block registered: {0}", block.Id));
+        Logger.LogDebug("{}", Localize(ModId, "Block registered: {0}", block.Id));
     }
     
     public static long GetBlockId<T>() where T: Block
@@ -44,7 +44,7 @@ public class BlockManager
             return;
         }
         Instance._blockMeta.Remove(id);
-        Logger.LogInformation("{}", Localize(ModId, "Block removed: {0}", id));
+        Logger.LogDebug("{}", Localize(ModId, "Block removed: {0}", id));
     }
     
     public static BlockMeta? GetBlock(long id)

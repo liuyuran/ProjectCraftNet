@@ -64,7 +64,12 @@ public class GameCore(Config config)
                 var gameMod = userInfo.GameMode;
                 _world.Set(entity, new Position { Val = position });
                 _world.Set(entity, new Player { UserId = userInfo.UserId, GameMode = gameMod });
-                
+                userInfo.PlayerEntity = entity;
+            }
+            while (UserManager.WaitToLeave.Count > 0)
+            {
+                var entity = UserManager.WaitToLeave.Dequeue();
+                _world.Destroy(entity);
             }
             // 调节逻辑帧率，等待下一个Tick
             var now = DateTime.Now.Ticks;
@@ -189,6 +194,13 @@ public class GameCore(Config config)
             case PackType.ControlEntity:
                 break;
             case PackType.Move:
+                // 用户移动
+                var move = PlayerMove.Parser.ParseFrom(data);
+                var userInfo = UserManager.GetUserInfo(info.SocketId);
+                userInfo.Position = new Vector3(move.X, move.Y, move.Z);
+                var entity = userInfo.PlayerEntity;
+                if (entity == null) break;
+                _world.Set(entity.Value, new Position { Val = userInfo.Position });
                 break;
             case PackType.OnlineList:
                 // 发送在线用户列表
