@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Microsoft.Extensions.Logging;
+using ModManager.config;
 using ModManager.logger;
 using static ModManager.game.localization.LocalizationManager;
 using static ModManager.mod.ModManager;
@@ -45,8 +46,9 @@ public class ChunkGeneratorManager
     /// <returns>区块数据</returns>
     public static BlockData[] GenerateChunkBlockData(long worldId, Vector3 chunkPosition)
     {
+        var chunkSize = ConfigUtil.Instance.GetConfig().Core!.ChunkSize;
         if (Instance._generators.TryGetValue(worldId, out var generator))
-            return generator.GenerateChunkBlockData( 64, chunkPosition);
+            return generator.GenerateChunkBlockData( chunkSize, chunkPosition);
         Logger.LogWarning("No chunk generator found for world {}", worldId);
         return Array.Empty<BlockData>();
     }

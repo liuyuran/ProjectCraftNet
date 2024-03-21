@@ -19,6 +19,7 @@ public sealed class Core : ITomlMetadataProvider {
     public required string LogLevel { get; set; }
     public required int MaxTps { get; set; }
     public required int Sight { get; set; }
+    public required int ChunkSize { get; set; }
     public TomlPropertiesMetadata? PropertiesMetadata { get; set; }
 }
 

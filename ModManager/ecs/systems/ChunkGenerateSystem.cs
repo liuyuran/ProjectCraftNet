@@ -7,6 +7,8 @@ using ModManager.config;
 using ModManager.ecs.components;
 using ModManager.game.generator;
 using ModManager.logger;
+using ModManager.state;
+using ModManager.state.world.chunk;
 
 namespace ModManager.ecs.systems;
 
@@ -56,8 +58,10 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
                             continue;
                         }
                         // 获取不成功则继续生成
+                        // TODO 这里需要继续改进，尽量少进行重量级类的分配
                         Logger.LogDebug("Generate chunk at {}", chunkPosition.Val);
                         var data = ChunkGeneratorManager.GenerateChunkBlockData(0, chunkPosition.Val);
+                        var idData = new long[data.Length];
                         var chunkData = new components.BlockData[data.Length];
                         for (var i = 0; i < data.Length; i++)
                         {
@@ -65,6 +69,7 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
                             {
                                 BlockId = data[i].BlockId
                             };
+                            idData[i] = data[i].BlockId;
                         }
                         _world.Set(entity, new ChunkBlockData
                         {
@@ -72,6 +77,12 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
                             Data = chunkData,
                             Changed = true
                         });
+                        ProjectCraftNet.Instance.World.AddChunk(0, new ChunkPos
+                        {
+                            X = (int)chunkPosition.Val.X,
+                            Y = (int)chunkPosition.Val.Y,
+                            Z = (int)chunkPosition.Val.Z
+                        }, idData);
                         existChunkPosition.Add(chunkPosition.Val);                
                     }
                 }                
