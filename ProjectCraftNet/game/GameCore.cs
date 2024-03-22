@@ -17,6 +17,7 @@ using ModManager.game.command;
 using ModManager.game.user;
 using ModManager.logger;
 using ModManager.network;
+using ModManager.utils;
 using SysInfo;
 using static ModManager.game.localization.LocalizationManager;
 using static ProjectCraftNet.Program;
@@ -44,7 +45,6 @@ public class GameCore(Config config)
         var systems = new Group<float>(
             "core-system",
             new ChunkGenerateSystem(_world),
-            new NetworkSyncSystem(_world),
             new ArchiveSystem(_world)
         );
         systems.Initialize();
@@ -62,7 +62,20 @@ public class GameCore(Config config)
                 var userInfo = UserManager.GetUserInfo(sockId);
                 var position = userInfo.Position;
                 var gameMod = userInfo.GameMode;
-                _world.Set(entity, new Position { Val = position });
+                var chunkSize = config.Core!.ChunkSize;
+                _world.Set(entity, new Position
+                {
+                    ChunkPos = new IntVector3(
+                        (int)(position.X / chunkSize),
+                        (int)(position.Y / chunkSize),
+                        (int)(position.Z / chunkSize)
+                    ),
+                    InChunkPos = new Vector3(
+                        position.X % chunkSize,
+                        position.Y % chunkSize,
+                        position.Z % chunkSize
+                    )
+                });
                 _world.Set(entity, new Player { UserId = userInfo.UserId, GameMode = gameMod });
                 userInfo.PlayerEntity = entity;
             }
@@ -93,7 +106,7 @@ public class GameCore(Config config)
     {
         ArchiveManager.SaveUserInfo(_world);
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
-        var existChunkPosition = new Dictionary<long, List<Vector3>>();
+        var existChunkPosition = new Dictionary<long, List<IntVector3>>();
         _world.Query(in chunkQuery, (ref ChunkBlockData data, ref Position position) => {
             if (!data.Changed) return;
             data.Changed = false;
@@ -104,7 +117,7 @@ public class GameCore(Config config)
                 existChunkPosition[worldId] = value;
             }
 
-            value.Add(position.Val);
+            value.Add(position.ChunkPos);
         });
         foreach (var (worldId, chunkPos) in existChunkPosition)
         {
@@ -200,10 +213,23 @@ public class GameCore(Config config)
                 var move = PlayerMove.Parser.ParseFrom(data);
                 var userInfo = UserManager.GetUserInfo(info.SocketId);
                 // TODO 俺寻思这里得加个判断防止穿墙，又或者维持君子协定？
-                userInfo.Position = new Vector3(move.X, move.Y, move.Z);
+                userInfo.Position = new LongVector3((long)move.X, (long)move.Y, (long)move.Z);
                 var entity = userInfo.PlayerEntity;
                 if (entity == null) break;
-                _world.Set(entity.Value, new Position { Val = userInfo.Position });
+                var chunkSize = config.Core!.ChunkSize;
+                _world.Set(entity.Value, new Position
+                {
+                    ChunkPos = new IntVector3(
+                        (int)(userInfo.Position.X / chunkSize),
+                        (int)(userInfo.Position.Y / chunkSize),
+                        (int)(userInfo.Position.Z / chunkSize)
+                    ),
+                    InChunkPos = new Vector3(
+                        userInfo.Position.X % chunkSize,
+                        userInfo.Position.Y % chunkSize,
+                        userInfo.Position.Z % chunkSize
+                    )
+                });
                 break;
             case PackType.OnlineList:
                 // 发送在线用户列表

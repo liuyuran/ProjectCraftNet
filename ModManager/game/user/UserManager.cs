@@ -8,6 +8,7 @@ using ModManager.eventBus.events;
 using ModManager.game.client;
 using ModManager.logger;
 using ModManager.network;
+using ModManager.utils;
 using static ModManager.game.localization.LocalizationManager;
 using static ModManager.mod.ModManager;
 
@@ -52,7 +53,7 @@ public class UserManager
             NickName = user.Nickname,
             ClientInfo = info,
             WorldId = user.WorldId,
-            Position = new Vector3(user.PosX, user.PosY, user.PosZ),
+            Position = new LongVector3(user.PosX, user.PosY, user.PosZ),
             GameMode = (GameMode) user.GameMode,
             PlayerEntity = null
         };

@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using ModManager.utils;
 
 namespace ModManager.game.generator;
 
@@ -13,5 +14,5 @@ public interface IChunkGenerator
     /// <param name="chunkSize">区块边长，目前锁定为64</param>
     /// <param name="chunkPosition">区块坐标，单位为1</param>
     /// <returns>区块数据</returns>
-    public BlockData[] GenerateChunkBlockData(int chunkSize, Vector3 chunkPosition);
+    public BlockData[] GenerateChunkBlockData(int chunkSize, IntVector3 chunkPosition);
 }
