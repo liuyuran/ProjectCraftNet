@@ -1,8 +1,10 @@
 ﻿using CommandLine;
+using CoreMod.blocks;
 using Microsoft.Extensions.Logging;
 using ModManager.config;
 using ModManager.eventBus;
 using ModManager.eventBus.events;
+using ModManager.game.block;
 using ModManager.logger;
 using ProjectCraftNet.game;
 using ProjectCraftNet.server;
@@ -37,6 +39,7 @@ public static class Program
 
         SysLogger.SetLogLevel(config.Core.LogLevel);
         GetLocalizationManager(ModId).LoadLocalization(config.Core.LocalizationPath);
+        BlockManager.RegisterBlock<Air>();
         ModManager.mod.ModManager.LoadMods(config.Core.ModPath);
         if (config.NetworkTcp == null)
         {

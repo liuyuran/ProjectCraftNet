@@ -22,18 +22,20 @@ public static partial class ClientReflection {
   static ClientReflection() {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
-          "ChVQcm90b1NyYy9jbGllbnQucHJvdG8iWwoKUGxheWVyTW92ZRIJCgF4GAEg",
-          "ASgCEgkKAXkYAiABKAISCQoBehgDIAEoAhILCgN5YXcYBCABKAISDQoFcGl0",
-          "Y2gYBSABKAISEAoIaGVhZF95YXcYBiABKAIiWAoSUGxheWVyQ29udHJvbEJs",
-          "b2NrEgwKBHR5cGUYASABKAUSEAoIdGFyZ2V0X3gYAiABKAISEAoIdGFyZ2V0",
-          "X3kYAyABKAISEAoIdGFyZ2V0X3oYBCABKAIiNgoTUGxheWVyQ29udHJvbEVu",
-          "dGl0eRIMCgR0eXBlGAEgASgFEhEKCXRhcmdldF9pZBgCIAEoA0ID+AEBYgZw",
-          "cm90bzM="));
+          "ChVQcm90b1NyYy9jbGllbnQucHJvdG8ijgEKClBsYXllck1vdmUSDwoHY2h1",
+          "bmtfeBgBIAEoBRIPCgdjaHVua195GAIgASgFEg8KB2NodW5rX3oYAyABKAUS",
+          "CQoBeBgEIAEoAhIJCgF5GAUgASgCEgkKAXoYBiABKAISCwoDeWF3GAcgASgC",
+          "Eg0KBXBpdGNoGAggASgCEhAKCGhlYWRfeWF3GAkgASgCIogBChJQbGF5ZXJD",
+          "b250cm9sQmxvY2sSDAoEdHlwZRgBIAEoBRIPCgdjaHVua194GAIgASgFEg8K",
+          "B2NodW5rX3kYAyABKAUSDwoHY2h1bmtfehgEIAEoBRIPCgdibG9ja194GAUg",
+          "ASgFEg8KB2Jsb2NrX3kYBiABKAUSDwoHYmxvY2tfehgHIAEoBSI2ChNQbGF5",
+          "ZXJDb250cm9sRW50aXR5EgwKBHR5cGUYASABKAUSEQoJdGFyZ2V0X2lkGAIg",
+          "ASgDQgP4AQFiBnByb3RvMw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-          new pbr::GeneratedClrTypeInfo(typeof(global::PlayerMove), global::PlayerMove.Parser, new[]{ "X", "Y", "Z", "Yaw", "Pitch", "HeadYaw" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::PlayerControlBlock), global::PlayerControlBlock.Parser, new[]{ "Type", "TargetX", "TargetY", "TargetZ" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::PlayerMove), global::PlayerMove.Parser, new[]{ "ChunkX", "ChunkY", "ChunkZ", "X", "Y", "Z", "Yaw", "Pitch", "HeadYaw" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::PlayerControlBlock), global::PlayerControlBlock.Parser, new[]{ "Type", "ChunkX", "ChunkY", "ChunkZ", "BlockX", "BlockY", "BlockZ" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::PlayerControlEntity), global::PlayerControlEntity.Parser, new[]{ "Type", "TargetId" }, null, null, null, null)
         }));
   }
@@ -75,6 +77,9 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public PlayerMove(PlayerMove other) : this() {
+    chunkX_ = other.chunkX_;
+    chunkY_ = other.chunkY_;
+    chunkZ_ = other.chunkZ_;
     x_ = other.x_;
     y_ = other.y_;
     z_ = other.z_;
@@ -90,8 +95,44 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
     return new PlayerMove(this);
   }
 
+  /// <summary>Field number for the "chunk_x" field.</summary>
+  public const int ChunkXFieldNumber = 1;
+  private int chunkX_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int ChunkX {
+    get { return chunkX_; }
+    set {
+      chunkX_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "chunk_y" field.</summary>
+  public const int ChunkYFieldNumber = 2;
+  private int chunkY_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int ChunkY {
+    get { return chunkY_; }
+    set {
+      chunkY_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "chunk_z" field.</summary>
+  public const int ChunkZFieldNumber = 3;
+  private int chunkZ_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int ChunkZ {
+    get { return chunkZ_; }
+    set {
+      chunkZ_ = value;
+    }
+  }
+
   /// <summary>Field number for the "x" field.</summary>
-  public const int XFieldNumber = 1;
+  public const int XFieldNumber = 4;
   private float x_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -103,7 +144,7 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
   }
 
   /// <summary>Field number for the "y" field.</summary>
-  public const int YFieldNumber = 2;
+  public const int YFieldNumber = 5;
   private float y_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -115,7 +156,7 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
   }
 
   /// <summary>Field number for the "z" field.</summary>
-  public const int ZFieldNumber = 3;
+  public const int ZFieldNumber = 6;
   private float z_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -127,7 +168,7 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
   }
 
   /// <summary>Field number for the "yaw" field.</summary>
-  public const int YawFieldNumber = 4;
+  public const int YawFieldNumber = 7;
   private float yaw_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -139,7 +180,7 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
   }
 
   /// <summary>Field number for the "pitch" field.</summary>
-  public const int PitchFieldNumber = 5;
+  public const int PitchFieldNumber = 8;
   private float pitch_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -151,7 +192,7 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
   }
 
   /// <summary>Field number for the "head_yaw" field.</summary>
-  public const int HeadYawFieldNumber = 6;
+  public const int HeadYawFieldNumber = 9;
   private float headYaw_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -177,6 +218,9 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
     if (ReferenceEquals(other, this)) {
       return true;
     }
+    if (ChunkX != other.ChunkX) return false;
+    if (ChunkY != other.ChunkY) return false;
+    if (ChunkZ != other.ChunkZ) return false;
     if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(X, other.X)) return false;
     if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Y, other.Y)) return false;
     if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Z, other.Z)) return false;
@@ -190,6 +234,9 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override int GetHashCode() {
     int hash = 1;
+    if (ChunkX != 0) hash ^= ChunkX.GetHashCode();
+    if (ChunkY != 0) hash ^= ChunkY.GetHashCode();
+    if (ChunkZ != 0) hash ^= ChunkZ.GetHashCode();
     if (X != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(X);
     if (Y != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Y);
     if (Z != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Z);
@@ -214,28 +261,40 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     output.WriteRawMessage(this);
   #else
+    if (ChunkX != 0) {
+      output.WriteRawTag(8);
+      output.WriteInt32(ChunkX);
+    }
+    if (ChunkY != 0) {
+      output.WriteRawTag(16);
+      output.WriteInt32(ChunkY);
+    }
+    if (ChunkZ != 0) {
+      output.WriteRawTag(24);
+      output.WriteInt32(ChunkZ);
+    }
     if (X != 0F) {
-      output.WriteRawTag(13);
+      output.WriteRawTag(37);
       output.WriteFloat(X);
     }
     if (Y != 0F) {
-      output.WriteRawTag(21);
+      output.WriteRawTag(45);
       output.WriteFloat(Y);
     }
     if (Z != 0F) {
-      output.WriteRawTag(29);
+      output.WriteRawTag(53);
       output.WriteFloat(Z);
     }
     if (Yaw != 0F) {
-      output.WriteRawTag(37);
+      output.WriteRawTag(61);
       output.WriteFloat(Yaw);
     }
     if (Pitch != 0F) {
-      output.WriteRawTag(45);
+      output.WriteRawTag(69);
       output.WriteFloat(Pitch);
     }
     if (HeadYaw != 0F) {
-      output.WriteRawTag(53);
+      output.WriteRawTag(77);
       output.WriteFloat(HeadYaw);
     }
     if (_unknownFields != null) {
@@ -248,28 +307,40 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+    if (ChunkX != 0) {
+      output.WriteRawTag(8);
+      output.WriteInt32(ChunkX);
+    }
+    if (ChunkY != 0) {
+      output.WriteRawTag(16);
+      output.WriteInt32(ChunkY);
+    }
+    if (ChunkZ != 0) {
+      output.WriteRawTag(24);
+      output.WriteInt32(ChunkZ);
+    }
     if (X != 0F) {
-      output.WriteRawTag(13);
+      output.WriteRawTag(37);
       output.WriteFloat(X);
     }
     if (Y != 0F) {
-      output.WriteRawTag(21);
+      output.WriteRawTag(45);
       output.WriteFloat(Y);
     }
     if (Z != 0F) {
-      output.WriteRawTag(29);
+      output.WriteRawTag(53);
       output.WriteFloat(Z);
     }
     if (Yaw != 0F) {
-      output.WriteRawTag(37);
+      output.WriteRawTag(61);
       output.WriteFloat(Yaw);
     }
     if (Pitch != 0F) {
-      output.WriteRawTag(45);
+      output.WriteRawTag(69);
       output.WriteFloat(Pitch);
     }
     if (HeadYaw != 0F) {
-      output.WriteRawTag(53);
+      output.WriteRawTag(77);
       output.WriteFloat(HeadYaw);
     }
     if (_unknownFields != null) {
@@ -282,6 +353,15 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public int CalculateSize() {
     int size = 0;
+    if (ChunkX != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(ChunkX);
+    }
+    if (ChunkY != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(ChunkY);
+    }
+    if (ChunkZ != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(ChunkZ);
+    }
     if (X != 0F) {
       size += 1 + 4;
     }
@@ -311,6 +391,15 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
   public void MergeFrom(PlayerMove other) {
     if (other == null) {
       return;
+    }
+    if (other.ChunkX != 0) {
+      ChunkX = other.ChunkX;
+    }
+    if (other.ChunkY != 0) {
+      ChunkY = other.ChunkY;
+    }
+    if (other.ChunkZ != 0) {
+      ChunkZ = other.ChunkZ;
     }
     if (other.X != 0F) {
       X = other.X;
@@ -345,27 +434,39 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
-        case 13: {
-          X = input.ReadFloat();
+        case 8: {
+          ChunkX = input.ReadInt32();
           break;
         }
-        case 21: {
-          Y = input.ReadFloat();
+        case 16: {
+          ChunkY = input.ReadInt32();
           break;
         }
-        case 29: {
-          Z = input.ReadFloat();
+        case 24: {
+          ChunkZ = input.ReadInt32();
           break;
         }
         case 37: {
-          Yaw = input.ReadFloat();
+          X = input.ReadFloat();
           break;
         }
         case 45: {
-          Pitch = input.ReadFloat();
+          Y = input.ReadFloat();
           break;
         }
         case 53: {
+          Z = input.ReadFloat();
+          break;
+        }
+        case 61: {
+          Yaw = input.ReadFloat();
+          break;
+        }
+        case 69: {
+          Pitch = input.ReadFloat();
+          break;
+        }
+        case 77: {
           HeadYaw = input.ReadFloat();
           break;
         }
@@ -384,27 +485,39 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
           break;
-        case 13: {
-          X = input.ReadFloat();
+        case 8: {
+          ChunkX = input.ReadInt32();
           break;
         }
-        case 21: {
-          Y = input.ReadFloat();
+        case 16: {
+          ChunkY = input.ReadInt32();
           break;
         }
-        case 29: {
-          Z = input.ReadFloat();
+        case 24: {
+          ChunkZ = input.ReadInt32();
           break;
         }
         case 37: {
-          Yaw = input.ReadFloat();
+          X = input.ReadFloat();
           break;
         }
         case 45: {
-          Pitch = input.ReadFloat();
+          Y = input.ReadFloat();
           break;
         }
         case 53: {
+          Z = input.ReadFloat();
+          break;
+        }
+        case 61: {
+          Yaw = input.ReadFloat();
+          break;
+        }
+        case 69: {
+          Pitch = input.ReadFloat();
+          break;
+        }
+        case 77: {
           HeadYaw = input.ReadFloat();
           break;
         }
@@ -450,9 +563,12 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public PlayerControlBlock(PlayerControlBlock other) : this() {
     type_ = other.type_;
-    targetX_ = other.targetX_;
-    targetY_ = other.targetY_;
-    targetZ_ = other.targetZ_;
+    chunkX_ = other.chunkX_;
+    chunkY_ = other.chunkY_;
+    chunkZ_ = other.chunkZ_;
+    blockX_ = other.blockX_;
+    blockY_ = other.blockY_;
+    blockZ_ = other.blockZ_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
@@ -474,39 +590,75 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
     }
   }
 
-  /// <summary>Field number for the "target_x" field.</summary>
-  public const int TargetXFieldNumber = 2;
-  private float targetX_;
+  /// <summary>Field number for the "chunk_x" field.</summary>
+  public const int ChunkXFieldNumber = 2;
+  private int chunkX_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public float TargetX {
-    get { return targetX_; }
+  public int ChunkX {
+    get { return chunkX_; }
     set {
-      targetX_ = value;
+      chunkX_ = value;
     }
   }
 
-  /// <summary>Field number for the "target_y" field.</summary>
-  public const int TargetYFieldNumber = 3;
-  private float targetY_;
+  /// <summary>Field number for the "chunk_y" field.</summary>
+  public const int ChunkYFieldNumber = 3;
+  private int chunkY_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public float TargetY {
-    get { return targetY_; }
+  public int ChunkY {
+    get { return chunkY_; }
     set {
-      targetY_ = value;
+      chunkY_ = value;
     }
   }
 
-  /// <summary>Field number for the "target_z" field.</summary>
-  public const int TargetZFieldNumber = 4;
-  private float targetZ_;
+  /// <summary>Field number for the "chunk_z" field.</summary>
+  public const int ChunkZFieldNumber = 4;
+  private int chunkZ_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public float TargetZ {
-    get { return targetZ_; }
+  public int ChunkZ {
+    get { return chunkZ_; }
     set {
-      targetZ_ = value;
+      chunkZ_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "block_x" field.</summary>
+  public const int BlockXFieldNumber = 5;
+  private int blockX_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int BlockX {
+    get { return blockX_; }
+    set {
+      blockX_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "block_y" field.</summary>
+  public const int BlockYFieldNumber = 6;
+  private int blockY_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int BlockY {
+    get { return blockY_; }
+    set {
+      blockY_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "block_z" field.</summary>
+  public const int BlockZFieldNumber = 7;
+  private int blockZ_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int BlockZ {
+    get { return blockZ_; }
+    set {
+      blockZ_ = value;
     }
   }
 
@@ -526,9 +678,12 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
       return true;
     }
     if (Type != other.Type) return false;
-    if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(TargetX, other.TargetX)) return false;
-    if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(TargetY, other.TargetY)) return false;
-    if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(TargetZ, other.TargetZ)) return false;
+    if (ChunkX != other.ChunkX) return false;
+    if (ChunkY != other.ChunkY) return false;
+    if (ChunkZ != other.ChunkZ) return false;
+    if (BlockX != other.BlockX) return false;
+    if (BlockY != other.BlockY) return false;
+    if (BlockZ != other.BlockZ) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -537,9 +692,12 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
   public override int GetHashCode() {
     int hash = 1;
     if (Type != 0) hash ^= Type.GetHashCode();
-    if (TargetX != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(TargetX);
-    if (TargetY != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(TargetY);
-    if (TargetZ != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(TargetZ);
+    if (ChunkX != 0) hash ^= ChunkX.GetHashCode();
+    if (ChunkY != 0) hash ^= ChunkY.GetHashCode();
+    if (ChunkZ != 0) hash ^= ChunkZ.GetHashCode();
+    if (BlockX != 0) hash ^= BlockX.GetHashCode();
+    if (BlockY != 0) hash ^= BlockY.GetHashCode();
+    if (BlockZ != 0) hash ^= BlockZ.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -562,17 +720,29 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
       output.WriteRawTag(8);
       output.WriteInt32(Type);
     }
-    if (TargetX != 0F) {
-      output.WriteRawTag(21);
-      output.WriteFloat(TargetX);
+    if (ChunkX != 0) {
+      output.WriteRawTag(16);
+      output.WriteInt32(ChunkX);
     }
-    if (TargetY != 0F) {
-      output.WriteRawTag(29);
-      output.WriteFloat(TargetY);
+    if (ChunkY != 0) {
+      output.WriteRawTag(24);
+      output.WriteInt32(ChunkY);
     }
-    if (TargetZ != 0F) {
-      output.WriteRawTag(37);
-      output.WriteFloat(TargetZ);
+    if (ChunkZ != 0) {
+      output.WriteRawTag(32);
+      output.WriteInt32(ChunkZ);
+    }
+    if (BlockX != 0) {
+      output.WriteRawTag(40);
+      output.WriteInt32(BlockX);
+    }
+    if (BlockY != 0) {
+      output.WriteRawTag(48);
+      output.WriteInt32(BlockY);
+    }
+    if (BlockZ != 0) {
+      output.WriteRawTag(56);
+      output.WriteInt32(BlockZ);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -588,17 +758,29 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
       output.WriteRawTag(8);
       output.WriteInt32(Type);
     }
-    if (TargetX != 0F) {
-      output.WriteRawTag(21);
-      output.WriteFloat(TargetX);
+    if (ChunkX != 0) {
+      output.WriteRawTag(16);
+      output.WriteInt32(ChunkX);
     }
-    if (TargetY != 0F) {
-      output.WriteRawTag(29);
-      output.WriteFloat(TargetY);
+    if (ChunkY != 0) {
+      output.WriteRawTag(24);
+      output.WriteInt32(ChunkY);
     }
-    if (TargetZ != 0F) {
-      output.WriteRawTag(37);
-      output.WriteFloat(TargetZ);
+    if (ChunkZ != 0) {
+      output.WriteRawTag(32);
+      output.WriteInt32(ChunkZ);
+    }
+    if (BlockX != 0) {
+      output.WriteRawTag(40);
+      output.WriteInt32(BlockX);
+    }
+    if (BlockY != 0) {
+      output.WriteRawTag(48);
+      output.WriteInt32(BlockY);
+    }
+    if (BlockZ != 0) {
+      output.WriteRawTag(56);
+      output.WriteInt32(BlockZ);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
@@ -613,14 +795,23 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
     if (Type != 0) {
       size += 1 + pb::CodedOutputStream.ComputeInt32Size(Type);
     }
-    if (TargetX != 0F) {
-      size += 1 + 4;
+    if (ChunkX != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(ChunkX);
     }
-    if (TargetY != 0F) {
-      size += 1 + 4;
+    if (ChunkY != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(ChunkY);
     }
-    if (TargetZ != 0F) {
-      size += 1 + 4;
+    if (ChunkZ != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(ChunkZ);
+    }
+    if (BlockX != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(BlockX);
+    }
+    if (BlockY != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(BlockY);
+    }
+    if (BlockZ != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(BlockZ);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -637,14 +828,23 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
     if (other.Type != 0) {
       Type = other.Type;
     }
-    if (other.TargetX != 0F) {
-      TargetX = other.TargetX;
+    if (other.ChunkX != 0) {
+      ChunkX = other.ChunkX;
     }
-    if (other.TargetY != 0F) {
-      TargetY = other.TargetY;
+    if (other.ChunkY != 0) {
+      ChunkY = other.ChunkY;
     }
-    if (other.TargetZ != 0F) {
-      TargetZ = other.TargetZ;
+    if (other.ChunkZ != 0) {
+      ChunkZ = other.ChunkZ;
+    }
+    if (other.BlockX != 0) {
+      BlockX = other.BlockX;
+    }
+    if (other.BlockY != 0) {
+      BlockY = other.BlockY;
+    }
+    if (other.BlockZ != 0) {
+      BlockZ = other.BlockZ;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -665,16 +865,28 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
           Type = input.ReadInt32();
           break;
         }
-        case 21: {
-          TargetX = input.ReadFloat();
+        case 16: {
+          ChunkX = input.ReadInt32();
           break;
         }
-        case 29: {
-          TargetY = input.ReadFloat();
+        case 24: {
+          ChunkY = input.ReadInt32();
           break;
         }
-        case 37: {
-          TargetZ = input.ReadFloat();
+        case 32: {
+          ChunkZ = input.ReadInt32();
+          break;
+        }
+        case 40: {
+          BlockX = input.ReadInt32();
+          break;
+        }
+        case 48: {
+          BlockY = input.ReadInt32();
+          break;
+        }
+        case 56: {
+          BlockZ = input.ReadInt32();
           break;
         }
       }
@@ -696,16 +908,28 @@ public sealed partial class PlayerControlBlock : pb::IMessage<PlayerControlBlock
           Type = input.ReadInt32();
           break;
         }
-        case 21: {
-          TargetX = input.ReadFloat();
+        case 16: {
+          ChunkX = input.ReadInt32();
           break;
         }
-        case 29: {
-          TargetY = input.ReadFloat();
+        case 24: {
+          ChunkY = input.ReadInt32();
           break;
         }
-        case 37: {
-          TargetZ = input.ReadFloat();
+        case 32: {
+          ChunkZ = input.ReadInt32();
+          break;
+        }
+        case 40: {
+          BlockX = input.ReadInt32();
+          break;
+        }
+        case 48: {
+          BlockY = input.ReadInt32();
+          break;
+        }
+        case 56: {
+          BlockZ = input.ReadInt32();
           break;
         }
       }

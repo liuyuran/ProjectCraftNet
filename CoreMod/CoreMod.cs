@@ -31,7 +31,6 @@ public class CoreMod: ModBase
     public override void OnLoad()
     {
         ChunkGeneratorManager.AddChunkGenerator(0, new DefaultChunkGenerator());
-        BlockManager.RegisterBlock<Air>();
         BlockManager.RegisterBlock<Dirt>();
     }
 

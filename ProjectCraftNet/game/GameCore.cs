@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Reflection;
 using Arch.Core;
 using Arch.System;
+using CoreMod.blocks;
 using Google.Protobuf;
 using Microsoft.Extensions.Logging;
 using ModManager.archive;
@@ -12,11 +13,14 @@ using ModManager.ecs.components;
 using ModManager.ecs.systems;
 using ModManager.eventBus;
 using ModManager.eventBus.events;
+using ModManager.game.block;
 using ModManager.game.client;
 using ModManager.game.command;
 using ModManager.game.user;
 using ModManager.logger;
 using ModManager.network;
+using ModManager.state.world;
+using ModManager.state.world.block;
 using ModManager.state.world.chunk;
 using ModManager.utils;
 using SysInfo;
@@ -204,33 +208,57 @@ public class GameCore(Config config)
                 NetworkEvents.FireSendEvent(info.SocketId, PackType.ServerStatus, status.ToByteArray());
                 break;
             case PackType.ControlBlock:
-                // TODO 方块交互
+            {
+                var userInfo = UserManager.GetUserInfo(info.SocketId);
+                var controlBlock = PlayerControlBlock.Parser.ParseFrom(data);
+                switch (controlBlock.Type)
+                {
+                    case 1:
+                    {
+                        // 挖掘
+                        var chunkPos = new ChunkPos(controlBlock.ChunkX, controlBlock.ChunkY, controlBlock.ChunkZ);
+                        var blockPos = new BlockPos(controlBlock.BlockX, controlBlock.BlockY, controlBlock.BlockZ);
+                        ModManager.state.ProjectCraftNet.Instance.World.SetBlockToChunk(userInfo.WorldId, 
+                            chunkPos, blockPos, 
+                            BlockManager.GetBlockId<Air>());
+                        var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
+                        _world.Query(in chunkQuery, (ref ChunkBlockData chunkData, ref Position position) => {
+                            if (position.ChunkPos.X != chunkPos.X || position.ChunkPos.Y != chunkPos.Y || position.ChunkPos.Z != chunkPos.Z) return;
+                            chunkData.Changed = true;
+                            chunkData.Data[GameWorld.GetIndexFromBlockPos(blockPos)] = BlockManager.GetBlockId<Air>();
+                        });
+                        break;
+                    }
+                }
+
                 break;
+            }
             case PackType.ControlEntity:
                 // TODO 实体交互
                 break;
             case PackType.Move:
+            {
                 // 用户移动
                 var move = PlayerMove.Parser.ParseFrom(data);
                 var userInfo = UserManager.GetUserInfo(info.SocketId);
                 userInfo.Position = new LongVector3((long)move.X, (long)move.Y, (long)move.Z);
                 var entity = userInfo.PlayerEntity;
                 if (entity == null) break;
-                var chunkSize = config.Core!.ChunkSize;
                 _world.Set(entity.Value, new Position
                 {
                     ChunkPos = new IntVector3(
-                        (int)(userInfo.Position.X / chunkSize),
-                        (int)(userInfo.Position.Y / chunkSize),
-                        (int)(userInfo.Position.Z / chunkSize)
+                        move.ChunkX,
+                        move.ChunkY,
+                        move.ChunkZ
                     ),
                     InChunkPos = new Vector3(
-                        userInfo.Position.X % chunkSize,
-                        userInfo.Position.Y % chunkSize,
-                        userInfo.Position.Z % chunkSize
+                        move.X,
+                        move.Y,
+                        move.Z
                     )
                 });
                 break;
+            }
             case PackType.OnlineList:
                 // 发送在线用户列表
                 var onlineList = new OnlineList();
