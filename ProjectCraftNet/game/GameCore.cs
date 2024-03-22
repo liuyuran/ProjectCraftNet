@@ -17,6 +17,7 @@ using ModManager.game.command;
 using ModManager.game.user;
 using ModManager.logger;
 using ModManager.network;
+using ModManager.state.world.chunk;
 using ModManager.utils;
 using SysInfo;
 using static ModManager.game.localization.LocalizationManager;
@@ -212,7 +213,6 @@ public class GameCore(Config config)
                 // 用户移动
                 var move = PlayerMove.Parser.ParseFrom(data);
                 var userInfo = UserManager.GetUserInfo(info.SocketId);
-                // TODO 俺寻思这里得加个判断防止穿墙，又或者维持君子协定？
                 userInfo.Position = new LongVector3((long)move.X, (long)move.Y, (long)move.Z);
                 var entity = userInfo.PlayerEntity;
                 if (entity == null) break;
@@ -246,6 +246,24 @@ public class GameCore(Config config)
                 NetworkEvents.FireSendEvent(info.SocketId, PackType.OnlineList, onlineList.ToByteArray());
                 break;
             case PackType.Chunk:
+                // 发送区块数据
+                var chunk = ChunkData.Parser.ParseFrom(data);
+                var chunkData = ModManager.state.ProjectCraftNet.Instance.World.GetChunkData(chunk.WorldId, new ChunkPos
+                {
+                    X = chunk.X,
+                    Y = chunk.Y,
+                    Z = chunk.Z
+                });
+                foreach (var blockId in chunkData)
+                {
+                    chunk.Blocks.Add(new BlockData
+                    {
+                        BlockId = blockId,
+                        SubId = 0
+                    });
+                }
+                NetworkEvents.FireSendEvent(info.SocketId, PackType.OnlineList, chunk.ToByteArray());
+                break;
             case PackType.Ping:
             case PackType.Unknown:
             default:

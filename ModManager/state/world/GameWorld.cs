@@ -20,6 +20,12 @@ public class GameWorld
         return state;
     }
     
+    public long[] GetChunkData(long worldId, ChunkPos pos)
+    {
+        if (!_chunkLink.TryGetValue(worldId, out var chunkLink)) return Array.Empty<long>();
+        return chunkLink.TryGetValue(pos, out var chunkData) ? chunkData : Array.Empty<long>();
+    }
+    
     private static int GetIndexFromBlockPos(BlockPos pos)
     {
         var len = ConfigUtil.Instance.GetConfig().Core!.ChunkSize;

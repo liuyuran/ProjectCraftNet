@@ -29,11 +29,11 @@ public static partial class ServerReflection {
           "KA0iIwoPQmxvY2tEZWZpbmVJdGVtEhAKCGJsb2NrX2lkGAEgASgDIi4KC0Js",
           "b2NrRGVmaW5lEh8KBWl0ZW1zGAEgAygLMhAuQmxvY2tEZWZpbmVJdGVtIi0K",
           "CUJsb2NrRGF0YRIQCghibG9ja19pZBgBIAEoAxIOCgZzdWJfaWQYAiABKAMi",
-          "SAoJQ2h1bmtEYXRhEgkKAXgYASABKAMSCQoBeRgCIAEoAxIJCgF6GAMgASgD",
-          "EhoKBmJsb2NrcxgEIAMoCzIKLkJsb2NrRGF0YSI0CgpQbGF5ZXJJdGVtEgoK",
-          "AmlkGAEgASgDEgwKBG5hbWUYAiABKAkSDAoEcGluZxgDIAEoDSIqCgpPbmxp",
-          "bmVMaXN0EhwKB3BsYXllcnMYASADKAsyCy5QbGF5ZXJJdGVtQgP4AQFiBnBy",
-          "b3RvMw=="));
+          "WQoJQ2h1bmtEYXRhEgkKAXgYASABKAUSCQoBeRgCIAEoBRIJCgF6GAMgASgF",
+          "Eg8KB3dvcmxkSWQYBCABKAMSGgoGYmxvY2tzGAUgAygLMgouQmxvY2tEYXRh",
+          "IjQKClBsYXllckl0ZW0SCgoCaWQYASABKAMSDAoEbmFtZRgCIAEoCRIMCgRw",
+          "aW5nGAMgASgNIioKCk9ubGluZUxpc3QSHAoHcGxheWVycxgBIAMoCzILLlBs",
+          "YXllckl0ZW1CA/gBAWIGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -41,7 +41,7 @@ public static partial class ServerReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::BlockDefineItem), global::BlockDefineItem.Parser, new[]{ "BlockId" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::BlockDefine), global::BlockDefine.Parser, new[]{ "Items" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::BlockData), global::BlockData.Parser, new[]{ "BlockId", "SubId" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::ChunkData), global::ChunkData.Parser, new[]{ "X", "Y", "Z", "Blocks" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::ChunkData), global::ChunkData.Parser, new[]{ "X", "Y", "Z", "WorldId", "Blocks" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::PlayerItem), global::PlayerItem.Parser, new[]{ "Id", "Name", "Ping" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::OnlineList), global::OnlineList.Parser, new[]{ "Players" }, null, null, null, null)
         }));
@@ -1128,6 +1128,7 @@ public sealed partial class ChunkData : pb::IMessage<ChunkData>
     x_ = other.x_;
     y_ = other.y_;
     z_ = other.z_;
+    worldId_ = other.worldId_;
     blocks_ = other.blocks_.Clone();
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
@@ -1140,10 +1141,10 @@ public sealed partial class ChunkData : pb::IMessage<ChunkData>
 
   /// <summary>Field number for the "x" field.</summary>
   public const int XFieldNumber = 1;
-  private long x_;
+  private int x_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public long X {
+  public int X {
     get { return x_; }
     set {
       x_ = value;
@@ -1152,10 +1153,10 @@ public sealed partial class ChunkData : pb::IMessage<ChunkData>
 
   /// <summary>Field number for the "y" field.</summary>
   public const int YFieldNumber = 2;
-  private long y_;
+  private int y_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public long Y {
+  public int Y {
     get { return y_; }
     set {
       y_ = value;
@@ -1164,20 +1165,32 @@ public sealed partial class ChunkData : pb::IMessage<ChunkData>
 
   /// <summary>Field number for the "z" field.</summary>
   public const int ZFieldNumber = 3;
-  private long z_;
+  private int z_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public long Z {
+  public int Z {
     get { return z_; }
     set {
       z_ = value;
     }
   }
 
+  /// <summary>Field number for the "worldId" field.</summary>
+  public const int WorldIdFieldNumber = 4;
+  private long worldId_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public long WorldId {
+    get { return worldId_; }
+    set {
+      worldId_ = value;
+    }
+  }
+
   /// <summary>Field number for the "blocks" field.</summary>
-  public const int BlocksFieldNumber = 4;
+  public const int BlocksFieldNumber = 5;
   private static readonly pb::FieldCodec<global::BlockData> _repeated_blocks_codec
-      = pb::FieldCodec.ForMessage(34, global::BlockData.Parser);
+      = pb::FieldCodec.ForMessage(42, global::BlockData.Parser);
   private readonly pbc::RepeatedField<global::BlockData> blocks_ = new pbc::RepeatedField<global::BlockData>();
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1203,6 +1216,7 @@ public sealed partial class ChunkData : pb::IMessage<ChunkData>
     if (X != other.X) return false;
     if (Y != other.Y) return false;
     if (Z != other.Z) return false;
+    if (WorldId != other.WorldId) return false;
     if(!blocks_.Equals(other.blocks_)) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
@@ -1211,9 +1225,10 @@ public sealed partial class ChunkData : pb::IMessage<ChunkData>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override int GetHashCode() {
     int hash = 1;
-    if (X != 0L) hash ^= X.GetHashCode();
-    if (Y != 0L) hash ^= Y.GetHashCode();
-    if (Z != 0L) hash ^= Z.GetHashCode();
+    if (X != 0) hash ^= X.GetHashCode();
+    if (Y != 0) hash ^= Y.GetHashCode();
+    if (Z != 0) hash ^= Z.GetHashCode();
+    if (WorldId != 0L) hash ^= WorldId.GetHashCode();
     hash ^= blocks_.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -1233,17 +1248,21 @@ public sealed partial class ChunkData : pb::IMessage<ChunkData>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     output.WriteRawMessage(this);
   #else
-    if (X != 0L) {
+    if (X != 0) {
       output.WriteRawTag(8);
-      output.WriteInt64(X);
+      output.WriteInt32(X);
     }
-    if (Y != 0L) {
+    if (Y != 0) {
       output.WriteRawTag(16);
-      output.WriteInt64(Y);
+      output.WriteInt32(Y);
     }
-    if (Z != 0L) {
+    if (Z != 0) {
       output.WriteRawTag(24);
-      output.WriteInt64(Z);
+      output.WriteInt32(Z);
+    }
+    if (WorldId != 0L) {
+      output.WriteRawTag(32);
+      output.WriteInt64(WorldId);
     }
     blocks_.WriteTo(output, _repeated_blocks_codec);
     if (_unknownFields != null) {
@@ -1256,17 +1275,21 @@ public sealed partial class ChunkData : pb::IMessage<ChunkData>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-    if (X != 0L) {
+    if (X != 0) {
       output.WriteRawTag(8);
-      output.WriteInt64(X);
+      output.WriteInt32(X);
     }
-    if (Y != 0L) {
+    if (Y != 0) {
       output.WriteRawTag(16);
-      output.WriteInt64(Y);
+      output.WriteInt32(Y);
     }
-    if (Z != 0L) {
+    if (Z != 0) {
       output.WriteRawTag(24);
-      output.WriteInt64(Z);
+      output.WriteInt32(Z);
+    }
+    if (WorldId != 0L) {
+      output.WriteRawTag(32);
+      output.WriteInt64(WorldId);
     }
     blocks_.WriteTo(ref output, _repeated_blocks_codec);
     if (_unknownFields != null) {
@@ -1279,14 +1302,17 @@ public sealed partial class ChunkData : pb::IMessage<ChunkData>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public int CalculateSize() {
     int size = 0;
-    if (X != 0L) {
-      size += 1 + pb::CodedOutputStream.ComputeInt64Size(X);
+    if (X != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(X);
     }
-    if (Y != 0L) {
-      size += 1 + pb::CodedOutputStream.ComputeInt64Size(Y);
+    if (Y != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(Y);
     }
-    if (Z != 0L) {
-      size += 1 + pb::CodedOutputStream.ComputeInt64Size(Z);
+    if (Z != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(Z);
+    }
+    if (WorldId != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(WorldId);
     }
     size += blocks_.CalculateSize(_repeated_blocks_codec);
     if (_unknownFields != null) {
@@ -1301,14 +1327,17 @@ public sealed partial class ChunkData : pb::IMessage<ChunkData>
     if (other == null) {
       return;
     }
-    if (other.X != 0L) {
+    if (other.X != 0) {
       X = other.X;
     }
-    if (other.Y != 0L) {
+    if (other.Y != 0) {
       Y = other.Y;
     }
-    if (other.Z != 0L) {
+    if (other.Z != 0) {
       Z = other.Z;
+    }
+    if (other.WorldId != 0L) {
+      WorldId = other.WorldId;
     }
     blocks_.Add(other.blocks_);
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -1327,18 +1356,22 @@ public sealed partial class ChunkData : pb::IMessage<ChunkData>
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
         case 8: {
-          X = input.ReadInt64();
+          X = input.ReadInt32();
           break;
         }
         case 16: {
-          Y = input.ReadInt64();
+          Y = input.ReadInt32();
           break;
         }
         case 24: {
-          Z = input.ReadInt64();
+          Z = input.ReadInt32();
           break;
         }
-        case 34: {
+        case 32: {
+          WorldId = input.ReadInt64();
+          break;
+        }
+        case 42: {
           blocks_.AddEntriesFrom(input, _repeated_blocks_codec);
           break;
         }
@@ -1358,18 +1391,22 @@ public sealed partial class ChunkData : pb::IMessage<ChunkData>
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
           break;
         case 8: {
-          X = input.ReadInt64();
+          X = input.ReadInt32();
           break;
         }
         case 16: {
-          Y = input.ReadInt64();
+          Y = input.ReadInt32();
           break;
         }
         case 24: {
-          Z = input.ReadInt64();
+          Z = input.ReadInt32();
           break;
         }
-        case 34: {
+        case 32: {
+          WorldId = input.ReadInt64();
+          break;
+        }
+        case 42: {
           blocks_.AddEntriesFrom(ref input, _repeated_blocks_codec);
           break;
         }

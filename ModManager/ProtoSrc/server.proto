@@ -26,10 +26,11 @@ message BlockData {
 }
 
 message ChunkData {
-  int64 x = 1;
-  int64 y = 2;
-  int64 z = 3;
-  repeated BlockData blocks = 4;
+  int32 x = 1;
+  int32 y = 2;
+  int32 z = 3;
+  int64 worldId = 4;
+  repeated BlockData blocks = 5;
 }
 
 message PlayerItem {

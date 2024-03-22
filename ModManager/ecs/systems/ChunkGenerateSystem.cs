@@ -23,7 +23,6 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
     {
         _existChunkPosition.Clear();
         var sight = ConfigUtil.Instance.GetConfig().Core!.Sight;
-        var chunkSize = ConfigUtil.Instance.GetConfig().Core!.ChunkSize;
         var playerQuery = new QueryDescription().WithAll<Player, Position>();
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
         _world.Query(in chunkQuery, (ref Position position) => {
@@ -90,9 +89,9 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
         });
         ProjectCraftNet.Instance.World.AddChunk(0, new ChunkPos
         {
-            X = (int)centerPosition.X,
-            Y = (int)centerPosition.Y,
-            Z = (int)centerPosition.Z
+            X = centerPosition.X,
+            Y = centerPosition.Y,
+            Z = centerPosition.Z
         }, chunkData);
     }
 }
