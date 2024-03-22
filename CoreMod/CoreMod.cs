@@ -37,7 +37,6 @@ public class CoreMod: ModBase
     public override void OnUnload()
     {
         ChunkGeneratorManager.RemoveChunkGenerator(0);
-        BlockManager.UnregisterBlock<Air>();
         BlockManager.UnregisterBlock<Dirt>();
     }
 
