@@ -33,7 +33,11 @@ public static partial class ServerReflection {
           "Eg8KB3dvcmxkSWQYBCABKAMSGgoGYmxvY2tzGAUgAygLMgouQmxvY2tEYXRh",
           "IjQKClBsYXllckl0ZW0SCgoCaWQYASABKAMSDAoEbmFtZRgCIAEoCRIMCgRw",
           "aW5nGAMgASgNIioKCk9ubGluZUxpc3QSHAoHcGxheWVycxgBIAMoCzILLlBs",
-          "YXllckl0ZW1CA/gBAWIGcHJvdG8z"));
+          "YXllckl0ZW0iqgEKC0Jsb2NrQ2hhbmdlEg8KB2NodW5rX3gYASABKAUSDwoH",
+          "Y2h1bmtfeRgCIAEoBRIPCgdjaHVua196GAMgASgFEg8KB2Jsb2NrX3gYBCAB",
+          "KAUSDwoHYmxvY2tfeRgFIAEoBRIPCgdibG9ja196GAYgASgFEhMKC2NoYW5n",
+          "ZV90eXBlGAcgASgFEhAKCGJsb2NrX2lkGAggASgDEg4KBnN1Yl9pZBgJIAEo",
+          "A0ID+AEBYgZwcm90bzM="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -43,7 +47,8 @@ public static partial class ServerReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::BlockData), global::BlockData.Parser, new[]{ "BlockId", "SubId" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::ChunkData), global::ChunkData.Parser, new[]{ "X", "Y", "Z", "WorldId", "Blocks" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::PlayerItem), global::PlayerItem.Parser, new[]{ "Id", "Name", "Ping" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::OnlineList), global::OnlineList.Parser, new[]{ "Players" }, null, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::OnlineList), global::OnlineList.Parser, new[]{ "Players" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::BlockChange), global::BlockChange.Parser, new[]{ "ChunkX", "ChunkY", "ChunkZ", "BlockX", "BlockY", "BlockZ", "ChangeType", "BlockId", "SubId" }, null, null, null, null)
         }));
   }
   #endregion
@@ -1849,6 +1854,491 @@ public sealed partial class OnlineList : pb::IMessage<OnlineList>
           break;
         case 10: {
           players_.AddEntriesFrom(ref input, _repeated_players_codec);
+          break;
+        }
+      }
+    }
+  }
+  #endif
+
+}
+
+public sealed partial class BlockChange : pb::IMessage<BlockChange>
+#if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    , pb::IBufferMessage
+#endif
+{
+  private static readonly pb::MessageParser<BlockChange> _parser = new pb::MessageParser<BlockChange>(() => new BlockChange());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pb::MessageParser<BlockChange> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::ServerReflection.Descriptor.MessageTypes[7]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public BlockChange() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public BlockChange(BlockChange other) : this() {
+    chunkX_ = other.chunkX_;
+    chunkY_ = other.chunkY_;
+    chunkZ_ = other.chunkZ_;
+    blockX_ = other.blockX_;
+    blockY_ = other.blockY_;
+    blockZ_ = other.blockZ_;
+    changeType_ = other.changeType_;
+    blockId_ = other.blockId_;
+    subId_ = other.subId_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public BlockChange Clone() {
+    return new BlockChange(this);
+  }
+
+  /// <summary>Field number for the "chunk_x" field.</summary>
+  public const int ChunkXFieldNumber = 1;
+  private int chunkX_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int ChunkX {
+    get { return chunkX_; }
+    set {
+      chunkX_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "chunk_y" field.</summary>
+  public const int ChunkYFieldNumber = 2;
+  private int chunkY_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int ChunkY {
+    get { return chunkY_; }
+    set {
+      chunkY_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "chunk_z" field.</summary>
+  public const int ChunkZFieldNumber = 3;
+  private int chunkZ_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int ChunkZ {
+    get { return chunkZ_; }
+    set {
+      chunkZ_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "block_x" field.</summary>
+  public const int BlockXFieldNumber = 4;
+  private int blockX_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int BlockX {
+    get { return blockX_; }
+    set {
+      blockX_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "block_y" field.</summary>
+  public const int BlockYFieldNumber = 5;
+  private int blockY_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int BlockY {
+    get { return blockY_; }
+    set {
+      blockY_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "block_z" field.</summary>
+  public const int BlockZFieldNumber = 6;
+  private int blockZ_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int BlockZ {
+    get { return blockZ_; }
+    set {
+      blockZ_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "change_type" field.</summary>
+  public const int ChangeTypeFieldNumber = 7;
+  private int changeType_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int ChangeType {
+    get { return changeType_; }
+    set {
+      changeType_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "block_id" field.</summary>
+  public const int BlockIdFieldNumber = 8;
+  private long blockId_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public long BlockId {
+    get { return blockId_; }
+    set {
+      blockId_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "sub_id" field.</summary>
+  public const int SubIdFieldNumber = 9;
+  private long subId_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public long SubId {
+    get { return subId_; }
+    set {
+      subId_ = value;
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override bool Equals(object other) {
+    return Equals(other as BlockChange);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool Equals(BlockChange other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (ChunkX != other.ChunkX) return false;
+    if (ChunkY != other.ChunkY) return false;
+    if (ChunkZ != other.ChunkZ) return false;
+    if (BlockX != other.BlockX) return false;
+    if (BlockY != other.BlockY) return false;
+    if (BlockZ != other.BlockZ) return false;
+    if (ChangeType != other.ChangeType) return false;
+    if (BlockId != other.BlockId) return false;
+    if (SubId != other.SubId) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (ChunkX != 0) hash ^= ChunkX.GetHashCode();
+    if (ChunkY != 0) hash ^= ChunkY.GetHashCode();
+    if (ChunkZ != 0) hash ^= ChunkZ.GetHashCode();
+    if (BlockX != 0) hash ^= BlockX.GetHashCode();
+    if (BlockY != 0) hash ^= BlockY.GetHashCode();
+    if (BlockZ != 0) hash ^= BlockZ.GetHashCode();
+    if (ChangeType != 0) hash ^= ChangeType.GetHashCode();
+    if (BlockId != 0L) hash ^= BlockId.GetHashCode();
+    if (SubId != 0L) hash ^= SubId.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void WriteTo(pb::CodedOutputStream output) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    output.WriteRawMessage(this);
+  #else
+    if (ChunkX != 0) {
+      output.WriteRawTag(8);
+      output.WriteInt32(ChunkX);
+    }
+    if (ChunkY != 0) {
+      output.WriteRawTag(16);
+      output.WriteInt32(ChunkY);
+    }
+    if (ChunkZ != 0) {
+      output.WriteRawTag(24);
+      output.WriteInt32(ChunkZ);
+    }
+    if (BlockX != 0) {
+      output.WriteRawTag(32);
+      output.WriteInt32(BlockX);
+    }
+    if (BlockY != 0) {
+      output.WriteRawTag(40);
+      output.WriteInt32(BlockY);
+    }
+    if (BlockZ != 0) {
+      output.WriteRawTag(48);
+      output.WriteInt32(BlockZ);
+    }
+    if (ChangeType != 0) {
+      output.WriteRawTag(56);
+      output.WriteInt32(ChangeType);
+    }
+    if (BlockId != 0L) {
+      output.WriteRawTag(64);
+      output.WriteInt64(BlockId);
+    }
+    if (SubId != 0L) {
+      output.WriteRawTag(72);
+      output.WriteInt64(SubId);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+    if (ChunkX != 0) {
+      output.WriteRawTag(8);
+      output.WriteInt32(ChunkX);
+    }
+    if (ChunkY != 0) {
+      output.WriteRawTag(16);
+      output.WriteInt32(ChunkY);
+    }
+    if (ChunkZ != 0) {
+      output.WriteRawTag(24);
+      output.WriteInt32(ChunkZ);
+    }
+    if (BlockX != 0) {
+      output.WriteRawTag(32);
+      output.WriteInt32(BlockX);
+    }
+    if (BlockY != 0) {
+      output.WriteRawTag(40);
+      output.WriteInt32(BlockY);
+    }
+    if (BlockZ != 0) {
+      output.WriteRawTag(48);
+      output.WriteInt32(BlockZ);
+    }
+    if (ChangeType != 0) {
+      output.WriteRawTag(56);
+      output.WriteInt32(ChangeType);
+    }
+    if (BlockId != 0L) {
+      output.WriteRawTag(64);
+      output.WriteInt64(BlockId);
+    }
+    if (SubId != 0L) {
+      output.WriteRawTag(72);
+      output.WriteInt64(SubId);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(ref output);
+    }
+  }
+  #endif
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int CalculateSize() {
+    int size = 0;
+    if (ChunkX != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(ChunkX);
+    }
+    if (ChunkY != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(ChunkY);
+    }
+    if (ChunkZ != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(ChunkZ);
+    }
+    if (BlockX != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(BlockX);
+    }
+    if (BlockY != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(BlockY);
+    }
+    if (BlockZ != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(BlockZ);
+    }
+    if (ChangeType != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(ChangeType);
+    }
+    if (BlockId != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(BlockId);
+    }
+    if (SubId != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(SubId);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(BlockChange other) {
+    if (other == null) {
+      return;
+    }
+    if (other.ChunkX != 0) {
+      ChunkX = other.ChunkX;
+    }
+    if (other.ChunkY != 0) {
+      ChunkY = other.ChunkY;
+    }
+    if (other.ChunkZ != 0) {
+      ChunkZ = other.ChunkZ;
+    }
+    if (other.BlockX != 0) {
+      BlockX = other.BlockX;
+    }
+    if (other.BlockY != 0) {
+      BlockY = other.BlockY;
+    }
+    if (other.BlockZ != 0) {
+      BlockZ = other.BlockZ;
+    }
+    if (other.ChangeType != 0) {
+      ChangeType = other.ChangeType;
+    }
+    if (other.BlockId != 0L) {
+      BlockId = other.BlockId;
+    }
+    if (other.SubId != 0L) {
+      SubId = other.SubId;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(pb::CodedInputStream input) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    input.ReadRawMessage(this);
+  #else
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 8: {
+          ChunkX = input.ReadInt32();
+          break;
+        }
+        case 16: {
+          ChunkY = input.ReadInt32();
+          break;
+        }
+        case 24: {
+          ChunkZ = input.ReadInt32();
+          break;
+        }
+        case 32: {
+          BlockX = input.ReadInt32();
+          break;
+        }
+        case 40: {
+          BlockY = input.ReadInt32();
+          break;
+        }
+        case 48: {
+          BlockZ = input.ReadInt32();
+          break;
+        }
+        case 56: {
+          ChangeType = input.ReadInt32();
+          break;
+        }
+        case 64: {
+          BlockId = input.ReadInt64();
+          break;
+        }
+        case 72: {
+          SubId = input.ReadInt64();
+          break;
+        }
+      }
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+          break;
+        case 8: {
+          ChunkX = input.ReadInt32();
+          break;
+        }
+        case 16: {
+          ChunkY = input.ReadInt32();
+          break;
+        }
+        case 24: {
+          ChunkZ = input.ReadInt32();
+          break;
+        }
+        case 32: {
+          BlockX = input.ReadInt32();
+          break;
+        }
+        case 40: {
+          BlockY = input.ReadInt32();
+          break;
+        }
+        case 48: {
+          BlockZ = input.ReadInt32();
+          break;
+        }
+        case 56: {
+          ChangeType = input.ReadInt32();
+          break;
+        }
+        case 64: {
+          BlockId = input.ReadInt64();
+          break;
+        }
+        case 72: {
+          SubId = input.ReadInt64();
           break;
         }
       }

@@ -1,6 +1,7 @@
 ﻿using System.Net.Sockets;
 using Google.Protobuf;
 using Microsoft.Extensions.Logging;
+using ModManager.eventBus;
 using ModManager.game.user;
 using ModManager.logger;
 using static ModManager.game.localization.LocalizationManager;
@@ -18,8 +19,6 @@ public static class NetworkEvents
     public delegate void ReceiveEventHandler(ClientInfo info, PackType packType, byte[] data);
     // 发送数据请调用此事件
     public static event SendEventHandler? SendEvent;
-    // 接收数据请监听此事件
-    public static event ReceiveEventHandler? ReceiveEvent;
     
     public static void FireSendEvent(long socketId, PackType packType, byte[] data)
     {
@@ -68,7 +67,7 @@ public static class NetworkEvents
             Ip = socket.RemoteEndPoint?.ToString() ?? ""
         };
         try {
-            ReceiveEvent?.Invoke(info, (PackType)packType, data);
+            NetworkPackBus.Trigger((uint)packType, info, data);
         } catch (Exception e) {
             Logger.LogError("{}", Localize(ModId, "Error when handling PackType: {0}, {1}", packType, e.Message));
         }

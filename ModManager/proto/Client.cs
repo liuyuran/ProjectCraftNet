@@ -22,19 +22,19 @@ public static partial class ClientReflection {
   static ClientReflection() {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
-          "ChVQcm90b1NyYy9jbGllbnQucHJvdG8ijgEKClBsYXllck1vdmUSDwoHY2h1",
+          "ChVQcm90b1NyYy9jbGllbnQucHJvdG8ioQEKClBsYXllck1vdmUSDwoHY2h1",
           "bmtfeBgBIAEoBRIPCgdjaHVua195GAIgASgFEg8KB2NodW5rX3oYAyABKAUS",
           "CQoBeBgEIAEoAhIJCgF5GAUgASgCEgkKAXoYBiABKAISCwoDeWF3GAcgASgC",
-          "Eg0KBXBpdGNoGAggASgCEhAKCGhlYWRfeWF3GAkgASgCIogBChJQbGF5ZXJD",
-          "b250cm9sQmxvY2sSDAoEdHlwZRgBIAEoBRIPCgdjaHVua194GAIgASgFEg8K",
-          "B2NodW5rX3kYAyABKAUSDwoHY2h1bmtfehgEIAEoBRIPCgdibG9ja194GAUg",
-          "ASgFEg8KB2Jsb2NrX3kYBiABKAUSDwoHYmxvY2tfehgHIAEoBSI2ChNQbGF5",
-          "ZXJDb250cm9sRW50aXR5EgwKBHR5cGUYASABKAUSEQoJdGFyZ2V0X2lkGAIg",
-          "ASgDQgP4AQFiBnByb3RvMw=="));
+          "Eg0KBXBpdGNoGAggASgCEhAKCGhlYWRfeWF3GAkgASgCEhEKCXBsYXllcl9p",
+          "ZBgKIAEoDSKIAQoSUGxheWVyQ29udHJvbEJsb2NrEgwKBHR5cGUYASABKAUS",
+          "DwoHY2h1bmtfeBgCIAEoBRIPCgdjaHVua195GAMgASgFEg8KB2NodW5rX3oY",
+          "BCABKAUSDwoHYmxvY2tfeBgFIAEoBRIPCgdibG9ja195GAYgASgFEg8KB2Js",
+          "b2NrX3oYByABKAUiNgoTUGxheWVyQ29udHJvbEVudGl0eRIMCgR0eXBlGAEg",
+          "ASgFEhEKCXRhcmdldF9pZBgCIAEoA0ID+AEBYgZwcm90bzM="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-          new pbr::GeneratedClrTypeInfo(typeof(global::PlayerMove), global::PlayerMove.Parser, new[]{ "ChunkX", "ChunkY", "ChunkZ", "X", "Y", "Z", "Yaw", "Pitch", "HeadYaw" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::PlayerMove), global::PlayerMove.Parser, new[]{ "ChunkX", "ChunkY", "ChunkZ", "X", "Y", "Z", "Yaw", "Pitch", "HeadYaw", "PlayerId" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::PlayerControlBlock), global::PlayerControlBlock.Parser, new[]{ "Type", "ChunkX", "ChunkY", "ChunkZ", "BlockX", "BlockY", "BlockZ" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::PlayerControlEntity), global::PlayerControlEntity.Parser, new[]{ "Type", "TargetId" }, null, null, null, null)
         }));
@@ -86,6 +86,7 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
     yaw_ = other.yaw_;
     pitch_ = other.pitch_;
     headYaw_ = other.headYaw_;
+    playerId_ = other.playerId_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
@@ -203,6 +204,18 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
     }
   }
 
+  /// <summary>Field number for the "player_id" field.</summary>
+  public const int PlayerIdFieldNumber = 10;
+  private uint playerId_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public uint PlayerId {
+    get { return playerId_; }
+    set {
+      playerId_ = value;
+    }
+  }
+
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override bool Equals(object other) {
@@ -227,6 +240,7 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
     if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Yaw, other.Yaw)) return false;
     if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Pitch, other.Pitch)) return false;
     if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(HeadYaw, other.HeadYaw)) return false;
+    if (PlayerId != other.PlayerId) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -243,6 +257,7 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
     if (Yaw != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Yaw);
     if (Pitch != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Pitch);
     if (HeadYaw != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(HeadYaw);
+    if (PlayerId != 0) hash ^= PlayerId.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -297,6 +312,10 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
       output.WriteRawTag(77);
       output.WriteFloat(HeadYaw);
     }
+    if (PlayerId != 0) {
+      output.WriteRawTag(80);
+      output.WriteUInt32(PlayerId);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -343,6 +362,10 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
       output.WriteRawTag(77);
       output.WriteFloat(HeadYaw);
     }
+    if (PlayerId != 0) {
+      output.WriteRawTag(80);
+      output.WriteUInt32(PlayerId);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
     }
@@ -379,6 +402,9 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
     }
     if (HeadYaw != 0F) {
       size += 1 + 4;
+    }
+    if (PlayerId != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(PlayerId);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -418,6 +444,9 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
     }
     if (other.HeadYaw != 0F) {
       HeadYaw = other.HeadYaw;
+    }
+    if (other.PlayerId != 0) {
+      PlayerId = other.PlayerId;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -470,6 +499,10 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
           HeadYaw = input.ReadFloat();
           break;
         }
+        case 80: {
+          PlayerId = input.ReadUInt32();
+          break;
+        }
       }
     }
   #endif
@@ -519,6 +552,10 @@ public sealed partial class PlayerMove : pb::IMessage<PlayerMove>
         }
         case 77: {
           HeadYaw = input.ReadFloat();
+          break;
+        }
+        case 80: {
+          PlayerId = input.ReadUInt32();
           break;
         }
       }

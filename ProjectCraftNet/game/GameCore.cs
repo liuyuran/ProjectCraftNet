@@ -4,7 +4,6 @@ using System.Numerics;
 using System.Reflection;
 using Arch.Core;
 using Arch.System;
-using CoreMod.blocks;
 using Google.Protobuf;
 using Microsoft.Extensions.Logging;
 using ModManager.archive;
@@ -13,15 +12,11 @@ using ModManager.ecs.components;
 using ModManager.ecs.systems;
 using ModManager.eventBus;
 using ModManager.eventBus.events;
-using ModManager.game.block;
-using ModManager.game.client;
 using ModManager.game.command;
 using ModManager.game.user;
 using ModManager.logger;
 using ModManager.network;
-using ModManager.state.world;
-using ModManager.state.world.block;
-using ModManager.state.world.chunk;
+using ModManager.network.handlers;
 using ModManager.utils;
 using SysInfo;
 using static ModManager.game.localization.LocalizationManager;
@@ -33,7 +28,6 @@ public class GameCore(Config config)
 {
     private static ILogger Logger { get; } = SysLogger.GetLogger(typeof(GameCore));
     private bool _stopping;
-    private readonly World _world = World.Create();
     private float _tickPerSecond;
 
     public void Start()
@@ -42,15 +36,16 @@ public class GameCore(Config config)
         var millPerTick = 10000000 / config.Core!.MaxTps;
         var tickPerSecond = 0;
         var baseMillis = DateTime.Now.Ticks;
-
+        var world = ModManager.state.ProjectCraftNet.Instance.World.World;
         // 开始监听网络事件
-        NetworkEvents.ReceiveEvent += OnNetworkEventsOnReceiveEvent;
+        PackHandlers.RegisterAllHandlers();
+        RegistryCorePackEvent();
         EventBus.Subscribe<ChatEvent>(OnGameEventsOnChatEvent);
         EventBus.Subscribe<ArchiveEvent>(OnGameEventsOnArchiveEvent);
         var systems = new Group<float>(
             "core-system",
-            new ChunkGenerateSystem(_world),
-            new ArchiveSystem(_world)
+            new ChunkGenerateSystem(world),
+            new ArchiveSystem(world)
         );
         systems.Initialize();
         Logger.LogInformation("{}", Localize(ModId, "Server started"));
@@ -62,13 +57,13 @@ public class GameCore(Config config)
             systems.AfterUpdate(in deltaTime);
             while (UserManager.WaitToJoin.Count > 0)
             {
-                var entity = _world.Create(Archetypes.Player);
+                var entity = world.Create(Archetypes.Player);
                 var sockId = UserManager.WaitToJoin.Dequeue();
                 var userInfo = UserManager.GetUserInfo(sockId);
                 var position = userInfo.Position;
                 var gameMod = userInfo.GameMode;
                 var chunkSize = config.Core!.ChunkSize;
-                _world.Set(entity, new Position
+                world.Set(entity, new Position
                 {
                     ChunkPos = new IntVector3(
                         (int)(position.X / chunkSize),
@@ -81,27 +76,31 @@ public class GameCore(Config config)
                         position.Z % chunkSize
                     )
                 });
-                _world.Set(entity, new Player { UserId = userInfo.UserId, GameMode = gameMod });
+                world.Set(entity, new Player { UserId = userInfo.UserId, GameMode = gameMod });
                 userInfo.PlayerEntity = entity;
             }
+
             while (UserManager.WaitToLeave.Count > 0)
             {
                 var entity = UserManager.WaitToLeave.Dequeue();
-                _world.Destroy(entity);
+                world.Destroy(entity);
             }
+
             // 调节逻辑帧率，等待下一个Tick
             var now = DateTime.Now.Ticks;
             var elapsed = now - lastTickMillis;
             if (elapsed < millPerTick)
             {
-                Thread.Sleep((int) (millPerTick - elapsed) / 10000);
+                Thread.Sleep((int)(millPerTick - elapsed) / 10000);
             }
+
             tickPerSecond++;
             if (now - baseMillis <= 10000000) continue;
             _tickPerSecond = tickPerSecond;
             tickPerSecond = 0;
             baseMillis = now;
         }
+
         systems.Dispose();
         Logger.LogInformation("{}", Localize(ModId, "Server shutdown"));
         Environment.Exit(0);
@@ -109,10 +108,12 @@ public class GameCore(Config config)
 
     private bool OnGameEventsOnArchiveEvent(ArchiveEvent @event)
     {
-        ArchiveManager.SaveUserInfo(_world);
+        var world = ModManager.state.ProjectCraftNet.Instance.World.World;
+        ArchiveManager.SaveUserInfo(world);
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
         var existChunkPosition = new Dictionary<long, List<IntVector3>>();
-        _world.Query(in chunkQuery, (ref ChunkBlockData data, ref Position position) => {
+        world.Query(in chunkQuery, (ref ChunkBlockData data, ref Position position) =>
+        {
             if (!data.Changed) return;
             data.Changed = false;
             var worldId = data.WorldId;
@@ -126,7 +127,7 @@ public class GameCore(Config config)
         });
         foreach (var (worldId, chunkPos) in existChunkPosition)
         {
-            ArchiveManager.SaveChunkInfo(_world, worldId, chunkPos.ToArray());
+            ArchiveManager.SaveChunkInfo(world, worldId, chunkPos.ToArray());
         }
 
         return true;
@@ -152,151 +153,28 @@ public class GameCore(Config config)
         return true;
     }
 
-    private void OnNetworkEventsOnReceiveEvent(ClientInfo info, PackType packType, byte[] data)
+    private void RegistryCorePackEvent()
     {
-        if (_stopping) return;
-        switch (packType)
+        NetworkPackBus.Subscribe((uint)PackType.ServerStatus, (info, _) =>
         {
-            case PackType.Shutdown:
-                // 关闭服务器
-                Logger.LogInformation("{}", Localize(ModId, "Server shutting down"));
-                _stopping = true;
-                break;
-            case PackType.Connect:
-                // 用户连接
-                var connect = Connect.Parser.ParseFrom(data);
-                var clientType = (ClientType)connect.ClientType;
-                Logger.LogInformation("{}", Localize(ModId, "Client [{0}]{1} connected", clientType, info.Ip));
-                var id = UserManager.UserLogin(connect, info);
-                if (id == 0)
-                {
-                    // 登录失败，通知客户端关闭连接
-                    NetworkEvents.FireSendEvent(info.SocketId, PackType.Shutdown, Array.Empty<byte>());
-                    return;
-                }
-                NetworkEvents.FireSendEvent(info.SocketId, PackType.Connect, Array.Empty<byte>());
-                EventBus.Trigger(info.SocketId, new UserLoginEvent());
-                break;
-            case PackType.Disconnect:
-                // 断开连接
-                EventBus.Trigger(info.SocketId, new UserLogoutEvent());
-                UserManager.UserLogout(info.SocketId);
-                break;
-            case PackType.Chat:
-                // 聊天消息
-                var chat = ChatAndBroadcast.Parser.ParseFrom(data);
-                Logger.LogInformation("{}", Localize(ModId, "Chat from {0}: {1}", info.Ip, chat.Msg));
-                EventBus.Trigger(info.SocketId, new ChatEvent
-                {
-                    Message = chat.Msg
-                });
-                break;
-            case PackType.ServerStatus:
-                // 发送服务器状态
-                var currentProcess = Process.GetCurrentProcess();
-                var status = new ServerStatus
-                {
-                    Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "unknown",
-                    Name = config.Core!.Title,
-                    MemoryUsed = (ulong)currentProcess.WorkingSet64,
-                    MemoryTotal = Memory.TotalMemorySize * 1073741824UL,
-                    MaxPlayers = config.Core!.MaxPlayer,
-                    OnlinePlayers = UserManager.GetOnlineUserCount(),
-                    Tps = (long)Math.Floor(_tickPerSecond),
-                    Ping = UserManager.GetUserInfo(info.SocketId).ClientInfo.Ping
-                };
-                NetworkEvents.FireSendEvent(info.SocketId, PackType.ServerStatus, status.ToByteArray());
-                break;
-            case PackType.ControlBlock:
+            var currentProcess = Process.GetCurrentProcess();
+            var status = new ServerStatus
             {
-                var userInfo = UserManager.GetUserInfo(info.SocketId);
-                var controlBlock = PlayerControlBlock.Parser.ParseFrom(data);
-                switch (controlBlock.Type)
-                {
-                    case 1:
-                    {
-                        // 挖掘
-                        var chunkPos = new ChunkPos(controlBlock.ChunkX, controlBlock.ChunkY, controlBlock.ChunkZ);
-                        var blockPos = new BlockPos(controlBlock.BlockX, controlBlock.BlockY, controlBlock.BlockZ);
-                        ModManager.state.ProjectCraftNet.Instance.World.SetBlockToChunk(userInfo.WorldId, 
-                            chunkPos, blockPos, 
-                            BlockManager.GetBlockId<Air>());
-                        var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
-                        _world.Query(in chunkQuery, (ref ChunkBlockData chunkData, ref Position position) => {
-                            if (position.ChunkPos.X != chunkPos.X || position.ChunkPos.Y != chunkPos.Y || position.ChunkPos.Z != chunkPos.Z) return;
-                            chunkData.Changed = true;
-                            chunkData.Data[GameWorld.GetIndexFromBlockPos(blockPos)] = BlockManager.GetBlockId<Air>();
-                        });
-                        break;
-                    }
-                }
-
-                break;
-            }
-            case PackType.ControlEntity:
-                // TODO 实体交互
-                break;
-            case PackType.Move:
-            {
-                // 用户移动
-                var move = PlayerMove.Parser.ParseFrom(data);
-                var userInfo = UserManager.GetUserInfo(info.SocketId);
-                userInfo.Position = new LongVector3((long)move.X, (long)move.Y, (long)move.Z);
-                var entity = userInfo.PlayerEntity;
-                if (entity == null) break;
-                _world.Set(entity.Value, new Position
-                {
-                    ChunkPos = new IntVector3(
-                        move.ChunkX,
-                        move.ChunkY,
-                        move.ChunkZ
-                    ),
-                    InChunkPos = new Vector3(
-                        move.X,
-                        move.Y,
-                        move.Z
-                    )
-                });
-                break;
-            }
-            case PackType.OnlineList:
-                // 发送在线用户列表
-                var onlineList = new OnlineList();
-                foreach (var user in UserManager.GetOnlineUsers())
-                {
-                    onlineList.Players.Add(new PlayerItem
-                    {
-                        Id = user.UserId,
-                        Name = user.NickName,
-                        Ping = user.ClientInfo.Ping
-                    });
-                }
-                NetworkEvents.FireSendEvent(info.SocketId, PackType.OnlineList, onlineList.ToByteArray());
-                break;
-            case PackType.Chunk:
-                // 发送区块数据
-                var chunk = ChunkData.Parser.ParseFrom(data);
-                var chunkData = ModManager.state.ProjectCraftNet.Instance.World.GetChunkData(chunk.WorldId, new ChunkPos
-                {
-                    X = chunk.X,
-                    Y = chunk.Y,
-                    Z = chunk.Z
-                });
-                foreach (var blockId in chunkData)
-                {
-                    chunk.Blocks.Add(new BlockData
-                    {
-                        BlockId = blockId,
-                        SubId = 0
-                    });
-                }
-                NetworkEvents.FireSendEvent(info.SocketId, PackType.OnlineList, chunk.ToByteArray());
-                break;
-            case PackType.Ping:
-            case PackType.Unknown:
-            default:
-                Logger.LogError("{}", Localize(ModId, "Unknown PackType: {0}", packType));
-                break;
-        }
+                Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "unknown",
+                Name = config.Core!.Title,
+                MemoryUsed = (ulong)currentProcess.WorkingSet64,
+                MemoryTotal = Memory.TotalMemorySize * 1073741824UL,
+                MaxPlayers = config.Core!.MaxPlayer,
+                OnlinePlayers = UserManager.GetOnlineUserCount(),
+                Tps = (long)Math.Floor(_tickPerSecond),
+                Ping = UserManager.GetUserInfo(info.SocketId).ClientInfo.Ping
+            };
+            NetworkEvents.FireSendEvent(info.SocketId, PackType.ServerStatus, status.ToByteArray());
+        });
+        NetworkPackBus.Subscribe((uint)PackType.Shutdown, (_, _) =>
+        {
+            Logger.LogInformation("{}", Localize(ModId, "Server shutting down"));
+            _stopping = true;
+        });
     }
 }

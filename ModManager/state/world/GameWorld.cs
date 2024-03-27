@@ -1,4 +1,5 @@
-﻿using ModManager.config;
+﻿using Arch.Core;
+using ModManager.config;
 using ModManager.state.world.block;
 using ModManager.state.world.block.interfaces;
 using ModManager.state.world.chunk;
@@ -8,6 +9,7 @@ namespace ModManager.state.world;
 public class GameWorld
 {
     private readonly Dictionary<long, Dictionary<ChunkPos, long[]>> _chunkLink = new();
+    public readonly World World = World.Create();
     
     public IBlockState? GetBlockState(WorldPos pos)
     {

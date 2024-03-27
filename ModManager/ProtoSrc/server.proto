@@ -42,3 +42,15 @@ message PlayerItem {
 message OnlineList {
   repeated PlayerItem players = 1;
 }
+
+message BlockChange {
+  int32 chunk_x = 1;
+  int32 chunk_y = 2;
+  int32 chunk_z = 3;
+  int32 block_x = 4;
+  int32 block_y = 5;
+  int32 block_z = 6;
+  int32 change_type = 7;
+  int64 block_id = 8;
+  int64 sub_id = 9;
+}

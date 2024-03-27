@@ -25,5 +25,7 @@ public enum PackType
     // 在线用户列表
     OnlineList = 9,
     // 断开连接
-    Disconnect = 10
+    Disconnect = 10,
+    // 方块变化
+    BlockChange = 11,
 }
