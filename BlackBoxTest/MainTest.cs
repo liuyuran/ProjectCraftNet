@@ -1,9 +1,7 @@
 using System.Numerics;
-using Arch.Core;
 using ModManager.game.user;
 using ModManager.network;
 using ModManager.utils;
-using Org.BouncyCastle.Tls;
 using ProjectCraftNet;
 
 namespace BlackBoxTest;
@@ -38,7 +36,7 @@ public class Tests
         return new TcpClient("127.0.0.1", 13000);
     }
     
-    [Test]
+    [Test, Order(1)]
     public async Task LoginAndLogout()
     {
         var tcpClient = GetClient();
@@ -58,7 +56,7 @@ public class Tests
         await tcpClient.Disconnect();
     }
     
-    [Test]
+    [Test, Order(2)]
     public async Task GetChunk()
     {
         var tcpClient = GetClient();
@@ -104,17 +102,57 @@ public class Tests
         Assert.That(step, Is.EqualTo(2));
     }
     
-    [Test]
+    [Test, Order(3)]
     public async Task Move()
     {
         var tcpClient = GetClient();
+        var tcpClient2 = GetClient();
+        var count = 0;
         tcpClient.ReceiveEvent += (type, bytes) =>
         {
-            //
+            if (type != (int)PackType.Chunk) return;
+            var data = PlayerMove.Parser.ParseFrom(bytes);
+            Assert.Multiple(() =>
+            {
+                Assert.That(data.ChunkX, Is.EqualTo(1));
+                Assert.That(data.ChunkY, Is.EqualTo(0));
+                Assert.That(data.ChunkZ, Is.EqualTo(0));
+                Assert.That(data.X, Is.EqualTo(0.3f));
+                Assert.That(data.Y, Is.EqualTo(0));
+                Assert.That(data.Z, Is.EqualTo(0));
+                Assert.That(data.Yaw, Is.EqualTo(0));
+                Assert.That(data.Pitch, Is.EqualTo(0));
+                Assert.That(data.HeadYaw, Is.EqualTo(0));
+                Assert.That(data.PlayerId, Is.EqualTo(1));
+            });
+            count++;
         };  
-        await tcpClient.Connect();
+        tcpClient2.ReceiveEvent += (type, bytes) =>
+        {
+            if (type != (int)PackType.Chunk) return;
+            var data = PlayerMove.Parser.ParseFrom(bytes);
+            Assert.Multiple(() =>
+            {
+                Assert.That(data.ChunkX, Is.EqualTo(1));
+                Assert.That(data.ChunkY, Is.EqualTo(0));
+                Assert.That(data.ChunkZ, Is.EqualTo(0));
+                Assert.That(data.X, Is.EqualTo(0.3f));
+                Assert.That(data.Y, Is.EqualTo(0));
+                Assert.That(data.Z, Is.EqualTo(0));
+                Assert.That(data.Yaw, Is.EqualTo(0));
+                Assert.That(data.Pitch, Is.EqualTo(0));
+                Assert.That(data.HeadYaw, Is.EqualTo(0));
+                Assert.That(data.PlayerId, Is.EqualTo(1));
+            });
+            count++;
+        };  
+        await tcpClient.Connect(54321);
         await tcpClient.Login("kamoeth", "123456");
+        await tcpClient2.Connect(54319);
+        await tcpClient2.Login("slave", "123456");
         Thread.Sleep(1000);
-        await tcpClient.MoveTo(new IntVector3(1, 0, 0), new Vector3(0, 0, 0));
+        await tcpClient.MoveTo(new IntVector3(1, 0, 0), new Vector3(0.3f, 0, 0));
+        Thread.Sleep(1000);
+        Assert.That(count, Is.EqualTo(2));
     }
 }

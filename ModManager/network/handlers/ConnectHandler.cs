@@ -16,7 +16,7 @@ public partial class PackHandlers
         // 用户连接
         var connect = Connect.Parser.ParseFrom(data);
         var clientType = (ClientType)connect.ClientType;
-        Logger.LogInformation("{}", Localize(ModId, "Client [{0}]{1} connected", clientType, info.Ip));
+        Logger.LogInformation("{}", Localize(ModId, "Client [{0}:{1}][{2}] connected", clientType, info.SocketId, info.Ip));
         var id = UserManager.UserLogin(connect, info);
         if (id == 0)
         {

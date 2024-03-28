@@ -13,13 +13,15 @@ public partial class TcpClient(string hostName, int port) {
     private string HostName { get; } = hostName;
     private int Port { get; } = port;
 
-    public async Task Connect() {
+    public async Task Connect(int port = -1) {
         var ipAddress = IPAddress.Parse(HostName);
         var ipEndPoint = new IPEndPoint(ipAddress, Port);
         _client = new Socket(
             ipEndPoint.AddressFamily,
             SocketType.Stream,
             ProtocolType.Tcp);
+        var randomEndPoint = new IPEndPoint(IPAddress.Any, 0);
+        _client.Bind(randomEndPoint);
         await _client.ConnectAsync(ipEndPoint);
         _thread = new Thread(Receive);
         _thread.Start();

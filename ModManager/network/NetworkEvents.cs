@@ -16,7 +16,6 @@ public static class NetworkEvents
 {
     private static ILogger Logger { get; } = SysLogger.GetLogger(typeof(NetworkEvents));
     public delegate void SendEventHandler(long socketId, PackType packType, byte[] data);
-    public delegate void ReceiveEventHandler(ClientInfo info, PackType packType, byte[] data);
     // 发送数据请调用此事件
     public static event SendEventHandler? SendEvent;
     
