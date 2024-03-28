@@ -47,7 +47,7 @@ public partial class PackHandlers
         NetworkPackBus.Subscribe(PackType.Move, (info, data) =>
         {
             // 用户移动
-            var world = state.ProjectCraftNet.Instance.World.World;
+            var world = ProjectCraftNet.Instance.World.World;
             var move = PlayerMove.Parser.ParseFrom(data);
             var userInfo = UserManager.GetUserInfo(info.SocketId);
             if (userInfo == null) return;
@@ -88,7 +88,7 @@ public partial class PackHandlers
                 });
             }
 
-            NetworkEvents.FireSendEvent(info.SocketId, PackType.OnlineList, chunk.ToByteArray());
+            NetworkEvents.FireSendEvent(info.SocketId, PackType.Chunk, chunk.ToByteArray());
         });
         NetworkPackBus.Subscribe(PackType.Chat, (info, data) =>
         {

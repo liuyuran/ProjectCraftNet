@@ -33,6 +33,7 @@ public partial class TcpClient(string hostName, int port) {
         await _client.DisconnectAsync(true);
         _thread?.Interrupt();
         _keepAliveThread?.Interrupt();
+        ReceiveEvent = null;
     }
 
     private async Task Send(int type, byte[] message) {

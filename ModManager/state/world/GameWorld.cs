@@ -1,8 +1,10 @@
 ﻿using Arch.Core;
+using ModManager.archive;
 using ModManager.config;
 using ModManager.state.world.block;
 using ModManager.state.world.block.interfaces;
 using ModManager.state.world.chunk;
+using ModManager.utils;
 
 namespace ModManager.state.world;
 
@@ -24,8 +26,10 @@ public class GameWorld
     
     public IEnumerable<long> GetChunkData(long worldId, ChunkPos pos)
     {
-        if (!_chunkLink.TryGetValue(worldId, out var chunkLink)) return Array.Empty<long>();
-        return chunkLink.TryGetValue(pos, out var chunkData) ? chunkData : Array.Empty<long>();
+        if (_chunkLink.TryGetValue(worldId, out var chunkLink))
+            return chunkLink.TryGetValue(pos, out var chunkData) ? chunkData : Array.Empty<long>();
+        var data = ArchiveManager.TryGetChunkData(worldId, new IntVector3(pos.X, pos.Y, pos.Z));
+        return data ?? Array.Empty<long>();
     }
     
     public static int GetIndexFromBlockPos(BlockPos pos)
