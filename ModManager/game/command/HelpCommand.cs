@@ -13,17 +13,17 @@ public class HelpCommand: ICommand
         return "help";
     }
 
-    public string GetShortDescription(UserInfo userInfo)
+    public string GetShortDescription(UserInfo? userInfo)
     {
         return Localize(ModId, "Show help message");
     }
 
-    public string GetUsage(UserInfo userInfo, string[] args)
+    public string GetUsage(UserInfo? userInfo, string[] args)
     {
         return Localize(ModId, "/help [command]? [arg1]? [arg2]? ...");
     }
 
-    public void Execute(UserInfo userInfo, string[] args)
+    public void Execute(UserInfo? userInfo, string[] args)
     {
         var clientInfo = userInfo.ClientInfo;
         switch (args.Length)

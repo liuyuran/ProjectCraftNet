@@ -1,4 +1,5 @@
 using ModManager.game.user;
+using Org.BouncyCastle.Tls;
 using ProjectCraftNet;
 
 namespace BlackBoxTest;
@@ -24,7 +25,8 @@ public class Tests
     public void TearDown()
     {
         _workThread.Join(1000);
-        if (_workThread.IsAlive) _workThread.Interrupt();
+        if (_workThread.IsAlive) 
+            _workThread.Interrupt();
     }
 
     private static TcpClient GetClient()
@@ -50,5 +52,19 @@ public class Tests
         Thread.Sleep(1000);
         Assert.That(UserManager.GetOnlineUserCount(), Is.EqualTo(0));
         await tcpClient.Disconnect();
+    }
+    
+    [Test]
+    public async Task Move()
+    {
+        var tcpClient = GetClient();
+        tcpClient.ReceiveEvent += (type, bytes) =>
+        {
+            //
+        };  
+        await tcpClient.Connect();
+        await tcpClient.Login("kamoeth", "123456");
+        Thread.Sleep(1000);
+        // 
     }
 }

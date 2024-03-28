@@ -26,9 +26,9 @@ public partial class PackHandlers
 
     public static void RegisterAllHandlers()
     {
-        NetworkPackBus.Subscribe((uint) PackType.Connect, ConnectHandler);
-        NetworkPackBus.Subscribe((uint) PackType.Disconnect, DisconnectHandler);
-        NetworkPackBus.Subscribe((uint)PackType.OnlineList, (info, _) =>
+        NetworkPackBus.Subscribe(PackType.Connect, ConnectHandler);
+        NetworkPackBus.Subscribe(PackType.Disconnect, DisconnectHandler);
+        NetworkPackBus.Subscribe(PackType.OnlineList, (info, _) =>
         {
             // 发送在线用户列表
             var onlineList = new OnlineList();
@@ -44,12 +44,13 @@ public partial class PackHandlers
 
             NetworkEvents.FireSendEvent(info.SocketId, PackType.OnlineList, onlineList.ToByteArray());
         });
-        NetworkPackBus.Subscribe((uint)PackType.Move, (info, data) =>
+        NetworkPackBus.Subscribe(PackType.Move, (info, data) =>
         {
             // 用户移动
             var world = state.ProjectCraftNet.Instance.World.World;
             var move = PlayerMove.Parser.ParseFrom(data);
             var userInfo = UserManager.GetUserInfo(info.SocketId);
+            if (userInfo == null) return;
             userInfo.Position = new LongVector3((long)move.X, (long)move.Y, (long)move.Z);
             var entity = userInfo.PlayerEntity;
             if (entity == null) return;
@@ -68,7 +69,7 @@ public partial class PackHandlers
             });
             NetworkEvents.FireSendEvent(0, PackType.Move, data);
         });
-        NetworkPackBus.Subscribe((uint)PackType.Chunk, (info, data) =>
+        NetworkPackBus.Subscribe(PackType.Chunk, (info, data) =>
         {
             // 发送区块数据
             var chunk = ChunkData.Parser.ParseFrom(data);
@@ -89,7 +90,7 @@ public partial class PackHandlers
 
             NetworkEvents.FireSendEvent(info.SocketId, PackType.OnlineList, chunk.ToByteArray());
         });
-        NetworkPackBus.Subscribe((uint)PackType.Chat, (info, data) =>
+        NetworkPackBus.Subscribe(PackType.Chat, (info, data) =>
         {
             // 聊天消息
             var chat = ChatAndBroadcast.Parser.ParseFrom(data);
@@ -99,10 +100,11 @@ public partial class PackHandlers
                 Message = chat.Msg
             });
         });
-        NetworkPackBus.Subscribe((uint)PackType.ControlBlock, (info, data) =>
+        NetworkPackBus.Subscribe(PackType.ControlBlock, (info, data) =>
         {
-            var world = state.ProjectCraftNet.Instance.World.World;
+            var world = ProjectCraftNet.Instance.World.World;
             var userInfo = UserManager.GetUserInfo(info.SocketId);
+            if (userInfo == null) return;
             var controlBlock = PlayerControlBlock.Parser.ParseFrom(data);
             switch (controlBlock.Type)
             {
@@ -111,7 +113,7 @@ public partial class PackHandlers
                     // 挖掘
                     var chunkPos = new ChunkPos(controlBlock.ChunkX, controlBlock.ChunkY, controlBlock.ChunkZ);
                     var blockPos = new BlockPos(controlBlock.BlockX, controlBlock.BlockY, controlBlock.BlockZ);
-                    state.ProjectCraftNet.Instance.World.SetBlockToChunk(userInfo.WorldId,
+                    ProjectCraftNet.Instance.World.SetBlockToChunk(userInfo.WorldId,
                         chunkPos, blockPos,
                         BlockManager.GetBlockId<Air>());
                     var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
@@ -139,7 +141,7 @@ public partial class PackHandlers
                 }
             }
         });
-        NetworkPackBus.Subscribe((uint)PackType.ControlEntity, (info, data) =>
+        NetworkPackBus.Subscribe(PackType.ControlEntity, (info, data) =>
         {
             //
         });

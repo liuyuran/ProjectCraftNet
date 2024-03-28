@@ -60,6 +60,7 @@ public class GameCore(Config config)
                 var entity = world.Create(Archetypes.Player);
                 var sockId = UserManager.WaitToJoin.Dequeue();
                 var userInfo = UserManager.GetUserInfo(sockId);
+                if (userInfo == null) continue;
                 var position = userInfo.Position;
                 var gameMod = userInfo.GameMode;
                 var chunkSize = config.Core!.ChunkSize;
@@ -139,6 +140,7 @@ public class GameCore(Config config)
         var message = @event.Message;
         if (string.IsNullOrWhiteSpace(message)) return false;
         var userInfo = UserManager.GetUserInfo(socketId);
+        if (userInfo == null) return false;
         var isCommand = CommandManager.TryParseAsCommand(userInfo, message);
         if (isCommand) return false;
         var data = new ChatAndBroadcast { Msg = message };
@@ -155,7 +157,7 @@ public class GameCore(Config config)
 
     private void RegistryCorePackEvent()
     {
-        NetworkPackBus.Subscribe((uint)PackType.ServerStatus, (info, _) =>
+        NetworkPackBus.Subscribe(PackType.ServerStatus, (info, _) =>
         {
             var currentProcess = Process.GetCurrentProcess();
             var status = new ServerStatus
@@ -167,11 +169,11 @@ public class GameCore(Config config)
                 MaxPlayers = config.Core!.MaxPlayer,
                 OnlinePlayers = UserManager.GetOnlineUserCount(),
                 Tps = (long)Math.Floor(_tickPerSecond),
-                Ping = UserManager.GetUserInfo(info.SocketId).ClientInfo.Ping
+                Ping = UserManager.GetUserInfo(info.SocketId)?.ClientInfo.Ping ?? 0
             };
             NetworkEvents.FireSendEvent(info.SocketId, PackType.ServerStatus, status.ToByteArray());
         });
-        NetworkPackBus.Subscribe((uint)PackType.Shutdown, (_, _) =>
+        NetworkPackBus.Subscribe(PackType.Shutdown, (_, _) =>
         {
             Logger.LogInformation("{}", Localize(ModId, "Server shutting down"));
             _stopping = true;

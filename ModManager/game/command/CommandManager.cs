@@ -54,7 +54,7 @@ public class CommandManager
     /// <param name="userInfo">执行命令的用户信息</param>
     /// <param name="command">命令名称</param>
     /// <param name="args">命令参数</param>
-    public static void ExecuteCommand(UserInfo userInfo, string command, string[] args)
+    public static void ExecuteCommand(UserInfo? userInfo, string command, string[] args)
     {
         if (!Instance.Commands.TryGetValue(command, out var value))
         {
@@ -79,7 +79,7 @@ public class CommandManager
     /// </summary>
     /// <param name="userInfo">当前用户信息</param>
     /// <returns>可输出的结果字符串</returns>
-    public static string GetCommandShortDescription(UserInfo userInfo)
+    public static string GetCommandShortDescription(UserInfo? userInfo)
     {
         var sb = new StringBuilder();
         foreach (var (key, value) in Instance.Commands)
@@ -99,7 +99,7 @@ public class CommandManager
     /// <param name="command">命令名称</param>
     /// <param name="args">命令参数</param>
     /// <returns>可输出的结果字符串</returns>
-    public static string GetCommandUsage(UserInfo userInfo, string command, string[] args)
+    public static string GetCommandUsage(UserInfo? userInfo, string command, string[] args)
     {
         if (!Instance.Commands.TryGetValue(command, out var value))
         {
@@ -116,7 +116,7 @@ public class CommandManager
     /// <param name="userInfo">当前用户信息</param>
     /// <param name="message">待解析的文本消息</param>
     /// <returns>该条消息是否为命令，如果是，返回true</returns>
-    public static bool TryParseAsCommand(UserInfo userInfo, string message)
+    public static bool TryParseAsCommand(UserInfo? userInfo, string message)
     {
         if (string.IsNullOrWhiteSpace(message)) return false;
         if (message[0] != '/') return false;

@@ -68,9 +68,14 @@ public static class Program
         {
             ClosingEvent.WaitOne();
         }
+        catch (ThreadInterruptedException e)
+        {
+            Logger.LogInformation(e, "{}", Localize(ModId, "main-thread.interrupt"));
+            return 0;
+        }
         catch (Exception e)
         {
-            Logger.LogError(e, "{}", Localize(ModId, "Error occurred."));
+            Logger.LogError(e, "{}", Localize(ModId, "main-thread.error"));
             return -1;
         }
         finally

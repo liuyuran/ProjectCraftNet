@@ -67,7 +67,7 @@ public static class NetworkEvents
             Ip = socket.RemoteEndPoint?.ToString() ?? ""
         };
         try {
-            NetworkPackBus.Trigger((uint)packType, info, data);
+            NetworkPackBus.Trigger(packType, info, data);
         } catch (Exception e) {
             Logger.LogError("{}", Localize(ModId, "Error when handling PackType: {0}, {1}", packType, e.Message));
         }

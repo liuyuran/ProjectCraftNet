@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ModManager.eventBus;
 using ModManager.eventBus.events;
 using ModManager.game.client;

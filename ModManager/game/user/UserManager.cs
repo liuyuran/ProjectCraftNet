@@ -81,9 +81,9 @@ public class UserManager
         Instance._users.Remove(socketId);
     }
     
-    public static UserInfo GetUserInfo(long socketId)
+    public static UserInfo? GetUserInfo(long socketId)
     {
-        return Instance._users[socketId];
+        return Instance._users!.GetValueOrDefault(socketId, null);
     }
     
     public static int GetOnlineUserCount()
@@ -94,6 +94,7 @@ public class UserManager
     public static void SetClientPing(long socketId, uint ping)
     {
         var userInfo = GetUserInfo(socketId);
+        if (userInfo == null) return;
         userInfo.ClientInfo.Ping = ping;
     }
 

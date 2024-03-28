@@ -74,7 +74,7 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
             return;
         }
         // 获取不成功则继续生成
-        Logger.LogDebug("Generate chunk at {}", centerPosition);
+        Logger.LogDebug("Generate chunk at [{x}, {y}, {z}]", centerPosition.X, centerPosition.Y, centerPosition.Z);
         var data = ChunkGeneratorManager.GenerateChunkBlockData(0, centerPosition);
         var chunkData = new long[data.Length];
         for (var i = 0; i < data.Length; i++)
