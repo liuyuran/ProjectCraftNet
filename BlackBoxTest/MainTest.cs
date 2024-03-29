@@ -20,7 +20,7 @@ public class Tests
             Program.Main(["-c", Path.Combine(testDic, @"BlackBoxTest\config.toml")]);
         });
         _workThread.Start();
-        Thread.Sleep(1000);
+        Thread.Sleep(30000);
     }
 
     [OneTimeTearDown]
@@ -100,6 +100,7 @@ public class Tests
         await tcpClient.FetchChunk(0, new IntVector3(100, 0, 0));
         Thread.Sleep(1000);
         Assert.That(step, Is.EqualTo(2));
+        await tcpClient.Disconnect();
     }
     
     [Test, Order(3)]
@@ -110,7 +111,7 @@ public class Tests
         var count = 0;
         tcpClient.ReceiveEvent += (type, bytes) =>
         {
-            if (type != (int)PackType.Chunk) return;
+            if (type != (int)PackType.Move) return;
             var data = PlayerMove.Parser.ParseFrom(bytes);
             Assert.Multiple(() =>
             {
@@ -129,7 +130,7 @@ public class Tests
         };  
         tcpClient2.ReceiveEvent += (type, bytes) =>
         {
-            if (type != (int)PackType.Chunk) return;
+            if (type != (int)PackType.Move) return;
             var data = PlayerMove.Parser.ParseFrom(bytes);
             Assert.Multiple(() =>
             {
@@ -154,5 +155,6 @@ public class Tests
         await tcpClient.MoveTo(new IntVector3(1, 0, 0), new Vector3(0.3f, 0, 0));
         Thread.Sleep(1000);
         Assert.That(count, Is.EqualTo(2));
+        await tcpClient.Disconnect();
     }
 }

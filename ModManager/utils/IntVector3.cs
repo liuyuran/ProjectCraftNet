@@ -1,6 +1,6 @@
 ﻿namespace ModManager.utils;
 
-public class IntVector3(int x, int y, int z)
+public class IntVector3(int x, int y, int z): IEquatable<IntVector3>
 {
     public readonly int X = x;
     public readonly int Y = y;
@@ -39,6 +39,11 @@ public class IntVector3(int x, int y, int z)
     public override bool Equals(object? obj)
     {
         return obj is IntVector3 other && X == other.X && Y == other.Y && Z == other.Z;
+    }
+    
+    public bool Equals(IntVector3? other)
+    {
+        return X == other!.X && Y == other.Y && Z == other.Z;
     }
 
     public override int GetHashCode()

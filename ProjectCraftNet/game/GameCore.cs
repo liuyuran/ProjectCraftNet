@@ -12,6 +12,7 @@ using ModManager.ecs.components;
 using ModManager.ecs.systems;
 using ModManager.eventBus;
 using ModManager.eventBus.events;
+using ModManager.game.client;
 using ModManager.game.command;
 using ModManager.game.user;
 using ModManager.logger;
@@ -33,10 +34,10 @@ public class GameCore(Config config)
     public void Start()
     {
         var deltaTime = 0.05f;
-        var millPerTick = 10000000 / config.Core!.MaxTps;
+        var millPerTick = 1000 / config.Core!.MaxTps;
         var tickPerSecond = 0;
-        var baseMillis = DateTime.Now.Ticks;
-        var world = ModManager.state.ProjectCraftNet.Instance.World.World;
+        var baseMillis = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        var world = ModManager.state.CraftNet.Instance.World.World;
         // 开始监听网络事件
         PackHandlers.RegisterAllHandlers();
         RegistryCorePackEvent();
@@ -48,13 +49,19 @@ public class GameCore(Config config)
             new ArchiveSystem(world)
         );
         systems.Initialize();
-        Logger.LogInformation("{}", Localize(ModId, "Server started"));
+        Logger.LogInformation("{}", Localize(ModId, "startup.loading_init_chunk"));
+        GeneratorInitPlayer(world);
+        systems.BeforeUpdate(in deltaTime);
+        systems.Update(in deltaTime);
+        systems.AfterUpdate(in deltaTime);
+        Logger.LogInformation("{}", Localize(ModId, "startup.done"));
         while (!_stopping)
         {
-            var lastTickMillis = DateTime.Now.Ticks;
+            var lastTickMillis = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             systems.BeforeUpdate(in deltaTime);
             systems.Update(in deltaTime);
             systems.AfterUpdate(in deltaTime);
+            Logger.LogDebug("{}", Localize(ModId, "Tick {0}ms", DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTickMillis));
             while (UserManager.WaitToJoin.Count > 0)
             {
                 var entity = world.Create(Archetypes.Player);
@@ -77,7 +84,7 @@ public class GameCore(Config config)
                         position.Z % chunkSize
                     )
                 });
-                world.Set(entity, new Player { UserId = userInfo.UserId, GameMode = gameMod });
+                world.Set(entity, new Player { UserId = userInfo.UserId, GameMode = gameMod, IsSystem = false});
                 userInfo.PlayerEntity = entity;
             }
 
@@ -88,15 +95,15 @@ public class GameCore(Config config)
             }
 
             // 调节逻辑帧率，等待下一个Tick
-            var now = DateTime.Now.Ticks;
+            var now = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             var elapsed = now - lastTickMillis;
             if (elapsed < millPerTick)
             {
-                Thread.Sleep((int)(millPerTick - elapsed) / 10000);
+                Thread.Sleep((int)(millPerTick - elapsed));
             }
 
             tickPerSecond++;
-            if (now - baseMillis <= 10000000) continue;
+            if (now - baseMillis <= 1000) continue;
             _tickPerSecond = tickPerSecond;
             tickPerSecond = 0;
             baseMillis = now;
@@ -107,9 +114,20 @@ public class GameCore(Config config)
         Environment.Exit(0);
     }
 
-    private bool OnGameEventsOnArchiveEvent(ArchiveEvent @event)
+    private static void GeneratorInitPlayer(World world)
     {
-        var world = ModManager.state.ProjectCraftNet.Instance.World.World;
+        var entity = world.Create(Archetypes.Player);
+        world.Set(entity, new Position
+        {
+            ChunkPos = new IntVector3(0, 0, 0),
+            InChunkPos = new Vector3(0, 0, 0)
+        });
+        world.Set(entity, new Player { UserId = -1, GameMode = GameMode.Creative, IsSystem = true });
+    }
+
+    private static bool OnGameEventsOnArchiveEvent(ArchiveEvent @event)
+    {
+        var world = ModManager.state.CraftNet.Instance.World.World;
         ArchiveManager.SaveUserInfo(world);
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
         var existChunkPosition = new Dictionary<long, List<IntVector3>>();

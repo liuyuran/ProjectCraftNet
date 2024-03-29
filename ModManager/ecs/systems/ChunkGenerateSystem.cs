@@ -18,6 +18,7 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
     private static readonly ILogger Logger = SysLogger.GetLogger(typeof(ChunkGenerateSystem));
     private readonly World _world = world;
     private readonly HashSet<IntVector3> _existChunkPosition = [];
+    private readonly HashSet<IntVector3> _generatingChunk = [];
 
     public override void Update(in float deltaTime)
     {
@@ -61,21 +62,31 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
         };
         var entity = _world.Create(Archetypes.Chunk);
         _world.Set(entity, chunkPosition);
-        // 尝试获取存档
-        var existChunk = ArchiveManager.TryGetChunkData(0, centerPosition);
-        if (existChunk != null)
+        // 如果未被标记为生成中，尝试从数据库获取存档
+        if (!_generatingChunk.Contains(centerPosition))
         {
-            _world.Set(entity, new ChunkBlockData
+            var existChunk = ArchiveManager.TryGetChunkData(0, centerPosition);
+            if (existChunk != null)
             {
-                WorldId = 0,
-                Data = existChunk,
-                Changed = false
-            });
-            return;
+                _world.Set(entity, new ChunkBlockData
+                {
+                    WorldId = 0,
+                    Data = existChunk,
+                    Changed = false
+                });
+                return;
+            }
         }
-        // 获取不成功则继续生成
+        // 获取不成功则继续生成，如果正在生成中则跳过
         Logger.LogDebug("Generate chunk at [{x}, {y}, {z}]", centerPosition.X, centerPosition.Y, centerPosition.Z);
         var data = ChunkGeneratorManager.GenerateChunkBlockData(0, centerPosition);
+        if (data == null)
+        {
+            _generatingChunk.Add(centerPosition);
+            return;
+        }
+
+        _generatingChunk.Remove(centerPosition);
         var chunkData = new long[data.Length];
         for (var i = 0; i < data.Length; i++)
         {
@@ -87,7 +98,7 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
             Data = chunkData,
             Changed = true
         });
-        ProjectCraftNet.Instance.World.AddChunk(0, new ChunkPos
+        CraftNet.Instance.World.AddChunk(0, new ChunkPos
         {
             X = centerPosition.X,
             Y = centerPosition.Y,

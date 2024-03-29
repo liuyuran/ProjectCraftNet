@@ -47,7 +47,7 @@ public partial class PackHandlers
         NetworkPackBus.Subscribe(PackType.Move, (info, data) =>
         {
             // 用户移动
-            var world = ProjectCraftNet.Instance.World.World;
+            var world = CraftNet.Instance.World.World;
             var move = PlayerMove.Parser.ParseFrom(data);
             var userInfo = UserManager.GetUserInfo(info.SocketId);
             if (userInfo == null) return;
@@ -73,7 +73,7 @@ public partial class PackHandlers
         {
             // 发送区块数据
             var chunk = ChunkData.Parser.ParseFrom(data);
-            var chunkData = ProjectCraftNet.Instance.World.GetChunkData(chunk.WorldId, new ChunkPos
+            var chunkData = CraftNet.Instance.World.GetChunkData(chunk.WorldId, new ChunkPos
             {
                 X = chunk.X,
                 Y = chunk.Y,
@@ -102,7 +102,7 @@ public partial class PackHandlers
         });
         NetworkPackBus.Subscribe(PackType.ControlBlock, (info, data) =>
         {
-            var world = ProjectCraftNet.Instance.World.World;
+            var world = CraftNet.Instance.World.World;
             var userInfo = UserManager.GetUserInfo(info.SocketId);
             if (userInfo == null) return;
             var controlBlock = PlayerControlBlock.Parser.ParseFrom(data);
@@ -113,7 +113,7 @@ public partial class PackHandlers
                     // 挖掘
                     var chunkPos = new ChunkPos(controlBlock.ChunkX, controlBlock.ChunkY, controlBlock.ChunkZ);
                     var blockPos = new BlockPos(controlBlock.BlockX, controlBlock.BlockY, controlBlock.BlockZ);
-                    ProjectCraftNet.Instance.World.SetBlockToChunk(userInfo.WorldId,
+                    CraftNet.Instance.World.SetBlockToChunk(userInfo.WorldId,
                         chunkPos, blockPos,
                         BlockManager.GetBlockId<Air>());
                     var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();

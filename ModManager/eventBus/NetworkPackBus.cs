@@ -38,9 +38,11 @@ public class NetworkPackBus
         // 尝试获取对应类型的处理器列表
         if (!Instance._eventHandlers.TryGetValue(type, out var handlers)) return;
         // 遍历处理器列表并调用它们
+        var nowMillis = DateTimeOffset.Now.ToUnixTimeMilliseconds();
         foreach (var unused in handlers.Where(handler => !(bool)(handler.DynamicInvoke(info, data) ?? false)))
         {
             break;
         }
+        Logger.LogDebug("{}", Localize(ModId, "Pack[{0}] handled in {1}ms", (PackType)type, DateTimeOffset.Now.ToUnixTimeMilliseconds() - nowMillis));
     }
 }

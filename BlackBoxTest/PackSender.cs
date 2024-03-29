@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Google.Protobuf;
+using ModManager.game.client;
 using ModManager.network;
 using ModManager.utils;
 
@@ -12,7 +13,8 @@ public partial class TcpClient
         var connectMsg = new Connect
         {
             Username = username,
-            Password = password
+            Password = password,
+            ClientType = (int)ClientType.Normal
         };
         await Send((int)PackType.Connect, connectMsg.ToByteArray());
     }

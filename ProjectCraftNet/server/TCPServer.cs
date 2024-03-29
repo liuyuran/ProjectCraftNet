@@ -173,6 +173,7 @@ public class TcpServer
             return;
         }
 
+        Logger.LogDebug("{}", Localize(ModId, "Send PackType: {0} to {1}", packType, socketId));
         var packLen = data.Length;
         var lenBytes = BitConverter.GetBytes(packLen);
         var typeBytes = BitConverter.GetBytes((int)packType);

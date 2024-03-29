@@ -39,6 +39,7 @@ public class ArchiveManager
         });
         foreach (var item in changed)
         {
+            if (item.UserId == -1) continue;
             var user = dbContext.Users.Find(item.UserId);
             if (user == null)
             {

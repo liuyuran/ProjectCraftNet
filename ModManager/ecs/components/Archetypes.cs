@@ -28,6 +28,7 @@ public struct Player
     public long SocketId;
     public long WorldId;
     public GameMode GameMode;
+    public bool IsSystem;
 }
 
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
