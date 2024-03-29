@@ -4,7 +4,7 @@ using ModManager.game.client;
 using ModManager.network;
 using ModManager.utils;
 
-namespace BlackBoxTest;
+namespace BlackBoxTest.utils;
 
 public partial class TcpClient
 {

@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace BlackBoxTest;
+namespace BlackBoxTest.utils;
 
 public delegate void ReceiveEventHandler(int type, byte[] e);
 
