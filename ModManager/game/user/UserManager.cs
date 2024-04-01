@@ -8,6 +8,7 @@ using ModManager.eventBus.events;
 using ModManager.game.client;
 using ModManager.logger;
 using ModManager.network;
+using ModManager.utils;
 using static ModManager.game.localization.LocalizationManager;
 using static ModManager.mod.ModManager;
 
@@ -52,7 +53,7 @@ public class UserManager
             NickName = user.Nickname,
             ClientInfo = info,
             WorldId = user.WorldId,
-            Position = new Vector3(user.PosX, user.PosY, user.PosZ),
+            Position = new LongVector3(user.PosX, user.PosY, user.PosZ),
             GameMode = (GameMode) user.GameMode,
             PlayerEntity = null
         };
@@ -80,9 +81,9 @@ public class UserManager
         Instance._users.Remove(socketId);
     }
     
-    public static UserInfo GetUserInfo(long socketId)
+    public static UserInfo? GetUserInfo(long socketId)
     {
-        return Instance._users[socketId];
+        return Instance._users!.GetValueOrDefault(socketId, null);
     }
     
     public static int GetOnlineUserCount()
@@ -93,6 +94,7 @@ public class UserManager
     public static void SetClientPing(long socketId, uint ping)
     {
         var userInfo = GetUserInfo(socketId);
+        if (userInfo == null) return;
         userInfo.ClientInfo.Ping = ping;
     }
 

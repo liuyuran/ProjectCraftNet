@@ -25,7 +25,7 @@ public class TcpServer
     private Dictionary<long, Socket> Sockets { get; } = new();
 
     // 连接标识符生成器
-    private long _socketId;
+    private long _socketId = 1;
 
     public TcpServer()
     {
@@ -124,7 +124,7 @@ public class TcpServer
                         {
                             lastTime = DateTime.Now.Ticks;
                         }
-
+                        
                         NetworkEvents.FireReceiveEvent(socketId, packType, msgBuffer.ToArray(), socket.Client);
                         msgBuffer.Clear();
                         // 把剩下的数据塞进去
@@ -173,6 +173,7 @@ public class TcpServer
             return;
         }
 
+        Logger.LogDebug("{}", Localize(ModId, "Send PackType: {0} to {1}", packType, socketId));
         var packLen = data.Length;
         var lenBytes = BitConverter.GetBytes(packLen);
         var typeBytes = BitConverter.GetBytes((int)packType);

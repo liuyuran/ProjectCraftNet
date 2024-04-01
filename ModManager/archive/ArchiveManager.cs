@@ -1,10 +1,11 @@
-﻿using System.Numerics;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Arch.Core;
 using Microsoft.Extensions.Logging;
+using ModManager.config;
 using ModManager.database;
 using ModManager.ecs.components;
 using ModManager.logger;
+using ModManager.utils;
 using Chunk = ModManager.database.generate.Chunk;
 
 namespace ModManager.archive;
@@ -22,20 +23,22 @@ public class ArchiveManager
         using var ts = dbContext.Database.BeginTransaction();
         var playerQuery = new QueryDescription().WithAll<Player, Position>();
         var changed = new List<UserChanged>();
+        var chunkSize = ConfigUtil.Instance.GetConfig().Core!.ChunkSize;
         world.Query(in playerQuery, (ref Player player, ref Position position) =>
         {
             changed.Add(new UserChanged
             {
                 UserId = player.UserId,
-                X = (long)position.Val.X,
-                Y = (long)position.Val.Y,
-                Z = (long)position.Val.Z,
+                X = (long) position.ChunkPos.X * chunkSize + (long) Math.Round(position.InChunkPos.X),
+                Y = (long) position.ChunkPos.Y * chunkSize + (long) Math.Round(position.InChunkPos.Y),
+                Z = (long) position.ChunkPos.Z * chunkSize + (long) Math.Round(position.InChunkPos.Z),
                 WorldId = player.WorldId,
                 GameMode = (int) player.GameMode
             });
         });
         foreach (var item in changed)
         {
+            if (item.UserId == -1) continue;
             var user = dbContext.Users.Find(item.UserId);
             if (user == null)
             {
@@ -53,7 +56,7 @@ public class ArchiveManager
         ts.Commit();
     }
 
-    public static void SaveChunkInfo(World world, long worldId, params Vector3[] chunkPos)
+    public static void SaveChunkInfo(World world, long worldId, params IntVector3[] chunkPos)
     {
         using var dbContext = new CoreDbContext();
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
@@ -61,11 +64,11 @@ public class ArchiveManager
         world.Query(in chunkQuery, (ref ChunkBlockData data, ref Position position) =>
         {
             var component = position;
-            if (chunkPos.All(pos => pos != component.Val)) return;
+            if (chunkPos.All(pos => pos != component.ChunkPos)) return;
             if (data.WorldId != worldId) return;
             changed.Add(new ChunkChanged
             {
-                Pos = component.Val,
+                Pos = component.ChunkPos,
                 WorldId = data.WorldId,
                 Data = data.Data
             });
@@ -74,18 +77,18 @@ public class ArchiveManager
         {
             // Define the multi-rule query
             var query = from chunkItem in dbContext.Chunks
-                where chunkItem.PosX == (int)item.Pos.X
-                      && chunkItem.PosY == (int)item.Pos.Y
-                      && chunkItem.PosZ == (int)item.Pos.Z
+                where chunkItem.PosX == item.Pos.X
+                      && chunkItem.PosY == item.Pos.Y
+                      && chunkItem.PosZ == item.Pos.Z
                       && chunkItem.WorldId == item.WorldId
                 select chunkItem;
             var chunk = query.FirstOrDefault();
             var created = chunk == null;
             chunk ??= new Chunk();
             chunk.WorldId = item.WorldId;
-            chunk.PosX = (int)item.Pos.X;
-            chunk.PosY = (int)item.Pos.Y;
-            chunk.PosZ = (int)item.Pos.Z;
+            chunk.PosX = item.Pos.X;
+            chunk.PosY = item.Pos.Y;
+            chunk.PosZ = item.Pos.Z;
             var jsonData = JsonSerializer.Serialize(item.Data);
             chunk.Data = jsonData;
             if (created)
@@ -102,16 +105,16 @@ public class ArchiveManager
         dbContext.SaveChanges();
     }
     
-    public static ecs.components.BlockData[]? TryGetChunkData(long worldId, Vector3 chunkPos)
+    public static long[]? TryGetChunkData(long worldId, IntVector3 chunkPos)
     {
         using var dbContext = new CoreDbContext();
         var query = from chunk in dbContext.Chunks
-            where chunk.PosX == (int)chunkPos.X
-                  && chunk.PosY == (int)chunkPos.Y
-                  && chunk.PosZ == (int)chunkPos.Z
+            where chunk.PosX == chunkPos.X
+                  && chunk.PosY == chunkPos.Y
+                  && chunk.PosZ == chunkPos.Z
                   && chunk.WorldId == worldId
             select chunk;
         var chunkData = query.FirstOrDefault();
-        return chunkData == null ? null : JsonSerializer.Deserialize<ecs.components.BlockData[]>(chunkData.Data);
+        return chunkData == null ? null : JsonSerializer.Deserialize<long[]>(chunkData.Data);
     }
 }

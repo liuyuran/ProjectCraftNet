@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using CoreMod.blocks;
+﻿using CoreMod.blocks;
 using ModManager.game.block;
 using ModManager.game.generator;
 using ModManager.utils;
@@ -20,8 +19,9 @@ public class DefaultChunkGenerator: IChunkGenerator
         return z * size * size + y * size + x;
     }
 
-    private void GenerateMainWorld(ref ModManager.game.generator.BlockData[] blockData, int chunkSize, Vector3 chunkPosition)
+    private ModManager.game.generator.BlockData[] GenerateMainWorld(int chunkSize, IntVector3 chunkPosition)
     {
+        var blockData = new ModManager.game.generator.BlockData[chunkSize * chunkSize * chunkSize];
         for (var x = 0; x < chunkSize; x++)
         {
             for (var z = 0; z < chunkSize; z++)
@@ -38,15 +38,15 @@ public class DefaultChunkGenerator: IChunkGenerator
                     };
                 }
             }
-        }        
+        }
+
+        return blockData;
     }
     
-    public ModManager.game.generator.BlockData[] GenerateChunkBlockData(int chunkSize, Vector3 chunkPosition)
+    public ModManager.game.generator.BlockData[] GenerateChunkBlockData(int chunkSize, IntVector3 chunkPosition)
     {
         _noise.SetSeed(DateTime.Now.Millisecond);
         _noise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
-        var blockData = new ModManager.game.generator.BlockData[chunkSize * chunkSize * chunkSize];
-        GenerateMainWorld(ref blockData, chunkSize, chunkPosition);
-        return blockData;
+        return GenerateMainWorld(chunkSize, chunkPosition);
     }
 }

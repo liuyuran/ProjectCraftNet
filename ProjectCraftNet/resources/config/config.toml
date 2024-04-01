@@ -6,6 +6,7 @@ localization-path = "/app/localization"
 log-level = "debug"
 max-tps = 20
 sight = 5
+chunk-size = 64
 
 [network-tcp]
 host = "127.0.0.1"

@@ -14,6 +14,8 @@ message ServerStatus {
 
 message BlockDefineItem {
   int64 block_id = 1;
+  string block_key = 2;
+  string material = 3;
 }
 
 message BlockDefine {
@@ -26,10 +28,11 @@ message BlockData {
 }
 
 message ChunkData {
-  int64 x = 1;
-  int64 y = 2;
-  int64 z = 3;
-  repeated BlockData blocks = 4;
+  int32 x = 1;
+  int32 y = 2;
+  int32 z = 3;
+  int64 worldId = 4;
+  repeated BlockData blocks = 5;
 }
 
 message PlayerItem {
@@ -40,4 +43,16 @@ message PlayerItem {
 
 message OnlineList {
   repeated PlayerItem players = 1;
+}
+
+message BlockChange {
+  int32 chunk_x = 1;
+  int32 chunk_y = 2;
+  int32 chunk_z = 3;
+  int32 block_x = 4;
+  int32 block_y = 5;
+  int32 block_z = 6;
+  int32 change_type = 7;
+  int64 block_id = 8;
+  int64 sub_id = 9;
 }

@@ -1,9 +1,10 @@
 using System.Net;
 using System.Net.Sockets;
+using ModManager.network;
 
-namespace BlackBoxTest;
+namespace BlackBoxTest.utils;
 
-public delegate void ReceiveEventHandler(object sender, int type, byte[] e);
+public delegate void ReceiveEventHandler(int type, byte[] e);
 
 public partial class TcpClient(string hostName, int port) {
     public event ReceiveEventHandler? ReceiveEvent;
@@ -13,13 +14,15 @@ public partial class TcpClient(string hostName, int port) {
     private string HostName { get; } = hostName;
     private int Port { get; } = port;
 
-    public async Task Connect() {
+    public async Task Connect(int port = -1) {
         var ipAddress = IPAddress.Parse(HostName);
         var ipEndPoint = new IPEndPoint(ipAddress, Port);
         _client = new Socket(
             ipEndPoint.AddressFamily,
             SocketType.Stream,
             ProtocolType.Tcp);
+        var randomEndPoint = new IPEndPoint(IPAddress.Any, 0);
+        _client.Bind(randomEndPoint);
         await _client.ConnectAsync(ipEndPoint);
         _thread = new Thread(Receive);
         _thread.Start();
@@ -30,9 +33,10 @@ public partial class TcpClient(string hostName, int port) {
     public async Task Disconnect() {
         if (_client is null)
             return;
-        await _client.DisconnectAsync(true);
+        if (_client.Connected) await _client.DisconnectAsync(true);
         _thread?.Interrupt();
         _keepAliveThread?.Interrupt();
+        ReceiveEvent = null;
     }
 
     private async Task Send(int type, byte[] message) {
@@ -59,11 +63,21 @@ public partial class TcpClient(string hostName, int port) {
             return;
         while (true)
         {
-            Thread.Sleep(1000);
+            try
+            {
+                Thread.Sleep(1000);
+            }
+            catch (Exception)
+            {
+                break;
+            }
             if (!_client.Connected) return;
             try
             {
-                await Send(3, Array.Empty<byte>());
+                var now = DateTimeOffset.Now;
+                var nowTimestamp = now.ToUnixTimeMilliseconds();
+                var timestamp = BitConverter.GetBytes((uint) nowTimestamp);
+                await Send((int)PackType.Ping, timestamp);
             }
             catch (SocketException)
             {
@@ -127,7 +141,7 @@ public partial class TcpClient(string hostName, int port) {
                     msgBuffer.RemoveAt(0);
                 }
 
-                ReceiveEvent?.Invoke(this, packType, msgBuffer.ToArray());
+                ReceiveEvent?.Invoke(packType, msgBuffer.ToArray());
                 msgBuffer.Clear();
                 // 把剩下的数据塞进去
                 for (var j = i + 1; j < bytesRec; j++) {

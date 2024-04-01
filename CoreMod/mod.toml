@@ -1,2 +1,13 @@
 ﻿core-file = "CoreMod.dll"
 core-class = "CoreMod.CoreMod"
+
+[mod]
+modId="examplemod"
+version="1.0.0.0"
+displayName="Example Mod"
+updateJSONURL="https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json"
+displayURL="https://minecraftforge.net"
+logoFile="logo.png"
+credits="鸣谢"
+authors="作者"
+description="测试说明"

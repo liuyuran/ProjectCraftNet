@@ -13,17 +13,17 @@ public class ModCommand: ICommand
         return "mod";
     }
 
-    public string GetShortDescription(UserInfo userInfo)
+    public string GetShortDescription(UserInfo? userInfo)
     {
         return Localize(ModId, "Show mod information");
     }
 
-    public string GetUsage(UserInfo userInfo, string[] args)
+    public string GetUsage(UserInfo? userInfo, string[] args)
     {
         return Localize(ModId, "/mod [list|info] [modId]?");
     }
 
-    public void Execute(UserInfo userInfo, string[] args)
+    public void Execute(UserInfo? userInfo, string[] args)
     {
         var clientInfo = userInfo.ClientInfo;
         var sb = new StringBuilder();

@@ -1,10 +1,11 @@
 using System.Numerics;
+using ModManager.utils;
 
 namespace ModManager.archive;
 
 public struct ChunkChanged
 {
-    public Vector3 Pos;
+    public IntVector3 Pos;
     public long WorldId;
-    public ecs.components.BlockData[] Data;
+    public long[] Data;
 }

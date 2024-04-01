@@ -1,9 +1,12 @@
 ﻿using CommandLine;
+using CoreMod.blocks;
 using Microsoft.Extensions.Logging;
 using ModManager.config;
 using ModManager.eventBus;
 using ModManager.eventBus.events;
+using ModManager.game.block;
 using ModManager.logger;
+using ModManager.state;
 using ProjectCraftNet.game;
 using ProjectCraftNet.server;
 using static ModManager.game.localization.LocalizationManager;
@@ -37,18 +40,19 @@ public static class Program
 
         SysLogger.SetLogLevel(config.Core.LogLevel);
         GetLocalizationManager(ModId).LoadLocalization(config.Core.LocalizationPath);
+        BlockManager.RegisterBlock<Air>();
         ModManager.mod.ModManager.LoadMods(config.Core.ModPath);
         if (config.NetworkTcp == null)
         {
             Logger.LogCritical("{}", Localize(ModId, "[{0}] not found", "network-tcp"));
             return -100;
         }
-
-        var cts = new CancellationTokenSource();
+        
         var gameCore = new GameCore(config);
-        Task.Run(() => gameCore.Start(), cts.Token);
+        Task.Run(() => gameCore.Start(), CraftNet.Instance.CancelToken.Token);
         var server = new TcpServer();
-        Task.Run(() => server.StartServer(config.NetworkTcp.Host, config.NetworkTcp.Port), cts.Token);
+        CraftNet.MapInitEvent.WaitOne(60000);
+        Task.Run(() => server.StartServer(config.NetworkTcp.Host, config.NetworkTcp.Port), CraftNet.Instance.CancelToken.Token);
         Console.CancelKeyPress += (_, _) =>
         {
             CleanUp();
@@ -65,14 +69,19 @@ public static class Program
         {
             ClosingEvent.WaitOne();
         }
+        catch (ThreadInterruptedException e)
+        {
+            Logger.LogInformation(e, "{}", Localize(ModId, "main-thread.interrupt"));
+            return 0;
+        }
         catch (Exception e)
         {
-            Logger.LogError(e, "{}", Localize(ModId, "Error occurred."));
+            Logger.LogError(e, "{}", Localize(ModId, "main-thread.error"));
             return -1;
         }
         finally
         {
-            cts.Cancel(false);
+            CraftNet.Instance.CancelToken.Cancel(false);
         }
         return 0;
     }

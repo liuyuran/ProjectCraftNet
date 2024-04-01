@@ -41,7 +41,7 @@ public class EventBus
         // 遍历处理器列表并调用它们
         var userInfo = UserManager.GetUserInfo(socketId);
         args.SocketId = socketId;
-        args.UserInfo = userInfo!;
+        args.UserInfo = userInfo;
         foreach (var unused in handlers.Where(handler => !(bool)(handler.DynamicInvoke(args) ?? false)))
         {
             break;

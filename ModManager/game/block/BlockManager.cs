@@ -22,7 +22,8 @@ public class BlockManager
         var block = Activator.CreateInstance<T>();
         var meta = new BlockMeta
         {
-            BlockId = block.Id,
+            BlockId = id,
+            BlockKey = block.Id,
             Material = block.Material
         };
         Instance._blockMeta.Add(id, meta);
@@ -50,5 +51,10 @@ public class BlockManager
     public static BlockMeta? GetBlock(long id)
     {
         return Instance._blockMeta.TryGetValue(id, out var meta) ? meta : null;
+    }
+
+    public static BlockMeta[] GetAllBlockMetas()
+    {
+        return Instance._blockMeta.Values.ToArray();
     }
 }

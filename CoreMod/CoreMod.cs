@@ -31,14 +31,12 @@ public class CoreMod: ModBase
     public override void OnLoad()
     {
         ChunkGeneratorManager.AddChunkGenerator(0, new DefaultChunkGenerator());
-        BlockManager.RegisterBlock<Air>();
         BlockManager.RegisterBlock<Dirt>();
     }
 
     public override void OnUnload()
     {
         ChunkGeneratorManager.RemoveChunkGenerator(0);
-        BlockManager.UnregisterBlock<Air>();
         BlockManager.UnregisterBlock<Dirt>();
     }
 

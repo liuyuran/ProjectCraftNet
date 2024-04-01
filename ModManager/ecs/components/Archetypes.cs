@@ -2,12 +2,14 @@
 using System.Numerics;
 using Arch.Core.Utils;
 using ModManager.game.client;
+using ModManager.utils;
 
 namespace ModManager.ecs.components;
 
 public struct Position
 {
-    public Vector3 Val;
+    public IntVector3 ChunkPos;
+    public Vector3 InChunkPos;
 }
 
 public struct Rotation
@@ -26,6 +28,7 @@ public struct Player
     public long SocketId;
     public long WorldId;
     public GameMode GameMode;
+    public bool IsSystem;
 }
 
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
