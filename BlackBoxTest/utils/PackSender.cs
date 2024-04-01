@@ -54,4 +54,19 @@ public partial class TcpClient
         };
         await Send((int)PackType.Chunk, chunkMsg.ToByteArray());
     }
+    
+    public async Task DigChunk(IntVector3 chunkPos, IntVector3 blockPos)
+    {
+        var blockMsg = new PlayerControlBlock
+        {
+            ChunkX = chunkPos.X,
+            ChunkY = chunkPos.Y,
+            ChunkZ = chunkPos.Z,
+            BlockX = blockPos.X,
+            BlockY = blockPos.Y,
+            BlockZ = blockPos.Z,
+            Type = 1
+        };
+        await Send((int)PackType.ControlBlock, blockMsg.ToByteArray());
+    }
 }

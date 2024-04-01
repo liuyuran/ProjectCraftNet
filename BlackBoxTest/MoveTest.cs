@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using ModManager.network;
+using ModManager.state;
 using ModManager.utils;
 
 namespace BlackBoxTest;
@@ -12,6 +13,7 @@ public partial class MainTest
     [Test, Order(3)]
     public async Task Move()
     {
+        CraftNet.MapInitEvent.WaitOne(60000);
         var tcpClient = GetClient();
         var tcpClient2 = GetClient();
         var count = 0;

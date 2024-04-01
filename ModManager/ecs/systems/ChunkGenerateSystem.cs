@@ -35,6 +35,7 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
             GenerateRangeChunkByCenterPosition(chunkPos, sight);
         });
         GenerateRangeChunkByCenterPosition(new IntVector3(0, 0, 0), sight);
+        CraftNet.MapInitEvent.Set();
     }
     
     private void GenerateRangeChunkByCenterPosition(IntVector3 centerPosition, int range)
