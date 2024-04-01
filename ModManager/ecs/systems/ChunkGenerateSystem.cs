@@ -79,7 +79,6 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
             }
         }
         // 获取不成功则继续生成，如果正在生成中则跳过
-        Logger.LogDebug("Generate chunk at [{x}, {y}, {z}]", centerPosition.X, centerPosition.Y, centerPosition.Z);
         var data = ChunkGeneratorManager.GenerateChunkBlockData(0, centerPosition);
         if (data == null)
         {

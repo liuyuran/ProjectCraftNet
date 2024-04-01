@@ -40,6 +40,7 @@ public class ChunkGeneratorManager
                 {
                     var centerPosition = _generatingChunks.Dequeue();
                     var generator = _generators[centerPosition.WorldId];
+                    Logger.LogDebug("Generate chunk at [{x}, {y}, {z}]", centerPosition.Pos.X, centerPosition.Pos.Y, centerPosition.Pos.Z);
                     var result = generator.GenerateChunkBlockData(chunkSize, centerPosition.Pos);
                     _generatedChunks[centerPosition] = result;
                 }

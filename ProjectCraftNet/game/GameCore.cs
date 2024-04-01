@@ -51,9 +51,6 @@ public class GameCore(Config config)
         systems.Initialize();
         Logger.LogInformation("{}", Localize(ModId, "startup.loading_init_chunk"));
         GeneratorInitPlayer(world);
-        systems.BeforeUpdate(in deltaTime);
-        systems.Update(in deltaTime);
-        systems.AfterUpdate(in deltaTime);
         Logger.LogInformation("{}", Localize(ModId, "startup.done"));
         while (!_stopping)
         {
