@@ -51,6 +51,7 @@ public static class Program
         var gameCore = new GameCore(config);
         Task.Run(() => gameCore.Start(), CraftNet.Instance.CancelToken.Token);
         var server = new TcpServer();
+        CraftNet.MapInitEvent.WaitOne(60000);
         Task.Run(() => server.StartServer(config.NetworkTcp.Host, config.NetworkTcp.Port), CraftNet.Instance.CancelToken.Token);
         Console.CancelKeyPress += (_, _) =>
         {

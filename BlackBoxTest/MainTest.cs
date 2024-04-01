@@ -1,12 +1,11 @@
-using System.Numerics;
 using BlackBoxTest.utils;
 using ModManager.game.user;
-using ModManager.network;
-using ModManager.utils;
+using ModManager.state;
 using ProjectCraftNet;
 
 namespace BlackBoxTest;
 
+[TestFixture(TestName = "基础测试", Category = "黑盒测试")]
 public partial class MainTest
 {
     private Thread _workThread = null!;
@@ -21,14 +20,14 @@ public partial class MainTest
             Program.Main(["-c", Path.Combine(testDic, @"BlackBoxTest\config.toml")]);
         });
         _workThread.Start();
-        Thread.Sleep(30000);
+        CraftNet.MapInitEvent.WaitOne(60000);
     }
 
     [OneTimeTearDown]
     public void TearDown()
     {
         _workThread.Join(1000);
-        if (_workThread.IsAlive) 
+        if (_workThread.IsAlive)
             _workThread.Interrupt();
     }
 
@@ -36,11 +35,11 @@ public partial class MainTest
     {
         return new TcpClient("127.0.0.1", 13000);
     }
-    
+
     /// <summary>
     /// 测试登入登出机制
     /// </summary>
-    [Test, Order(1)]
+    [utils.Test(DisplayName = "登入登出测试"), Order(1)]
     public async Task LoginAndLogout()
     {
         var tcpClient = GetClient();

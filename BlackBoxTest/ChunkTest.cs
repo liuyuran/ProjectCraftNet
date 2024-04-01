@@ -8,7 +8,7 @@ namespace BlackBoxTest;
 /// </summary>
 public partial class MainTest
 {
-    [Test, Order(2)]
+    [utils.Test(DisplayName = "区块操作测试"), Order(2)]
     public async Task GetChunk()
     {
         var tcpClient = GetClient();

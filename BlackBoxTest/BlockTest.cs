@@ -1,4 +1,6 @@
-﻿using ModManager.network;
+﻿using System.ComponentModel;
+using BlackBoxTest.utils;
+using ModManager.network;
 using ModManager.state;
 using ModManager.utils;
 
@@ -12,10 +14,9 @@ public partial class MainTest
     private int _digStep;
     private IntVector3? _digTarget;
 
-    [Test, Order(4)]
+    [utils.Test(DisplayName = "方块操作测试"), Order(4)]
     public async Task Dig()
     {
-        CraftNet.MapInitEvent.WaitOne(60000);
         var tcpClient = GetClient();
         await tcpClient.Connect();
         await tcpClient.Login("kamoeth", "123456");

@@ -10,10 +10,9 @@ namespace BlackBoxTest;
 /// </summary>
 public partial class MainTest
 {
-    [Test, Order(3)]
+    [utils.Test(DisplayName = "移动测试"), Order(3)]
     public async Task Move()
     {
-        CraftNet.MapInitEvent.WaitOne(60000);
         var tcpClient = GetClient();
         var tcpClient2 = GetClient();
         var count = 0;
