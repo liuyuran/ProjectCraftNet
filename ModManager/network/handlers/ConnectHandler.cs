@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Google.Protobuf;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ModManager.eventBus;
 using ModManager.eventBus.events;
+using ModManager.game.block;
 using ModManager.game.client;
 using ModManager.game.user;
 using static ModManager.game.localization.LocalizationManager;
@@ -24,8 +26,19 @@ public partial class PackHandlers
             NetworkEvents.FireSendEvent(info.SocketId, PackType.Shutdown, Array.Empty<byte>());
             return;
         }
-        NetworkEvents.FireSendEvent(info.SocketId, PackType.Connect, Array.Empty<byte>());
-        EventBus.Trigger(info.SocketId, new UserLoginEvent());        
+        EventBus.Trigger(info.SocketId, new UserLoginEvent());
+        var blockDefineData = new BlockDefine();
+        var blockList = BlockManager.GetAllBlockMetas();
+        foreach (var block in blockList)
+        {
+            blockDefineData.Items.Add(new BlockDefineItem
+            {
+                BlockId = block.BlockId,
+                BlockKey = block.BlockKey,
+                Material = block.Material
+            });
+        }
+        NetworkEvents.FireSendEvent(info.SocketId, PackType.BlockDefine, blockDefineData.ToByteArray());
     }
 
     private static void DisconnectHandler(ClientInfo info, byte[] data)

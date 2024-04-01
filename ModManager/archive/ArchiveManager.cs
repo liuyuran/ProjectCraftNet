@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Arch.Core;
 using Microsoft.Extensions.Logging;
 using ModManager.config;

@@ -26,23 +26,24 @@ public static partial class ServerReflection {
           "ZXJzaW9uGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLbWVtb3J5VG90YWwYAyAB",
           "KAQSEgoKbWVtb3J5VXNlZBgEIAEoBBISCgptYXhQbGF5ZXJzGAUgASgDEhUK",
           "DW9ubGluZVBsYXllcnMYBiABKAMSCwoDdHBzGAcgASgDEgwKBHBpbmcYCCAB",
-          "KA0iIwoPQmxvY2tEZWZpbmVJdGVtEhAKCGJsb2NrX2lkGAEgASgDIi4KC0Js",
-          "b2NrRGVmaW5lEh8KBWl0ZW1zGAEgAygLMhAuQmxvY2tEZWZpbmVJdGVtIi0K",
-          "CUJsb2NrRGF0YRIQCghibG9ja19pZBgBIAEoAxIOCgZzdWJfaWQYAiABKAMi",
-          "WQoJQ2h1bmtEYXRhEgkKAXgYASABKAUSCQoBeRgCIAEoBRIJCgF6GAMgASgF",
-          "Eg8KB3dvcmxkSWQYBCABKAMSGgoGYmxvY2tzGAUgAygLMgouQmxvY2tEYXRh",
-          "IjQKClBsYXllckl0ZW0SCgoCaWQYASABKAMSDAoEbmFtZRgCIAEoCRIMCgRw",
-          "aW5nGAMgASgNIioKCk9ubGluZUxpc3QSHAoHcGxheWVycxgBIAMoCzILLlBs",
-          "YXllckl0ZW0iqgEKC0Jsb2NrQ2hhbmdlEg8KB2NodW5rX3gYASABKAUSDwoH",
-          "Y2h1bmtfeRgCIAEoBRIPCgdjaHVua196GAMgASgFEg8KB2Jsb2NrX3gYBCAB",
-          "KAUSDwoHYmxvY2tfeRgFIAEoBRIPCgdibG9ja196GAYgASgFEhMKC2NoYW5n",
-          "ZV90eXBlGAcgASgFEhAKCGJsb2NrX2lkGAggASgDEg4KBnN1Yl9pZBgJIAEo",
-          "A0ID+AEBYgZwcm90bzM="));
+          "KA0iSAoPQmxvY2tEZWZpbmVJdGVtEhAKCGJsb2NrX2lkGAEgASgDEhEKCWJs",
+          "b2NrX2tleRgCIAEoCRIQCghtYXRlcmlhbBgDIAEoCSIuCgtCbG9ja0RlZmlu",
+          "ZRIfCgVpdGVtcxgBIAMoCzIQLkJsb2NrRGVmaW5lSXRlbSItCglCbG9ja0Rh",
+          "dGESEAoIYmxvY2tfaWQYASABKAMSDgoGc3ViX2lkGAIgASgDIlkKCUNodW5r",
+          "RGF0YRIJCgF4GAEgASgFEgkKAXkYAiABKAUSCQoBehgDIAEoBRIPCgd3b3Js",
+          "ZElkGAQgASgDEhoKBmJsb2NrcxgFIAMoCzIKLkJsb2NrRGF0YSI0CgpQbGF5",
+          "ZXJJdGVtEgoKAmlkGAEgASgDEgwKBG5hbWUYAiABKAkSDAoEcGluZxgDIAEo",
+          "DSIqCgpPbmxpbmVMaXN0EhwKB3BsYXllcnMYASADKAsyCy5QbGF5ZXJJdGVt",
+          "IqoBCgtCbG9ja0NoYW5nZRIPCgdjaHVua194GAEgASgFEg8KB2NodW5rX3kY",
+          "AiABKAUSDwoHY2h1bmtfehgDIAEoBRIPCgdibG9ja194GAQgASgFEg8KB2Js",
+          "b2NrX3kYBSABKAUSDwoHYmxvY2tfehgGIAEoBRITCgtjaGFuZ2VfdHlwZRgH",
+          "IAEoBRIQCghibG9ja19pZBgIIAEoAxIOCgZzdWJfaWQYCSABKANCA/gBAWIG",
+          "cHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::ServerStatus), global::ServerStatus.Parser, new[]{ "Version", "Name", "MemoryTotal", "MemoryUsed", "MaxPlayers", "OnlinePlayers", "Tps", "Ping" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::BlockDefineItem), global::BlockDefineItem.Parser, new[]{ "BlockId" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::BlockDefineItem), global::BlockDefineItem.Parser, new[]{ "BlockId", "BlockKey", "Material" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::BlockDefine), global::BlockDefine.Parser, new[]{ "Items" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::BlockData), global::BlockData.Parser, new[]{ "BlockId", "SubId" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::ChunkData), global::ChunkData.Parser, new[]{ "X", "Y", "Z", "WorldId", "Blocks" }, null, null, null, null),
@@ -538,6 +539,8 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public BlockDefineItem(BlockDefineItem other) : this() {
     blockId_ = other.blockId_;
+    blockKey_ = other.blockKey_;
+    material_ = other.material_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
@@ -559,6 +562,30 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
     }
   }
 
+  /// <summary>Field number for the "block_key" field.</summary>
+  public const int BlockKeyFieldNumber = 2;
+  private string blockKey_ = "";
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public string BlockKey {
+    get { return blockKey_; }
+    set {
+      blockKey_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  /// <summary>Field number for the "material" field.</summary>
+  public const int MaterialFieldNumber = 3;
+  private string material_ = "";
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public string Material {
+    get { return material_; }
+    set {
+      material_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override bool Equals(object other) {
@@ -575,6 +602,8 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
       return true;
     }
     if (BlockId != other.BlockId) return false;
+    if (BlockKey != other.BlockKey) return false;
+    if (Material != other.Material) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -583,6 +612,8 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
   public override int GetHashCode() {
     int hash = 1;
     if (BlockId != 0L) hash ^= BlockId.GetHashCode();
+    if (BlockKey.Length != 0) hash ^= BlockKey.GetHashCode();
+    if (Material.Length != 0) hash ^= Material.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -605,6 +636,14 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
       output.WriteRawTag(8);
       output.WriteInt64(BlockId);
     }
+    if (BlockKey.Length != 0) {
+      output.WriteRawTag(18);
+      output.WriteString(BlockKey);
+    }
+    if (Material.Length != 0) {
+      output.WriteRawTag(26);
+      output.WriteString(Material);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -619,6 +658,14 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
       output.WriteRawTag(8);
       output.WriteInt64(BlockId);
     }
+    if (BlockKey.Length != 0) {
+      output.WriteRawTag(18);
+      output.WriteString(BlockKey);
+    }
+    if (Material.Length != 0) {
+      output.WriteRawTag(26);
+      output.WriteString(Material);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
     }
@@ -631,6 +678,12 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
     int size = 0;
     if (BlockId != 0L) {
       size += 1 + pb::CodedOutputStream.ComputeInt64Size(BlockId);
+    }
+    if (BlockKey.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(BlockKey);
+    }
+    if (Material.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(Material);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -646,6 +699,12 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
     }
     if (other.BlockId != 0L) {
       BlockId = other.BlockId;
+    }
+    if (other.BlockKey.Length != 0) {
+      BlockKey = other.BlockKey;
+    }
+    if (other.Material.Length != 0) {
+      Material = other.Material;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -666,6 +725,14 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
           BlockId = input.ReadInt64();
           break;
         }
+        case 18: {
+          BlockKey = input.ReadString();
+          break;
+        }
+        case 26: {
+          Material = input.ReadString();
+          break;
+        }
       }
     }
   #endif
@@ -683,6 +750,14 @@ public sealed partial class BlockDefineItem : pb::IMessage<BlockDefineItem>
           break;
         case 8: {
           BlockId = input.ReadInt64();
+          break;
+        }
+        case 18: {
+          BlockKey = input.ReadString();
+          break;
+        }
+        case 26: {
+          Material = input.ReadString();
           break;
         }
       }

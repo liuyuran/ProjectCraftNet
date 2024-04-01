@@ -61,7 +61,6 @@ public class GameCore(Config config)
             systems.BeforeUpdate(in deltaTime);
             systems.Update(in deltaTime);
             systems.AfterUpdate(in deltaTime);
-            Logger.LogDebug("{}", Localize(ModId, "Tick {0}ms", DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTickMillis));
             while (UserManager.WaitToJoin.Count > 0)
             {
                 var entity = world.Create(Archetypes.Player);
@@ -86,6 +85,7 @@ public class GameCore(Config config)
                 });
                 world.Set(entity, new Player { UserId = userInfo.UserId, GameMode = gameMod, IsSystem = false});
                 userInfo.PlayerEntity = entity;
+                NetworkEvents.FireSendEvent(userInfo.ClientInfo.SocketId, PackType.Connect, Array.Empty<byte>());
             }
 
             while (UserManager.WaitToLeave.Count > 0)

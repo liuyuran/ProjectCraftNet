@@ -80,7 +80,7 @@ public partial class MainTest
             }
         };
         await tcpClient.FetchChunk(0, new IntVector3(0, 0, 0));
-        chunkEvent.WaitOne(1000);
+        Assert.That(chunkEvent.WaitOne(1000), Is.True);
         for (var i = 0; i < chunk.Length; i++)
         {
             if (chunk[i] == 0) continue;
@@ -90,11 +90,13 @@ public partial class MainTest
         Assert.That(_digTarget, Is.Not.Null);
         await tcpClient.DigChunk(new IntVector3(0, 0, 0), _digTarget ?? new IntVector3(0, 0, 0));
         _digStep++;
-        Thread.Sleep(1000);
         chunkEvent.Reset();
         await tcpClient.FetchChunk(0, new IntVector3(0, 0, 0));
-        blockChangeEvent.WaitOne(1000);
-        chunkEvent.WaitOne(1000);
+        Assert.Multiple(() =>
+        {
+            Assert.That(blockChangeEvent.WaitOne(1000), Is.True);
+            Assert.That(chunkEvent.WaitOne(1000), Is.True);
+        });
         await tcpClient.Disconnect();
     }
 }

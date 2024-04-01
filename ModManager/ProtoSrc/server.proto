@@ -14,6 +14,8 @@ message ServerStatus {
 
 message BlockDefineItem {
   int64 block_id = 1;
+  string block_key = 2;
+  string material = 3;
 }
 
 message BlockDefine {

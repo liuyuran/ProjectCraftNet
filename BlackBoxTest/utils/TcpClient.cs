@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
+using ModManager.network;
 
 namespace BlackBoxTest.utils;
 
@@ -32,7 +33,7 @@ public partial class TcpClient(string hostName, int port) {
     public async Task Disconnect() {
         if (_client is null)
             return;
-        await _client.DisconnectAsync(true);
+        if (_client.Connected) await _client.DisconnectAsync(true);
         _thread?.Interrupt();
         _keepAliveThread?.Interrupt();
         ReceiveEvent = null;
@@ -76,7 +77,7 @@ public partial class TcpClient(string hostName, int port) {
                 var now = DateTimeOffset.Now;
                 var nowTimestamp = now.ToUnixTimeMilliseconds();
                 var timestamp = BitConverter.GetBytes((uint) nowTimestamp);
-                await Send(3, timestamp);
+                await Send((int)PackType.Ping, timestamp);
             }
             catch (SocketException)
             {
