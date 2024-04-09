@@ -7,7 +7,6 @@ using ModManager.ecs.components;
 using ModManager.eventBus;
 using ModManager.eventBus.events;
 using ModManager.game.block;
-using ModManager.game.client;
 using ModManager.game.user;
 using ModManager.logger;
 using ModManager.state;

@@ -4,6 +4,8 @@ CraftNet计划
 
 名字源于minecraft，我想开发一个网游版的minecraft，并摆脱来自微软的制约，当然C#这类开源语言不算。
 
+客户端在别的工程里，勿念。
+
 项目构成
 --
 
@@ -23,9 +25,3 @@ protoc --csharp_out=$pwd/proto ./ProtoSrc/*
 dotnet ef dbcontext scaffold "Host=192.168.18.4;Database=game;Username=postgres;Password=liuyuran" Npgsql.EntityFrameworkCore.PostgreSQL -f -o database/generate
 
 dotnet ef dbcontext scaffold "Host=127.0.0.1;Database=game;Username=postgres;Password=example" Npgsql.EntityFrameworkCore.PostgreSQL -f -o database/generate
-
-现阶段奇思妙想
---
-1. 区块二进制数据存入磁盘，不能把大文件扔数据库里
-2. ECS中只储存数据引用，不储存完整的数据副本
-3. 完成破坏和保存实验

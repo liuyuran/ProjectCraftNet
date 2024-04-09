@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using Arch.Core;
+﻿using Arch.Core;
 using ModManager.game.client;
 using ModManager.network;
 using ModManager.utils;
