@@ -6,6 +6,9 @@ variables:
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
   CONTAINER_NAME: game-server
 
+before_script:
+  - echo '192.168.18.4 gitlab.chaotic-quantum.site' >> /etc/hosts
+
 stages:
   - release
   - deploy
