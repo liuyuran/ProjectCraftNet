@@ -7,24 +7,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Arch" Version="1.2.7.1-alpha" />
+      <PackageReference Include="Arch" Version="1.2.8" />
       <PackageReference Include="Arch.AOT.SourceGenerator" Version="1.0.1" />
       <PackageReference Include="Arch.EventBus" Version="1.0.2" />
       <PackageReference Include="Arch.LowLevel" Version="1.1.0" />
-      <PackageReference Include="Arch.Persistence" Version="1.0.3" />
+      <PackageReference Include="Arch.Persistence" Version="1.0.4" />
       <PackageReference Include="Arch.Relationships" Version="1.0.1" />
       <PackageReference Include="Arch.System" Version="1.0.5" />
       <PackageReference Include="Arch.System.SourceGenerator" Version="1.1.4" />
-      <PackageReference Include="EasilyNET.Security" Version="2.1.9" />
-      <PackageReference Include="Google.Protobuf" Version="3.26.0-rc3" />
-      <PackageReference Include="Google.Protobuf.Tools" Version="3.26.0-rc3" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0-preview.1.24081.2">
+      <PackageReference Include="EasilyNET.Security" Version="2.2.72" />
+      <PackageReference Include="Google.Protobuf" Version="3.26.1" />
+      <PackageReference Include="Google.Protobuf.Tools" Version="3.26.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0-preview.3.24172.4">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0-preview.1.24080.9" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0-preview.1.24080.9" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0-preview.1" />
+      <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0-preview.3.24172.9" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0-preview.3.24172.9" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0-preview.3" />
       <PackageReference Include="SysInfo" Version="1.0.0" />
       <PackageReference Include="Tomlyn" Version="0.17.0" />
     </ItemGroup>
