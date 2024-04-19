@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreMod", "CoreMod\CoreMod.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackBoxTest", "BlackBoxTest\BlackBoxTest.csproj", "{6A2AA519-B531-478E-8065-AAD4274D5668}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandSimulator", "LandSimulator\LandSimulator.csproj", "{0F08B744-B60C-41CB-90F8-0E29DDDCD0F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{6A2AA519-B531-478E-8065-AAD4274D5668}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A2AA519-B531-478E-8065-AAD4274D5668}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A2AA519-B531-478E-8065-AAD4274D5668}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F08B744-B60C-41CB-90F8-0E29DDDCD0F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F08B744-B60C-41CB-90F8-0E29DDDCD0F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F08B744-B60C-41CB-90F8-0E29DDDCD0F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F08B744-B60C-41CB-90F8-0E29DDDCD0F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

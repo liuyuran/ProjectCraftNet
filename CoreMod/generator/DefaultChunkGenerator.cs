@@ -8,9 +8,16 @@ namespace CoreMod.generator;
 /// <summary>
 /// 初始世界区块生成器
 /// </summary>
-public class DefaultChunkGenerator: IChunkGenerator
+public class DefaultChunkGenerator : IChunkGenerator
 {
     private readonly FastNoiseLite _noise = new();
+
+    public DefaultChunkGenerator()
+    {
+        _noise.SetSeed(DateTime.Now.Millisecond);
+        _noise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
+    }
+
     private static int GetBlockIndex(int x, int y, int z, int size)
     {
         if (x > size) x %= size;
@@ -28,7 +35,7 @@ public class DefaultChunkGenerator: IChunkGenerator
             {
                 var noiseData = _noise.GetNoise(chunkPosition.X * chunkSize + x, chunkPosition.Z * chunkSize + z);
                 noiseData = Math.Abs(noiseData);
-                var height = (uint) Math.Round(noiseData * chunkSize);
+                var height = (uint)Math.Round(noiseData * chunkSize);
                 for (var y = 0; y < chunkSize; y++)
                 {
                     var blockId = y > height ? BlockManager.GetBlockId<Air>() : BlockManager.GetBlockId<Dirt>();
@@ -42,11 +49,9 @@ public class DefaultChunkGenerator: IChunkGenerator
 
         return blockData;
     }
-    
+
     public ModManager.game.generator.BlockData[] GenerateChunkBlockData(int chunkSize, IntVector3 chunkPosition)
     {
-        _noise.SetSeed(DateTime.Now.Millisecond);
-        _noise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
         return GenerateMainWorld(chunkSize, chunkPosition);
     }
 }
