@@ -25,10 +25,45 @@ public class DefaultChunkGenerator : IChunkGenerator
         if (z > size) z %= size;
         return z * size * size + y * size + x;
     }
+    
+    /// <summary>
+    /// 根据区块坐标匹配生物群系
+    /// </summary>
+    /// <param name="chunkPosition">区块坐标</param>
+    /// <returns>生物群系</returns>
+    private static EBiome GetBiome(IntVector3 chunkPosition)
+    {
+        return EBiome.Plain;
+    }
 
+    /// <summary>
+    /// 生成高度图
+    /// </summary>
+    /// <param name="chunkData">高度图存储器的引用</param>
+    /// <param name="chunkSize">区块大小</param>
+    /// <param name="chunkPosition">区块位置</param>
+    private static void GenerateHeightMap(
+        MemoryChunkData chunkData,
+        int chunkSize,
+        IntVector3 chunkPosition)
+    {
+        
+    }
+
+    /// <summary>
+    /// 计算高度图并据此生成区块数据
+    /// </summary>
+    /// <param name="chunkSize">区块大小</param>
+    /// <param name="chunkPosition">区块位置</param>
+    /// <returns>区块数据</returns>
     private MemoryChunkData GenerateMainWorld(int chunkSize, IntVector3 chunkPosition)
     {
-        var blockData = new ModManager.game.generator.BlockData[chunkSize * chunkSize * chunkSize];
+        var data = new MemoryChunkData
+        {
+            Biome = GetBiome(chunkPosition),
+            BlockData = new MemoryBlockData[chunkSize * chunkSize * chunkSize]
+        };
+        GenerateHeightMap(data, chunkSize, chunkPosition);
         for (var x = 0; x < chunkSize; x++)
         {
             for (var z = 0; z < chunkSize; z++)
@@ -39,7 +74,7 @@ public class DefaultChunkGenerator : IChunkGenerator
                 for (var y = 0; y < chunkSize; y++)
                 {
                     var blockId = y > height ? BlockManager.GetBlockId<Air>() : BlockManager.GetBlockId<Dirt>();
-                    blockData[GetBlockIndex(x, y, z, chunkSize)] = new ModManager.game.generator.BlockData
+                    data.BlockData[GetBlockIndex(x, y, z, chunkSize)] = new MemoryBlockData
                     {
                         BlockId = blockId
                     };
@@ -47,10 +82,7 @@ public class DefaultChunkGenerator : IChunkGenerator
             }
         }
 
-        return new MemoryChunkData
-        {
-            BlockData = blockData
-        };
+        return data;
     }
 
     public MemoryChunkData GenerateChunkBlockData(int chunkSize, IntVector3 chunkPosition)

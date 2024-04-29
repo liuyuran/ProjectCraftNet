@@ -27,7 +27,7 @@ public class ChunkGeneratorManager
     private static ChunkGeneratorManager Instance { get; } = new();
     private readonly Dictionary<long, IChunkGenerator> _generators = new();
     private readonly Queue<QueueItem> _generatingChunks = new();
-    private readonly Dictionary<QueueItem, BlockData[]> _generatedChunks = new();
+    private readonly Dictionary<QueueItem, MemoryBlockData[]> _generatedChunks = new();
 
     private ChunkGeneratorManager()
     {
@@ -77,7 +77,7 @@ public class ChunkGeneratorManager
     /// <param name="worldId">世界编码</param>
     /// <param name="chunkPosition">区块坐标，以1为单位</param>
     /// <returns>区块数据，如果正在生成中则返回null</returns>
-    public static BlockData[]? GenerateChunkBlockData(long worldId, IntVector3 chunkPosition)
+    public static MemoryBlockData[]? GenerateChunkBlockData(long worldId, IntVector3 chunkPosition)
     {
         if (Instance._generatedChunks.TryGetValue(new QueueItem(worldId, chunkPosition), out var result))
         {

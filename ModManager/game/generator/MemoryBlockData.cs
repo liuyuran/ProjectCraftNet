@@ -1,6 +1,6 @@
 ﻿namespace ModManager.game.generator;
 
-public struct BlockData
+public struct MemoryBlockData
 {
     public long BlockId;
 }

@@ -1,5 +1,8 @@
 ﻿namespace ModManager.game.generator;
 
+/// <summary>
+/// 高度图类型
+/// </summary>
 public enum EHeightMapUsage
 {
     LIGHT_BLOCKING, // 可见光方块的最大高度
