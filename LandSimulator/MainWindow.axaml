@@ -3,7 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="500"
-        Width="500" Height="500"
+        Width="800" Height="800"
         x:Class="LandSimulator.MainWindow"
         Title="LandSimulator">
     <DockPanel>

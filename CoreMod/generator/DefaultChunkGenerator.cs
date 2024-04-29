@@ -26,7 +26,7 @@ public class DefaultChunkGenerator : IChunkGenerator
         return z * size * size + y * size + x;
     }
 
-    private ModManager.game.generator.BlockData[] GenerateMainWorld(int chunkSize, IntVector3 chunkPosition)
+    private MemoryChunkData GenerateMainWorld(int chunkSize, IntVector3 chunkPosition)
     {
         var blockData = new ModManager.game.generator.BlockData[chunkSize * chunkSize * chunkSize];
         for (var x = 0; x < chunkSize; x++)
@@ -47,10 +47,13 @@ public class DefaultChunkGenerator : IChunkGenerator
             }
         }
 
-        return blockData;
+        return new MemoryChunkData
+        {
+            BlockData = blockData
+        };
     }
 
-    public ModManager.game.generator.BlockData[] GenerateChunkBlockData(int chunkSize, IntVector3 chunkPosition)
+    public MemoryChunkData GenerateChunkBlockData(int chunkSize, IntVector3 chunkPosition)
     {
         return GenerateMainWorld(chunkSize, chunkPosition);
     }

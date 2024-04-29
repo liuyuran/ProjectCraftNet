@@ -50,7 +50,7 @@ public partial class MainWindow : Window
     
     private void GeneratePreview(Bitmap bitmap, IntVector3 chunkPosition, Vector2 offset)
     {
-        var data = _generator.GenerateChunkBlockData(ChunkSize, chunkPosition);
+        var data = _generator.GenerateChunkBlockData(ChunkSize, chunkPosition).BlockData;
         for (var i = 0; i < ChunkSize; i++)
         {
             for (var j = 0; j < ChunkSize; j++)
