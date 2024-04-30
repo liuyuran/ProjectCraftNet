@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using CoreMod.blocks;
 using CoreMod.generator;
 using ModManager.game.block;
+using ModManager.game.generator;
 using ModManager.utils;
 using static System.Drawing.Imaging.ImageFormat;
 
@@ -22,7 +23,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         BlockManager.RegisterBlock<Air>();
         BlockManager.RegisterBlock<Dirt>();
-        const int size = 12;
+        const int size = 64;
         var drawingBitmap = new Bitmap(ChunkSize * size, ChunkSize * size);
         for (var i = 0; i < size; i++)
         {
@@ -50,18 +51,12 @@ public partial class MainWindow : Window
     
     private void GeneratePreview(Bitmap bitmap, IntVector3 chunkPosition, Vector2 offset)
     {
-        var data = _generator.GenerateChunkBlockData(ChunkSize, chunkPosition).BlockData;
+        var data = _generator.GenerateChunkBlockData(ChunkSize, chunkPosition).HeightMap[EHeightMapUsage.LIGHT_BLOCKING];
         for (var i = 0; i < ChunkSize; i++)
         {
             for (var j = 0; j < ChunkSize; j++)
             {
-                var height = ChunkSize;
-                for (var k = 0; k < ChunkSize; k++)
-                {
-                    if (data[GetBlockIndex(i, k, j, ChunkSize)].BlockId != BlockManager.GetBlockId<Air>()) continue;
-                    height = k;
-                    break;
-                }
+                var height = data[i, j];
 
                 var percent = (float)height / ChunkSize;
                 bitmap.SetPixel((int)(i + offset.X * ChunkSize), (int)(j + offset.Y * ChunkSize), Color.FromArgb(

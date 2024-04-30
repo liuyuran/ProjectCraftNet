@@ -6,6 +6,6 @@
 public class MemoryChunkData
 {
     public EBiome Biome;
-    public Dictionary<EHeightMapUsage, long[][]> HeightMap = new();
+    public Dictionary<EHeightMapUsage, long[,]> HeightMap = new();
     public required MemoryBlockData[] BlockData;
 }

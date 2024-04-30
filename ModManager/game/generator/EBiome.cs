@@ -5,5 +5,6 @@
 /// </summary>
 public enum EBiome
 {
-    Plain // 平原
+    Plain, // 平原
+    Sea
 }
