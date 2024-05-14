@@ -53,13 +53,13 @@ public partial class MainTest
         {
             switch (type)
             {
-                case (int)PackType.Shutdown:
+                case (int)PackType.ShutdownPack:
                     if (shouldFail) loginEvent.Set();
                     break;
-                case (int)PackType.Connect:
+                case (int)PackType.ConnectPack:
                     if (!shouldFail) loginEvent.Set();
                     break;
-                case (int)PackType.BlockDefine:
+                case (int)PackType.BlockDefinePack:
                     if (shouldFail) break;
                     var data = BlockDefine.Parser.ParseFrom(bytes);
                     Assert.That(data.Items, Is.Not.Empty);

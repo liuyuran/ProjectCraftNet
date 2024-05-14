@@ -15,7 +15,7 @@ public partial class MainTest
         var step = 0;
         tcpClient.ReceiveEvent += (type, bytes) =>
         {
-            if (type != (int)PackType.Chunk) return;
+            if (type != (int)PackType.ChunkPack) return;
             var data = ChunkData.Parser.ParseFrom(bytes);
             switch (step)
             {

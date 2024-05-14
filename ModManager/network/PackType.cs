@@ -3,31 +3,33 @@
 public enum PackType
 {
     // 未知消息
-    Unknown = -1,
+    UnknownPack = -1,
     // 关闭服务器
-    Shutdown = 0,
+    ShutdownPack = 0,
     // 用户连入
-    Connect = 1,
+    ConnectPack = 1,
     // 方块注册表
-    BlockDefine = 2,
+    BlockDefinePack = 2,
     // 聊天数据发送
-    Chat = 3,
+    ChatPack = 3,
     // 心跳包
-    Ping = 4,
+    PingPack = 4,
     // 服务器状态
-    ServerStatus = 5,
+    ServerStatusPack = 5,
+    // 背包信息
+    InventoryPack = 6,
     // 区块数据发送
-    Chunk = 100,
+    ChunkPack = 100,
     // 方块交互
-    ControlBlock = 101,
+    ControlBlockPack = 101,
     // 实体交互
-    ControlEntity = 102,
+    ControlEntityPack = 102,
     // 用户移动
-    Move = 103,
+    MovePack = 103,
     // 在线用户列表
-    OnlineList = 104,
+    OnlineListPack = 104,
     // 断开连接
-    Disconnect = 105,
+    DisconnectPack = 105,
     // 方块变化
-    BlockChange = 106,
+    BlockChangePack = 106,
 }

@@ -41,6 +41,7 @@ public class GameCore(Config config)
         // 开始监听网络事件
         PackHandlers.RegisterAllHandlers();
         RegistryCorePackEvent();
+        RegistryGamePlayPackEvent();
         EventBus.Subscribe<ChatEvent>(OnGameEventsOnChatEvent);
         EventBus.Subscribe<ArchiveEvent>(OnGameEventsOnArchiveEvent);
         var systems = new Group<float>(
@@ -82,7 +83,7 @@ public class GameCore(Config config)
                 });
                 world.Set(entity, new Player { UserId = userInfo.UserId, GameMode = gameMod, IsSystem = false});
                 userInfo.PlayerEntity = entity;
-                NetworkEvents.FireSendEvent(userInfo.ClientInfo.SocketId, PackType.Connect, Array.Empty<byte>());
+                NetworkEvents.FireSendEvent(userInfo.ClientInfo.SocketId, PackType.ConnectPack, Array.Empty<byte>());
             }
 
             while (UserManager.WaitToLeave.Count > 0)
@@ -166,13 +167,16 @@ public class GameCore(Config config)
             return false;
         }
 
-        NetworkEvents.FireSendEvent(socketId, PackType.Chat, buffer);
+        NetworkEvents.FireSendEvent(socketId, PackType.ChatPack, buffer);
         return true;
     }
 
+    /// <summary>
+    /// 注册基础包监听
+    /// </summary>
     private void RegistryCorePackEvent()
     {
-        NetworkPackBus.Subscribe(PackType.ServerStatus, (info, _) =>
+        NetworkPackBus.Subscribe(PackType.ServerStatusPack, (info, _) =>
         {
             var currentProcess = Process.GetCurrentProcess();
             var status = new ServerStatus
@@ -186,12 +190,23 @@ public class GameCore(Config config)
                 Tps = (long)Math.Floor(_tickPerSecond),
                 Ping = UserManager.GetUserInfo(info.SocketId)?.ClientInfo.Ping ?? 0
             };
-            NetworkEvents.FireSendEvent(info.SocketId, PackType.ServerStatus, status.ToByteArray());
+            NetworkEvents.FireSendEvent(info.SocketId, PackType.ServerStatusPack, status.ToByteArray());
         });
-        NetworkPackBus.Subscribe(PackType.Shutdown, (_, _) =>
+        NetworkPackBus.Subscribe(PackType.ShutdownPack, (_, _) =>
         {
             Logger.LogInformation("{}", Localize(ModId, "Server shutting down"));
             _stopping = true;
+        });
+    }
+    
+    /// <summary>
+    /// 注册游戏性相关的包监听
+    /// </summary>
+    private void RegistryGamePlayPackEvent()
+    {
+        NetworkPackBus.Subscribe(PackType.InventoryPack, (info, pack) =>
+        {
+            // TODO
         });
     }
 }

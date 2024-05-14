@@ -25,8 +25,8 @@ public partial class MainTest
         var chunk = Array.Empty<long>();
         tcpClient.ReceiveEvent += (type, bytes) =>
         {
-            if (type != (int)PackType.Chunk && type != (int)PackType.BlockChange) return;
-            if (type == (int)PackType.BlockChange)
+            if (type != (int)PackType.ChunkPack && type != (int)PackType.BlockChangePack) return;
+            if (type == (int)PackType.BlockChangePack)
             {
                 var data = BlockChange.Parser.ParseFrom(bytes);
                 Assert.Multiple(() =>

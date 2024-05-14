@@ -61,7 +61,7 @@ public class UserManager
             PlayerEntity = null
         };
         Instance._users.Add(info.SocketId, userInfo);
-        InventoryManager.AttachInventory(userInfo.UserId);
+        InventoryManager.AttachInventory(userInfo.UserId, 64);
         Logger.LogInformation("{}", Localize(ModId, "User {0} login", connect.Username));
         if (connect.ClientType == (int)ClientType.CommandLine)
         {

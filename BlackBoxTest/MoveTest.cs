@@ -21,8 +21,8 @@ public partial class MainTest
         var tcpClient2 = GetClient();
         tcpClient.ReceiveEvent += (type, bytes) =>
         {
-            if (type == (int)PackType.Connect) loginAEvent.Set();
-            if (type != (int)PackType.Move) return;
+            if (type == (int)PackType.ConnectPack) loginAEvent.Set();
+            if (type != (int)PackType.MovePack) return;
             var data = PlayerMove.Parser.ParseFrom(bytes);
             Assert.Multiple(() =>
             {
@@ -41,8 +41,8 @@ public partial class MainTest
         };  
         tcpClient2.ReceiveEvent += (type, bytes) =>
         {
-            if (type == (int)PackType.Connect) loginBEvent.Set();
-            if (type != (int)PackType.Move) return;
+            if (type == (int)PackType.ConnectPack) loginBEvent.Set();
+            if (type != (int)PackType.MovePack) return;
             var data = PlayerMove.Parser.ParseFrom(bytes);
             Assert.Multiple(() =>
             {

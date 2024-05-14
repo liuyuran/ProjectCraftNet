@@ -120,7 +120,7 @@ public class TcpServer
                             msgBuffer.RemoveAt(0);
                         }
 
-                        if (packType == (int)PackType.Ping)
+                        if (packType == (int)PackType.PingPack)
                         {
                             lastTime = DateTime.Now.Ticks;
                         }

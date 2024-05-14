@@ -77,7 +77,7 @@ public partial class TcpClient(string hostName, int port) {
                 var now = DateTimeOffset.Now;
                 var nowTimestamp = now.ToUnixTimeMilliseconds();
                 var timestamp = BitConverter.GetBytes((uint) nowTimestamp);
-                await Send((int)PackType.Ping, timestamp);
+                await Send((int)PackType.PingPack, timestamp);
             }
             catch (SocketException)
             {
