@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using CoreMod.blocks;
-using ModManager.game.block;
 using ModManager.game.generator;
 using ModManager.utils;
 
@@ -12,10 +10,11 @@ namespace CoreMod.generator;
 public class DefaultChunkGenerator : IChunkGenerator
 {
     private readonly FastNoiseLite _noisePrimal = new();
+    private const int Scale = 16;
 
     public DefaultChunkGenerator()
     {
-        const int seed = 2024; //DateTime.Now.Millisecond;
+        var seed = DateTime.Now.Millisecond;
         _noisePrimal.SetSeed(seed);
         _noisePrimal.SetNoiseType(FastNoiseLite.NoiseType.Cellular);
     }
@@ -27,14 +26,22 @@ public class DefaultChunkGenerator : IChunkGenerator
         if (z > size) z %= size;
         return z * size * size + y * size + x;
     }
+    
+    private float GetNoise(int chunkX, int chunkZ, int chunkSize)
+    {
+        var noiseX = chunkX * chunkSize / Scale;
+        var noiseZ = chunkZ * chunkSize / Scale;
+        return _noisePrimal.GetNoise(noiseX, noiseZ);
+    }
 
     /// <summary>
     /// 根据区块坐标匹配生物群系
     /// </summary>
     /// <param name="chunkPosition">区块坐标</param>
     /// <param name="chunkSize">区块大小</param>
+    /// <param name="level">检索深度</param>
     /// <returns>生物群系</returns>
-    private EBiome GetBiome(IntVector3 chunkPosition, int chunkSize)
+    private EBiome GetBiome(IntVector3 chunkPosition, int chunkSize, int level = 5)
     {
         /*
          *  这种层在第二阶段也被使用，与第一阶段的混合表示法不同，第二阶段的幻数直接表示生物群系。
@@ -42,11 +49,48 @@ public class DefaultChunkGenerator : IChunkGenerator
             否则如果四周（象）也是海，那自己就还是海。
             否则变为炎热，有一定概率变为四周（象）的生物群系。
          */
-        var noiseX = chunkPosition.X * chunkSize / 2 + chunkSize / 4;
-        var noiseZ = chunkPosition.Z * chunkSize / 2 + chunkSize / 4;
-        var noiseData = _noisePrimal.GetNoise(noiseX, noiseZ);
-        var isLand = noiseData > -.5f;
-        return isLand ? EBiome.Plain : EBiome.Sea;
+        if ((chunkPosition / 4) is { X: 0, Z: 0 }) return EBiome.Plain;
+        var noiseData = GetNoise(chunkPosition.X, chunkPosition.Z, chunkSize);
+        var isLand = noiseData > -.3f;
+        if (level <= 0) return isLand ? EBiome.Plain : EBiome.Sea;
+        if (isLand)
+        {
+            for (var i = -1; i <= 1; i++)
+            {
+                for (var j = -1; j <= 1; j++)
+                {
+                    if (i == 0 && j == 0) continue;
+                    if (Math.Abs(i) == Math.Abs(j)) continue;
+                    var noise = GetBiome(chunkPosition + new IntVector3(i, 0, j), chunkSize, level - 1);
+                    if (noise == EBiome.Plain)
+                    {
+                        return EBiome.Plain;
+                    }
+                }                
+            }
+
+            return EBiome.Sea;
+        }
+        return EBiome.Sea;
+
+        // var flag = 0;
+        // for (var i = -1; i <= 1; i++)
+        // {
+        //     for (var j = -1; j <= 1; j++)
+        //     {
+        //         if (i == 0 && j == 0) continue;
+        //         if (Math.Abs(i) == Math.Abs(j)) continue;
+        //         var noise = GetBiome(chunkPosition + new IntVector3(i, 0, j), chunkSize, level - 1);
+        //         if (noise == EBiome.Plain)
+        //         {
+        //             flag++;
+        //         }
+        //     }                
+        // }
+        //
+        // if (flag == 0) return EBiome.Sea;
+        // var percent = Random.Shared.NextSingle() * 4;
+        // return percent < flag ? EBiome.Plain : EBiome.Sea;
     }
 
     /// <summary>
@@ -89,7 +133,7 @@ public class DefaultChunkGenerator : IChunkGenerator
         var data = new MemoryChunkData
         {
             Biome = GetBiome(chunkPosition, chunkSize),
-            BlockData = new MemoryBlockData[chunkSize * chunkSize * chunkSize]
+            BlockData = new MemoryBlockData[chunkSize * chunkSize * chunkSize],
         };
         GenerateHeightMap(data, chunkSize, chunkPosition);
         // for (var x = 0; x < chunkSize; x++)
