@@ -81,7 +81,7 @@ public class GameCore(Config config)
                         position.Z % chunkSize
                     )
                 });
-                world.Set(entity, new Player { UserId = userInfo.UserId, GameMode = gameMod, IsSystem = false});
+                world.Set(entity, new Player { UserId = userInfo.UserId, GameMode = gameMod, IsSystem = false });
                 userInfo.PlayerEntity = entity;
                 NetworkEvents.FireSendEvent(userInfo.ClientInfo.SocketId, PackType.ConnectPack, Array.Empty<byte>());
             }
@@ -125,6 +125,7 @@ public class GameCore(Config config)
 
     private static bool OnGameEventsOnArchiveEvent(ArchiveEvent @event)
     {
+        NetworkEvents.FireSendTextEvent(-1, Localize(ModId, "saving_to_database"));
         var world = ModManager.state.CraftNet.Instance.World.World;
         ArchiveManager.SaveUserInfo(world);
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
@@ -147,6 +148,7 @@ public class GameCore(Config config)
             ArchiveManager.SaveChunkInfo(world, worldId, chunkPos.ToArray());
         }
 
+        NetworkEvents.FireSendTextEvent(-1, Localize(ModId, "saved_to_database"));
         return true;
     }
 
@@ -198,7 +200,7 @@ public class GameCore(Config config)
             _stopping = true;
         });
     }
-    
+
     /// <summary>
     /// 注册游戏性相关的包监听
     /// </summary>
