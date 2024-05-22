@@ -29,4 +29,9 @@ public partial class Chunk
     /// 区块数据
     /// </summary>
     public string Data { get; set; } = null!;
+
+    /// <summary>
+    /// 坐标索引
+    /// </summary>
+    public string Pos { get; set; } = null!;
 }

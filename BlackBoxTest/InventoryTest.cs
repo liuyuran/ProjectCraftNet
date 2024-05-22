@@ -11,7 +11,7 @@ namespace BlackBoxTest;
 /// </summary>
 public partial class MainTest
 {
-    [utils.Test(DisplayName = "背包数据拉取测试"), Order(4)]
+    [utils.Test(DisplayName = "背包数据拉取测试"), Order(5)]
     public async Task InventoryFetch()
     {
         var tcpClient = GetClient();

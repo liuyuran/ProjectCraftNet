@@ -89,6 +89,7 @@ public class ArchiveManager
             chunk.PosX = item.Pos.X;
             chunk.PosY = item.Pos.Y;
             chunk.PosZ = item.Pos.Z;
+            chunk.Pos = $"{chunk.PosX},{chunk.PosY},{chunk.PosZ}";
             var jsonData = JsonSerializer.Serialize(item.Data);
             chunk.Data = jsonData;
             if (created)
@@ -120,9 +121,11 @@ public class ArchiveManager
     
     public static Dictionary<IntVector3, long[]> TryGetAllChunkData(long worldId, HashSet<IntVector3> chunkPos)
     {
+        if (chunkPos.Count == 0) return new Dictionary<IntVector3, long[]>();
+        List<string> posList = chunkPos.Select(pos => $"{pos.X},{pos.Y},{pos.Z}").ToList();
         using var dbContext = new CoreDbContext();
-        var query = from chunk in dbContext.Chunks.AsEnumerable()
-            where chunk.WorldId == worldId && chunkPos.Contains(new IntVector3(chunk.PosX, chunk.PosY, chunk.PosZ))
+        var query = from chunk in dbContext.Chunks
+            where chunk.WorldId == worldId && posList.Contains(chunk.Pos)
             select chunk;
         var chunkData = query.ToList();
         var result = new Dictionary<IntVector3, long[]>();

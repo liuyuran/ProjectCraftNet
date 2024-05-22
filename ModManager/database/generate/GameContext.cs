@@ -62,6 +62,8 @@ public partial class GameContext : DbContext
 
             entity.ToTable("chunk", tb => tb.HasComment("区块数据"));
 
+            entity.HasIndex(e => new { e.WorldId, e.Pos }, "chunk_world_id_pos_index");
+
             entity.Property(e => e.PosX)
                 .HasComment("X轴坐标")
                 .HasColumnName("pos_x");
@@ -75,6 +77,11 @@ public partial class GameContext : DbContext
             entity.Property(e => e.Data)
                 .HasComment("区块数据")
                 .HasColumnName("data");
+            entity.Property(e => e.Pos)
+                .HasMaxLength(500)
+                .HasDefaultValueSql("''::character varying")
+                .HasComment("坐标索引")
+                .HasColumnName("pos");
         });
 
         modelBuilder.Entity<Inventory>(entity =>

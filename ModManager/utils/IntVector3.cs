@@ -28,8 +28,10 @@ public class IntVector3(int x, int y, int z): IEquatable<IntVector3>
         return new IntVector3(a.X / b, a.Y / b, a.Z / b);
     }
     
-    public static bool operator ==(IntVector3 a, IntVector3 b)
+    public static bool operator ==(IntVector3? a, IntVector3? b)
     {
+        if (a is null && b is null) return true;
+        if (a is null || b is null) return false;
         return a.X == b.X && a.Y == b.Y && a.Z == b.Z;
     }
     

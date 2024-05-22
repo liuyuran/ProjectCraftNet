@@ -7,6 +7,7 @@ using ProjectCraftNet;
 namespace BlackBoxTest;
 
 [TestFixture(TestName = "基础测试", Category = "黑盒测试")]
+[Parallelizable(ParallelScope.None)]
 public partial class MainTest
 {
     private Thread _workThread = null!;
@@ -21,7 +22,7 @@ public partial class MainTest
             Program.Main(["-c", Path.Combine(testDic, @"BlackBoxTest\config.toml")]);
         });
         _workThread.Start();
-        Assert.That(CraftNet.MapInitEvent.WaitOne(600000), Is.True);
+        Assert.That(CraftNet.ServerInitEvent.WaitOne(600000), Is.True);
     }
 
     [OneTimeTearDown]
