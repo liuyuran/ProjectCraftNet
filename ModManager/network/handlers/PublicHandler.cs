@@ -7,6 +7,7 @@ using ModManager.ecs.components;
 using ModManager.eventBus;
 using ModManager.eventBus.events;
 using ModManager.game.block;
+using ModManager.game.inventory;
 using ModManager.game.user;
 using ModManager.logger;
 using ModManager.state;
@@ -143,6 +144,27 @@ public partial class PackHandlers
         NetworkPackBus.Subscribe(PackType.ControlEntityPack, (info, data) =>
         {
             //
+        });
+        NetworkPackBus.Subscribe(PackType.InventoryPack, (info, data) =>
+        {
+            var userInfo = UserManager.GetUserInfo(info.SocketId);
+            if (userInfo == null) return;
+            var allInventories = InventoryManager.GetInventory(userInfo.UserId);
+            var msg = new InventoryMsg();
+            foreach (var inventory in allInventories)
+            {
+                var itemMsg = new InventoryItemMsg();
+                foreach (var item in inventory.Items)
+                {
+                    itemMsg.Items.Add(new InventoryItemInfoMsg
+                    {
+                        ItemId = item.ItemId,
+                        ItemCount = item.Count
+                    });
+                }
+
+                msg.Items.Add(itemMsg);
+            }
         });
     }
 }

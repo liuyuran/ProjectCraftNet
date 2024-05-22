@@ -13,6 +13,9 @@ using ModManager.utils;
 
 namespace ModManager.ecs.systems;
 
+/// <summary>
+/// 区块生成，不过还没有实现多个世界的生成
+/// </summary>
 public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
 {
     private static readonly ILogger Logger = SysLogger.GetLogger(typeof(ChunkGenerateSystem));
@@ -26,9 +29,7 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
         var sight = ConfigUtil.Instance.GetConfig().Core!.Sight;
         var playerQuery = new QueryDescription().WithAll<Player, Position>();
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
-        _world.Query(in chunkQuery, (ref Position position) => {
-            _existChunkPosition.Add(position.ChunkPos);
-        });
+        _world.Query(in chunkQuery, (ref Position position) => { _existChunkPosition.Add(position.ChunkPos); });
         _world.Query(in playerQuery, (ref Position position) =>
         {
             var chunkPos = position.ChunkPos;
@@ -37,48 +38,73 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
         GenerateRangeChunkByCenterPosition(new IntVector3(0, 0, 0), sight);
         CraftNet.MapInitEvent.Set();
     }
-    
+
     private void GenerateRangeChunkByCenterPosition(IntVector3 centerPosition, int range)
     {
+        var needGenerate = new HashSet<IntVector3>();
         for (var x = -range; x < range; x++)
         {
             for (var y = -range; y < range; y++)
             {
                 for (var z = -range; z < range; z++)
                 {
-                    var chunkPosition = new IntVector3(centerPosition.X + x, centerPosition.Y + y, centerPosition.Z + z);
+                    var chunkPosition =
+                        new IntVector3(centerPosition.X + x, centerPosition.Y + y, centerPosition.Z + z);
                     if (_existChunkPosition.Contains(chunkPosition)) continue;
-                    TryGenerateChunkByCenterPosition(chunkPosition);
+                    needGenerate.Add(chunkPosition);
                 }
             }
         }
+
+        TryGenerateChunkByCenterPositions(needGenerate);
     }
-    
+
+    private void TryGenerateChunkByCenterPositions(HashSet<IntVector3> centerPosition)
+    {
+        var needQuery = new HashSet<IntVector3>();
+        foreach (var pos in centerPosition.Where(pos => !_generatingChunk.Contains(pos)))
+        {
+            needQuery.Add(pos);
+        }
+
+        var queryResult = ArchiveManager.TryGetAllChunkData(0, needQuery);
+        foreach (var (pos, data) in queryResult)
+        {
+            var entity = _world.Create(Archetypes.Chunk);
+            _world.Set(entity, new Position
+            {
+                ChunkPos = pos,
+                InChunkPos = new Vector3()
+            });
+            _world.Set(entity, new ChunkBlockData
+            {
+                WorldId = 0,
+                Data = data,
+                Changed = false
+            });
+            CraftNet.Instance.World.AddChunk(0, new ChunkPos
+            {
+                X = pos.X,
+                Y = pos.Y,
+                Z = pos.Z
+            }, data);
+        }
+        var other = needQuery.Except(queryResult.Keys);
+        foreach (var pos in other)
+        {
+            TryGenerateChunkByCenterPosition(pos);
+        }
+    }
+
     private void TryGenerateChunkByCenterPosition(IntVector3 centerPosition)
     {
-        var chunkPosition = new Position
+        if (_generatingChunk.Contains(centerPosition)) return;
+        var entity = _world.Create(Archetypes.Chunk);
+        _world.Set(entity, new Position
         {
             ChunkPos = centerPosition,
             InChunkPos = new Vector3()
-        };
-        var entity = _world.Create(Archetypes.Chunk);
-        _world.Set(entity, chunkPosition);
-        // 如果未被标记为生成中，尝试从数据库获取存档
-        if (!_generatingChunk.Contains(centerPosition))
-        {
-            var existChunk = ArchiveManager.TryGetChunkData(0, centerPosition);
-            if (existChunk != null)
-            {
-                _world.Set(entity, new ChunkBlockData
-                {
-                    WorldId = 0,
-                    Data = existChunk,
-                    Changed = false
-                });
-                return;
-            }
-        }
-        // 获取不成功则继续生成，如果正在生成中则跳过
+        });
         var data = ChunkGeneratorManager.GenerateChunkBlockData(0, centerPosition);
         if (data == null)
         {

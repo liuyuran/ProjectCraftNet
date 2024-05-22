@@ -21,7 +21,7 @@ public partial class TcpClient
     
     public async Task Logout()
     {
-        await Send((int)PackType.DisconnectPack, Array.Empty<byte>());
+        await Send((int)PackType.DisconnectPack, []);
         await Disconnect();
     }
 
@@ -68,5 +68,10 @@ public partial class TcpClient
             Type = 1
         };
         await Send((int)PackType.ControlBlockPack, blockMsg.ToByteArray());
+    }
+    
+    public async Task FetchInventory()
+    {
+        await Send((int)PackType.InventoryPack, []);
     }
 }

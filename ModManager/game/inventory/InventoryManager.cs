@@ -10,9 +10,10 @@ public class InventoryManager
     
     public static void AttachInventory(long userId, long size)
     {
-        if (!Instance._inventories.ContainsKey(userId))
-            Instance._inventories[userId] = [];
-        Instance._inventories[userId].Add(new Inventory(size));
+        var inventoryBox = Instance._inventories;
+        if (!inventoryBox.ContainsKey(userId))
+            inventoryBox.Add(userId, []);
+        inventoryBox[userId].Add(new Inventory(size));
     }
     
     public static void DetachInventory(long userId)

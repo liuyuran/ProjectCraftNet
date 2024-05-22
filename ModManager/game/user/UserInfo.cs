@@ -11,8 +11,8 @@ public class UserInfo
     public required string NickName { get; init; }
     public required ClientInfo ClientInfo { get; init; }
     public Entity? PlayerEntity { get; set; }
-    public long WorldId { get; set; }
+    public long WorldId { get; init; } // 以后需要改为可变
     public LongVector3 Position { get; set; }
-    public GameMode GameMode { get; set; }
+    public GameMode GameMode { get; init; } // 以后需要改为可变
     public bool IsCommandLine { get; set; }
 }

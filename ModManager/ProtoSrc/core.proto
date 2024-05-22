@@ -12,16 +12,16 @@ message ChatAndBroadcast {
 }
 
 message InventoryItemInfoMsg {
-  uint32 ItemId = 1;
-  uint32 ItemCount = 2;
+  int64 ItemId = 1;
+  int64 ItemCount = 2;
   string ItemClob = 3;
 }
 
 message InventoryItemMsg {
-  repeated InventoryItemInfoMsg items = 1;
+  int64 InventoryId = 1;
+  repeated InventoryItemInfoMsg items = 2;
 }
 
 message InventoryMsg {
-  uint32 InventoryId = 1;
-  repeated InventoryItemMsg items = 2;
+  repeated InventoryItemMsg items = 1;
 }

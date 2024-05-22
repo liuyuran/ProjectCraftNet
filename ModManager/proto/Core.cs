@@ -25,10 +25,10 @@ public static partial class CoreReflection {
           "ChNQcm90b1NyYy9jb3JlLnByb3RvIkIKB0Nvbm5lY3QSEwoLY2xpZW50X3R5",
           "cGUYASABKAUSEAoIdXNlcm5hbWUYAiABKAkSEAoIcGFzc3dvcmQYAyABKAki",
           "HwoQQ2hhdEFuZEJyb2FkY2FzdBILCgNtc2cYASABKAkiSwoUSW52ZW50b3J5",
-          "SXRlbUluZm9Nc2cSDgoGSXRlbUlkGAEgASgNEhEKCUl0ZW1Db3VudBgCIAEo",
-          "DRIQCghJdGVtQ2xvYhgDIAEoCSI4ChBJbnZlbnRvcnlJdGVtTXNnEiQKBWl0",
-          "ZW1zGAEgAygLMhUuSW52ZW50b3J5SXRlbUluZm9Nc2ciRQoMSW52ZW50b3J5",
-          "TXNnEhMKC0ludmVudG9yeUlkGAEgASgNEiAKBWl0ZW1zGAIgAygLMhEuSW52",
+          "SXRlbUluZm9Nc2cSDgoGSXRlbUlkGAEgASgDEhEKCUl0ZW1Db3VudBgCIAEo",
+          "AxIQCghJdGVtQ2xvYhgDIAEoCSJNChBJbnZlbnRvcnlJdGVtTXNnEhMKC0lu",
+          "dmVudG9yeUlkGAEgASgDEiQKBWl0ZW1zGAIgAygLMhUuSW52ZW50b3J5SXRl",
+          "bUluZm9Nc2ciMAoMSW52ZW50b3J5TXNnEiAKBWl0ZW1zGAEgAygLMhEuSW52",
           "ZW50b3J5SXRlbU1zZ0ID+AEBYgZwcm90bzM="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
@@ -36,8 +36,8 @@ public static partial class CoreReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::Connect), global::Connect.Parser, new[]{ "ClientType", "Username", "Password" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::ChatAndBroadcast), global::ChatAndBroadcast.Parser, new[]{ "Msg" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::InventoryItemInfoMsg), global::InventoryItemInfoMsg.Parser, new[]{ "ItemId", "ItemCount", "ItemClob" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::InventoryItemMsg), global::InventoryItemMsg.Parser, new[]{ "Items" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::InventoryMsg), global::InventoryMsg.Parser, new[]{ "InventoryId", "Items" }, null, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::InventoryItemMsg), global::InventoryItemMsg.Parser, new[]{ "InventoryId", "Items" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::InventoryMsg), global::InventoryMsg.Parser, new[]{ "Items" }, null, null, null, null)
         }));
   }
   #endregion
@@ -547,10 +547,10 @@ public sealed partial class InventoryItemInfoMsg : pb::IMessage<InventoryItemInf
 
   /// <summary>Field number for the "ItemId" field.</summary>
   public const int ItemIdFieldNumber = 1;
-  private uint itemId_;
+  private long itemId_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public uint ItemId {
+  public long ItemId {
     get { return itemId_; }
     set {
       itemId_ = value;
@@ -559,10 +559,10 @@ public sealed partial class InventoryItemInfoMsg : pb::IMessage<InventoryItemInf
 
   /// <summary>Field number for the "ItemCount" field.</summary>
   public const int ItemCountFieldNumber = 2;
-  private uint itemCount_;
+  private long itemCount_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public uint ItemCount {
+  public long ItemCount {
     get { return itemCount_; }
     set {
       itemCount_ = value;
@@ -606,8 +606,8 @@ public sealed partial class InventoryItemInfoMsg : pb::IMessage<InventoryItemInf
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override int GetHashCode() {
     int hash = 1;
-    if (ItemId != 0) hash ^= ItemId.GetHashCode();
-    if (ItemCount != 0) hash ^= ItemCount.GetHashCode();
+    if (ItemId != 0L) hash ^= ItemId.GetHashCode();
+    if (ItemCount != 0L) hash ^= ItemCount.GetHashCode();
     if (ItemClob.Length != 0) hash ^= ItemClob.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -627,13 +627,13 @@ public sealed partial class InventoryItemInfoMsg : pb::IMessage<InventoryItemInf
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     output.WriteRawMessage(this);
   #else
-    if (ItemId != 0) {
+    if (ItemId != 0L) {
       output.WriteRawTag(8);
-      output.WriteUInt32(ItemId);
+      output.WriteInt64(ItemId);
     }
-    if (ItemCount != 0) {
+    if (ItemCount != 0L) {
       output.WriteRawTag(16);
-      output.WriteUInt32(ItemCount);
+      output.WriteInt64(ItemCount);
     }
     if (ItemClob.Length != 0) {
       output.WriteRawTag(26);
@@ -649,13 +649,13 @@ public sealed partial class InventoryItemInfoMsg : pb::IMessage<InventoryItemInf
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-    if (ItemId != 0) {
+    if (ItemId != 0L) {
       output.WriteRawTag(8);
-      output.WriteUInt32(ItemId);
+      output.WriteInt64(ItemId);
     }
-    if (ItemCount != 0) {
+    if (ItemCount != 0L) {
       output.WriteRawTag(16);
-      output.WriteUInt32(ItemCount);
+      output.WriteInt64(ItemCount);
     }
     if (ItemClob.Length != 0) {
       output.WriteRawTag(26);
@@ -671,11 +671,11 @@ public sealed partial class InventoryItemInfoMsg : pb::IMessage<InventoryItemInf
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public int CalculateSize() {
     int size = 0;
-    if (ItemId != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ItemId);
+    if (ItemId != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(ItemId);
     }
-    if (ItemCount != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ItemCount);
+    if (ItemCount != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(ItemCount);
     }
     if (ItemClob.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(ItemClob);
@@ -692,10 +692,10 @@ public sealed partial class InventoryItemInfoMsg : pb::IMessage<InventoryItemInf
     if (other == null) {
       return;
     }
-    if (other.ItemId != 0) {
+    if (other.ItemId != 0L) {
       ItemId = other.ItemId;
     }
-    if (other.ItemCount != 0) {
+    if (other.ItemCount != 0L) {
       ItemCount = other.ItemCount;
     }
     if (other.ItemClob.Length != 0) {
@@ -717,11 +717,11 @@ public sealed partial class InventoryItemInfoMsg : pb::IMessage<InventoryItemInf
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
         case 8: {
-          ItemId = input.ReadUInt32();
+          ItemId = input.ReadInt64();
           break;
         }
         case 16: {
-          ItemCount = input.ReadUInt32();
+          ItemCount = input.ReadInt64();
           break;
         }
         case 26: {
@@ -744,11 +744,11 @@ public sealed partial class InventoryItemInfoMsg : pb::IMessage<InventoryItemInf
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
           break;
         case 8: {
-          ItemId = input.ReadUInt32();
+          ItemId = input.ReadInt64();
           break;
         }
         case 16: {
-          ItemCount = input.ReadUInt32();
+          ItemCount = input.ReadInt64();
           break;
         }
         case 26: {
@@ -796,6 +796,7 @@ public sealed partial class InventoryItemMsg : pb::IMessage<InventoryItemMsg>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public InventoryItemMsg(InventoryItemMsg other) : this() {
+    inventoryId_ = other.inventoryId_;
     items_ = other.items_.Clone();
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
@@ -806,10 +807,22 @@ public sealed partial class InventoryItemMsg : pb::IMessage<InventoryItemMsg>
     return new InventoryItemMsg(this);
   }
 
+  /// <summary>Field number for the "InventoryId" field.</summary>
+  public const int InventoryIdFieldNumber = 1;
+  private long inventoryId_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public long InventoryId {
+    get { return inventoryId_; }
+    set {
+      inventoryId_ = value;
+    }
+  }
+
   /// <summary>Field number for the "items" field.</summary>
-  public const int ItemsFieldNumber = 1;
+  public const int ItemsFieldNumber = 2;
   private static readonly pb::FieldCodec<global::InventoryItemInfoMsg> _repeated_items_codec
-      = pb::FieldCodec.ForMessage(10, global::InventoryItemInfoMsg.Parser);
+      = pb::FieldCodec.ForMessage(18, global::InventoryItemInfoMsg.Parser);
   private readonly pbc::RepeatedField<global::InventoryItemInfoMsg> items_ = new pbc::RepeatedField<global::InventoryItemInfoMsg>();
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -832,6 +845,7 @@ public sealed partial class InventoryItemMsg : pb::IMessage<InventoryItemMsg>
     if (ReferenceEquals(other, this)) {
       return true;
     }
+    if (InventoryId != other.InventoryId) return false;
     if(!items_.Equals(other.items_)) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
@@ -840,6 +854,7 @@ public sealed partial class InventoryItemMsg : pb::IMessage<InventoryItemMsg>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override int GetHashCode() {
     int hash = 1;
+    if (InventoryId != 0L) hash ^= InventoryId.GetHashCode();
     hash ^= items_.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -859,6 +874,10 @@ public sealed partial class InventoryItemMsg : pb::IMessage<InventoryItemMsg>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     output.WriteRawMessage(this);
   #else
+    if (InventoryId != 0L) {
+      output.WriteRawTag(8);
+      output.WriteInt64(InventoryId);
+    }
     items_.WriteTo(output, _repeated_items_codec);
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -870,6 +889,10 @@ public sealed partial class InventoryItemMsg : pb::IMessage<InventoryItemMsg>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+    if (InventoryId != 0L) {
+      output.WriteRawTag(8);
+      output.WriteInt64(InventoryId);
+    }
     items_.WriteTo(ref output, _repeated_items_codec);
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
@@ -881,6 +904,9 @@ public sealed partial class InventoryItemMsg : pb::IMessage<InventoryItemMsg>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public int CalculateSize() {
     int size = 0;
+    if (InventoryId != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(InventoryId);
+    }
     size += items_.CalculateSize(_repeated_items_codec);
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -893,6 +919,9 @@ public sealed partial class InventoryItemMsg : pb::IMessage<InventoryItemMsg>
   public void MergeFrom(InventoryItemMsg other) {
     if (other == null) {
       return;
+    }
+    if (other.InventoryId != 0L) {
+      InventoryId = other.InventoryId;
     }
     items_.Add(other.items_);
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -910,7 +939,11 @@ public sealed partial class InventoryItemMsg : pb::IMessage<InventoryItemMsg>
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
-        case 10: {
+        case 8: {
+          InventoryId = input.ReadInt64();
+          break;
+        }
+        case 18: {
           items_.AddEntriesFrom(input, _repeated_items_codec);
           break;
         }
@@ -929,7 +962,11 @@ public sealed partial class InventoryItemMsg : pb::IMessage<InventoryItemMsg>
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
           break;
-        case 10: {
+        case 8: {
+          InventoryId = input.ReadInt64();
+          break;
+        }
+        case 18: {
           items_.AddEntriesFrom(ref input, _repeated_items_codec);
           break;
         }
@@ -974,7 +1011,6 @@ public sealed partial class InventoryMsg : pb::IMessage<InventoryMsg>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public InventoryMsg(InventoryMsg other) : this() {
-    inventoryId_ = other.inventoryId_;
     items_ = other.items_.Clone();
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
@@ -985,22 +1021,10 @@ public sealed partial class InventoryMsg : pb::IMessage<InventoryMsg>
     return new InventoryMsg(this);
   }
 
-  /// <summary>Field number for the "InventoryId" field.</summary>
-  public const int InventoryIdFieldNumber = 1;
-  private uint inventoryId_;
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public uint InventoryId {
-    get { return inventoryId_; }
-    set {
-      inventoryId_ = value;
-    }
-  }
-
   /// <summary>Field number for the "items" field.</summary>
-  public const int ItemsFieldNumber = 2;
+  public const int ItemsFieldNumber = 1;
   private static readonly pb::FieldCodec<global::InventoryItemMsg> _repeated_items_codec
-      = pb::FieldCodec.ForMessage(18, global::InventoryItemMsg.Parser);
+      = pb::FieldCodec.ForMessage(10, global::InventoryItemMsg.Parser);
   private readonly pbc::RepeatedField<global::InventoryItemMsg> items_ = new pbc::RepeatedField<global::InventoryItemMsg>();
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1023,7 +1047,6 @@ public sealed partial class InventoryMsg : pb::IMessage<InventoryMsg>
     if (ReferenceEquals(other, this)) {
       return true;
     }
-    if (InventoryId != other.InventoryId) return false;
     if(!items_.Equals(other.items_)) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
@@ -1032,7 +1055,6 @@ public sealed partial class InventoryMsg : pb::IMessage<InventoryMsg>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override int GetHashCode() {
     int hash = 1;
-    if (InventoryId != 0) hash ^= InventoryId.GetHashCode();
     hash ^= items_.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -1052,10 +1074,6 @@ public sealed partial class InventoryMsg : pb::IMessage<InventoryMsg>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     output.WriteRawMessage(this);
   #else
-    if (InventoryId != 0) {
-      output.WriteRawTag(8);
-      output.WriteUInt32(InventoryId);
-    }
     items_.WriteTo(output, _repeated_items_codec);
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -1067,10 +1085,6 @@ public sealed partial class InventoryMsg : pb::IMessage<InventoryMsg>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-    if (InventoryId != 0) {
-      output.WriteRawTag(8);
-      output.WriteUInt32(InventoryId);
-    }
     items_.WriteTo(ref output, _repeated_items_codec);
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
@@ -1082,9 +1096,6 @@ public sealed partial class InventoryMsg : pb::IMessage<InventoryMsg>
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public int CalculateSize() {
     int size = 0;
-    if (InventoryId != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(InventoryId);
-    }
     size += items_.CalculateSize(_repeated_items_codec);
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -1097,9 +1108,6 @@ public sealed partial class InventoryMsg : pb::IMessage<InventoryMsg>
   public void MergeFrom(InventoryMsg other) {
     if (other == null) {
       return;
-    }
-    if (other.InventoryId != 0) {
-      InventoryId = other.InventoryId;
     }
     items_.Add(other.items_);
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -1117,11 +1125,7 @@ public sealed partial class InventoryMsg : pb::IMessage<InventoryMsg>
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
-        case 8: {
-          InventoryId = input.ReadUInt32();
-          break;
-        }
-        case 18: {
+        case 10: {
           items_.AddEntriesFrom(input, _repeated_items_codec);
           break;
         }
@@ -1140,11 +1144,7 @@ public sealed partial class InventoryMsg : pb::IMessage<InventoryMsg>
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
           break;
-        case 8: {
-          InventoryId = input.ReadUInt32();
-          break;
-        }
-        case 18: {
+        case 10: {
           items_.AddEntriesFrom(ref input, _repeated_items_codec);
           break;
         }

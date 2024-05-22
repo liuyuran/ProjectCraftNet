@@ -1,4 +1,6 @@
-﻿namespace ModManager.utils;
+﻿using ModManager.state.world.chunk;
+
+namespace ModManager.utils;
 
 public class IntVector3(int x, int y, int z): IEquatable<IntVector3>
 {
@@ -49,5 +51,10 @@ public class IntVector3(int x, int y, int z): IEquatable<IntVector3>
     public override int GetHashCode()
     {
         return HashCode.Combine(X, Y, Z);
+    }
+    
+    public ChunkPos ToChunkPos()
+    {
+        return new ChunkPos(X, Y, Z);
     }
 }

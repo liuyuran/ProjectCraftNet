@@ -21,7 +21,7 @@ public partial class MainTest
             Program.Main(["-c", Path.Combine(testDic, @"BlackBoxTest\config.toml")]);
         });
         _workThread.Start();
-        CraftNet.MapInitEvent.WaitOne(60000);
+        Assert.That(CraftNet.MapInitEvent.WaitOne(600000), Is.True);
     }
 
     [OneTimeTearDown]

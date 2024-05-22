@@ -16,7 +16,7 @@ namespace ModManager.archive;
 public class ArchiveManager
 {
     private static readonly ILogger Logger = SysLogger.GetLogger(typeof(ArchiveManager));
-
+    
     public static void SaveUserInfo(World world)
     {
         using var dbContext = new CoreDbContext();
@@ -116,5 +116,23 @@ public class ArchiveManager
             select chunk;
         var chunkData = query.FirstOrDefault();
         return chunkData == null ? null : JsonSerializer.Deserialize<long[]>(chunkData.Data);
+    }
+    
+    public static Dictionary<IntVector3, long[]> TryGetAllChunkData(long worldId, HashSet<IntVector3> chunkPos)
+    {
+        using var dbContext = new CoreDbContext();
+        var query = from chunk in dbContext.Chunks.AsEnumerable()
+            where chunk.WorldId == worldId && chunkPos.Contains(new IntVector3(chunk.PosX, chunk.PosY, chunk.PosZ))
+            select chunk;
+        var chunkData = query.ToList();
+        var result = new Dictionary<IntVector3, long[]>();
+        foreach (var data in chunkData)
+        {
+            var tData = JsonSerializer.Deserialize<long[]>(data.Data);
+            if (tData == null) continue;
+            result[new IntVector3(data.PosX, data.PosY, data.PosZ)] = tData;
+        }
+
+        return result;
     }
 }

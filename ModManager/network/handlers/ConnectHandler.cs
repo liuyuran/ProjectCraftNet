@@ -1,5 +1,4 @@
 ﻿using Google.Protobuf;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ModManager.eventBus;
 using ModManager.eventBus.events;
@@ -27,6 +26,7 @@ public partial class PackHandlers
             return;
         }
         EventBus.Trigger(info.SocketId, new UserLoginEvent());
+        NetworkEvents.FireSendEvent(info.SocketId, PackType.ConnectPack, []);
         var blockDefineData = new BlockDefine();
         var blockList = BlockManager.GetAllBlockMetas();
         foreach (var block in blockList)
