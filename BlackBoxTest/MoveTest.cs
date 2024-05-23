@@ -10,7 +10,7 @@ namespace BlackBoxTest;
 /// </summary>
 public partial class MainTest
 {
-    [utils.Test(DisplayName = "移动测试"), Order(3)]
+    [TestCase, Order(3)]
     public async Task Move()
     {
         var loginAEvent = new AutoResetEvent(false);
@@ -65,6 +65,7 @@ public partial class MainTest
         await tcpClient2.Connect(54319);
         await tcpClient2.Login("slave", "123456");
         Assert.That(loginBEvent.WaitOne(1000), Is.True);
+        Thread.Sleep(5000);
         await tcpClient.MoveTo(new IntVector3(1, 0, 0), new Vector3(0.3f, 0, 0));
         Assert.Multiple(() =>
         {

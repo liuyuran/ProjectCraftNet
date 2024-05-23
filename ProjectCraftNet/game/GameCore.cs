@@ -41,13 +41,13 @@ public class GameCore(Config config)
         // 开始监听网络事件
         PackHandlers.RegisterAllHandlers();
         RegistryCorePackEvent();
-        RegistryGamePlayPackEvent();
         EventBus.Subscribe<ChatEvent>(OnGameEventsOnChatEvent);
         EventBus.Subscribe<ArchiveEvent>(OnGameEventsOnArchiveEvent);
         var systems = new Group<float>(
             "core-system",
             new ChunkGenerateSystem(world),
-            new ArchiveSystem(world)
+            new ArchiveSystem(world),
+            new UserJoinSystem(world)
         );
         systems.Initialize();
         Logger.LogInformation("{}", Localize(ModId, "startup.loading_init_chunk"));
@@ -59,39 +59,7 @@ public class GameCore(Config config)
             systems.BeforeUpdate(in deltaTime);
             systems.Update(in deltaTime);
             systems.AfterUpdate(in deltaTime);
-            while (UserManager.WaitToJoin.Count > 0)
-            {
-                var entity = world.Create(Archetypes.Player);
-                var sockId = UserManager.WaitToJoin.Dequeue();
-                var userInfo = UserManager.GetUserInfo(sockId);
-                if (userInfo == null) continue;
-                var position = userInfo.Position;
-                var gameMod = userInfo.GameMode;
-                var chunkSize = config.Core!.ChunkSize;
-                world.Set(entity, new Position
-                {
-                    ChunkPos = new IntVector3(
-                        (int)(position.X / chunkSize),
-                        (int)(position.Y / chunkSize),
-                        (int)(position.Z / chunkSize)
-                    ),
-                    InChunkPos = new Vector3(
-                        position.X % chunkSize,
-                        position.Y % chunkSize,
-                        position.Z % chunkSize
-                    )
-                });
-                world.Set(entity, new Player { UserId = userInfo.UserId, GameMode = gameMod, IsSystem = false });
-                userInfo.PlayerEntity = entity;
-                NetworkEvents.FireSendEvent(userInfo.ClientInfo.SocketId, PackType.ConnectPack, Array.Empty<byte>());
-            }
-
-            while (UserManager.WaitToLeave.Count > 0)
-            {
-                var entity = UserManager.WaitToLeave.Dequeue();
-                world.Destroy(entity);
-            }
-
+            
             // 调节逻辑帧率，等待下一个Tick
             var now = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             var elapsed = now - lastTickMillis;
@@ -198,17 +166,6 @@ public class GameCore(Config config)
         {
             Logger.LogInformation("{}", Localize(ModId, "Server shutting down"));
             _stopping = true;
-        });
-    }
-
-    /// <summary>
-    /// 注册游戏性相关的包监听
-    /// </summary>
-    private void RegistryGamePlayPackEvent()
-    {
-        NetworkPackBus.Subscribe(PackType.InventoryPack, (info, pack) =>
-        {
-            // TODO
         });
     }
 }

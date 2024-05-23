@@ -41,7 +41,7 @@ public partial class MainTest
     /// <summary>
     /// 测试登入登出机制
     /// </summary>
-    [utils.Test(DisplayName = "登入登出测试"), Order(1)]
+    [Order(1)]
     [TestCase("kamoeth", "123456", false, TestName = "成功")]
     [TestCase("kamoeth", "fake", true, TestName = "失败")]
     public async Task LoginAndLogout(string username, string password, bool shouldFail)

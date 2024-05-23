@@ -165,6 +165,7 @@ public partial class PackHandlers
 
                 msg.Items.Add(itemMsg);
             }
+            NetworkEvents.FireSendEvent(info.SocketId, PackType.InventoryPack, msg.ToByteArray());
         });
     }
 }
