@@ -7,7 +7,7 @@ using ModManager.ecs.components;
 using ModManager.eventBus;
 using ModManager.eventBus.events;
 using ModManager.game.block;
-using ModManager.game.client;
+using ModManager.game.inventory;
 using ModManager.game.user;
 using ModManager.logger;
 using ModManager.state;
@@ -26,9 +26,9 @@ public partial class PackHandlers
 
     public static void RegisterAllHandlers()
     {
-        NetworkPackBus.Subscribe(PackType.Connect, ConnectHandler);
-        NetworkPackBus.Subscribe(PackType.Disconnect, DisconnectHandler);
-        NetworkPackBus.Subscribe(PackType.OnlineList, (info, _) =>
+        NetworkPackBus.Subscribe(PackType.ConnectPack, ConnectHandler);
+        NetworkPackBus.Subscribe(PackType.DisconnectPack, DisconnectHandler);
+        NetworkPackBus.Subscribe(PackType.OnlineListPack, (info, _) =>
         {
             // 发送在线用户列表
             var onlineList = new OnlineList();
@@ -42,9 +42,9 @@ public partial class PackHandlers
                 });
             }
 
-            NetworkEvents.FireSendEvent(info.SocketId, PackType.OnlineList, onlineList.ToByteArray());
+            NetworkEvents.FireSendEvent(info.SocketId, PackType.OnlineListPack, onlineList.ToByteArray());
         });
-        NetworkPackBus.Subscribe(PackType.Move, (info, data) =>
+        NetworkPackBus.Subscribe(PackType.MovePack, (info, data) =>
         {
             // 用户移动
             var world = CraftNet.Instance.World.World;
@@ -67,9 +67,9 @@ public partial class PackHandlers
                     move.Z
                 )
             });
-            NetworkEvents.FireSendEvent(0, PackType.Move, data);
+            NetworkEvents.FireSendEvent(0, PackType.MovePack, data);
         });
-        NetworkPackBus.Subscribe(PackType.Chunk, (info, data) =>
+        NetworkPackBus.Subscribe(PackType.ChunkPack, (info, data) =>
         {
             // 发送区块数据
             var chunk = ChunkData.Parser.ParseFrom(data);
@@ -88,9 +88,9 @@ public partial class PackHandlers
                 });
             }
 
-            NetworkEvents.FireSendEvent(info.SocketId, PackType.Chunk, chunk.ToByteArray());
+            NetworkEvents.FireSendEvent(info.SocketId, PackType.ChunkPack, chunk.ToByteArray());
         });
-        NetworkPackBus.Subscribe(PackType.Chat, (info, data) =>
+        NetworkPackBus.Subscribe(PackType.ChatPack, (info, data) =>
         {
             // 聊天消息
             var chat = ChatAndBroadcast.Parser.ParseFrom(data);
@@ -100,7 +100,7 @@ public partial class PackHandlers
                 Message = chat.Msg
             });
         });
-        NetworkPackBus.Subscribe(PackType.ControlBlock, (info, data) =>
+        NetworkPackBus.Subscribe(PackType.ControlBlockPack, (info, data) =>
         {
             var world = CraftNet.Instance.World.World;
             var userInfo = UserManager.GetUserInfo(info.SocketId);
@@ -135,15 +135,37 @@ public partial class PackHandlers
                             BlockId = BlockManager.GetBlockId<Air>(),
                             SubId = 0
                         };
-                        NetworkEvents.FireSendEvent(0, PackType.BlockChange, blockChange.ToByteArray());
+                        NetworkEvents.FireSendEvent(0, PackType.BlockChangePack, blockChange.ToByteArray());
                     });
                     break;
                 }
             }
         });
-        NetworkPackBus.Subscribe(PackType.ControlEntity, (info, data) =>
+        NetworkPackBus.Subscribe(PackType.ControlEntityPack, (info, data) =>
         {
             //
+        });
+        NetworkPackBus.Subscribe(PackType.InventoryPack, (info, data) =>
+        {
+            var userInfo = UserManager.GetUserInfo(info.SocketId);
+            if (userInfo == null) return;
+            var allInventories = InventoryManager.GetInventory(userInfo.UserId);
+            var msg = new InventoryMsg();
+            foreach (var inventory in allInventories)
+            {
+                var itemMsg = new InventoryItemMsg();
+                foreach (var item in inventory.Items)
+                {
+                    itemMsg.Items.Add(new InventoryItemInfoMsg
+                    {
+                        ItemId = item.ItemId,
+                        ItemCount = item.Count
+                    });
+                }
+
+                msg.Items.Add(itemMsg);
+            }
+            NetworkEvents.FireSendEvent(info.SocketId, PackType.InventoryPack, msg.ToByteArray());
         });
     }
 }

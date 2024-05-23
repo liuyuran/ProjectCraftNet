@@ -1,5 +1,4 @@
 ﻿using Google.Protobuf;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ModManager.eventBus;
 using ModManager.eventBus.events;
@@ -23,10 +22,11 @@ public partial class PackHandlers
         if (id == 0)
         {
             // 登录失败，通知客户端关闭连接
-            NetworkEvents.FireSendEvent(info.SocketId, PackType.Shutdown, Array.Empty<byte>());
+            NetworkEvents.FireSendEvent(info.SocketId, PackType.ShutdownPack, Array.Empty<byte>());
             return;
         }
         EventBus.Trigger(info.SocketId, new UserLoginEvent());
+        NetworkEvents.FireSendEvent(info.SocketId, PackType.ConnectPack, []);
         var blockDefineData = new BlockDefine();
         var blockList = BlockManager.GetAllBlockMetas();
         foreach (var block in blockList)
@@ -38,7 +38,7 @@ public partial class PackHandlers
                 Material = block.Material
             });
         }
-        NetworkEvents.FireSendEvent(info.SocketId, PackType.BlockDefine, blockDefineData.ToByteArray());
+        NetworkEvents.FireSendEvent(info.SocketId, PackType.BlockDefinePack, blockDefineData.ToByteArray());
     }
 
     private static void DisconnectHandler(ClientInfo info, byte[] data)

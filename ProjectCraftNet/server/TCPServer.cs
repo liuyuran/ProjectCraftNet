@@ -6,6 +6,7 @@ using ModManager.eventBus.events;
 using ModManager.game.user;
 using ModManager.logger;
 using ModManager.network;
+using ModManager.state;
 using static ModManager.game.localization.LocalizationManager;
 using static ProjectCraftNet.Program;
 using TcpListener = System.Net.Sockets.TcpListener;
@@ -44,6 +45,7 @@ public class TcpServer
         listener.Start();
         listener.Server.ReceiveTimeout = 5000;
         Logger.LogInformation("{}", Localize(ModId, "Server started at {0}:{1}", ip, port));
+        CraftNet.ServerInitEvent.Set();
         while (true)
         {
             var socket = await listener.AcceptTcpClientAsync();
@@ -120,7 +122,7 @@ public class TcpServer
                             msgBuffer.RemoveAt(0);
                         }
 
-                        if (packType == (int)PackType.Ping)
+                        if (packType == (int)PackType.PingPack)
                         {
                             lastTime = DateTime.Now.Ticks;
                         }

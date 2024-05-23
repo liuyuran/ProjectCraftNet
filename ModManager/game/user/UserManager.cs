@@ -1,11 +1,11 @@
-﻿using System.Numerics;
-using Arch.Core;
+﻿using Arch.Core;
 using EasilyNET.Security;
 using Microsoft.Extensions.Logging;
 using ModManager.database;
 using ModManager.eventBus;
 using ModManager.eventBus.events;
 using ModManager.game.client;
+using ModManager.game.inventory;
 using ModManager.logger;
 using ModManager.network;
 using ModManager.utils;
@@ -14,6 +14,9 @@ using static ModManager.mod.ModManager;
 
 namespace ModManager.game.user;
 
+/// <summary>
+/// 登录用户管理器
+/// </summary>
 public class UserManager
 {
     private static ILogger Logger { get; } = SysLogger.GetLogger(typeof(UserManager));
@@ -58,6 +61,7 @@ public class UserManager
             PlayerEntity = null
         };
         Instance._users.Add(info.SocketId, userInfo);
+        InventoryManager.AttachInventory(userInfo.UserId, 64);
         Logger.LogInformation("{}", Localize(ModId, "User {0} login", connect.Username));
         if (connect.ClientType == (int)ClientType.CommandLine)
         {
@@ -78,6 +82,7 @@ public class UserManager
         {
             WaitToLeave.Enqueue(value.PlayerEntity.Value);
         }
+        InventoryManager.DetachInventory(value.UserId);
         Instance._users.Remove(socketId);
     }
     

@@ -16,12 +16,12 @@ public partial class TcpClient
             Password = password,
             ClientType = (int)ClientType.Normal
         };
-        await Send((int)PackType.Connect, connectMsg.ToByteArray());
+        await Send((int)PackType.ConnectPack, connectMsg.ToByteArray());
     }
     
     public async Task Logout()
     {
-        await Send((int)PackType.Disconnect, Array.Empty<byte>());
+        await Send((int)PackType.DisconnectPack, []);
         await Disconnect();
     }
 
@@ -40,7 +40,7 @@ public partial class TcpClient
             HeadYaw = 0,
             PlayerId = 1
         };
-        await Send((int)PackType.Move, moveMsg.ToByteArray());
+        await Send((int)PackType.MovePack, moveMsg.ToByteArray());
     }
     
     public async Task FetchChunk(long worldId, IntVector3 chunkPos)
@@ -52,7 +52,7 @@ public partial class TcpClient
             Z = chunkPos.Z,
             WorldId = worldId
         };
-        await Send((int)PackType.Chunk, chunkMsg.ToByteArray());
+        await Send((int)PackType.ChunkPack, chunkMsg.ToByteArray());
     }
     
     public async Task DigChunk(IntVector3 chunkPos, IntVector3 blockPos)
@@ -67,6 +67,11 @@ public partial class TcpClient
             BlockZ = blockPos.Z,
             Type = 1
         };
-        await Send((int)PackType.ControlBlock, blockMsg.ToByteArray());
+        await Send((int)PackType.ControlBlockPack, blockMsg.ToByteArray());
+    }
+    
+    public async Task FetchInventory()
+    {
+        await Send((int)PackType.InventoryPack, []);
     }
 }

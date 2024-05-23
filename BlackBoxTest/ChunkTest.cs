@@ -8,14 +8,14 @@ namespace BlackBoxTest;
 /// </summary>
 public partial class MainTest
 {
-    [utils.Test(DisplayName = "区块操作测试"), Order(2)]
+    [TestCase, Order(2)]
     public async Task GetChunk()
     {
         var tcpClient = GetClient();
         var step = 0;
         tcpClient.ReceiveEvent += (type, bytes) =>
         {
-            if (type != (int)PackType.Chunk) return;
+            if (type != (int)PackType.ChunkPack) return;
             var data = ChunkData.Parser.ParseFrom(bytes);
             switch (step)
             {

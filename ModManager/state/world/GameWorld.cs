@@ -27,9 +27,9 @@ public class GameWorld
     public IEnumerable<long> GetChunkData(long worldId, ChunkPos pos)
     {
         if (_chunkLink.TryGetValue(worldId, out var chunkLink))
-            return chunkLink.TryGetValue(pos, out var chunkData) ? chunkData : Array.Empty<long>();
+            return chunkLink.TryGetValue(pos, out var chunkData) ? chunkData : [];
         var data = ArchiveManager.TryGetChunkData(worldId, new IntVector3(pos.X, pos.Y, pos.Z));
-        return data ?? Array.Empty<long>();
+        return data ?? [];
     }
     
     public static int GetIndexFromBlockPos(BlockPos pos)

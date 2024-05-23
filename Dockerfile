@@ -25,6 +25,5 @@ COPY CoreMod/mod.toml /app/publish/mods/core-mod/mod.toml
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN mkdir config;
 COPY ./ProjectCraftNet/resources .
 ENTRYPOINT ["dotnet", "ProjectCraftNet.dll"]

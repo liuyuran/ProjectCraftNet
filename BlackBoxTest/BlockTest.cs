@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using BlackBoxTest.utils;
-using ModManager.network;
-using ModManager.state;
+﻿using ModManager.network;
 using ModManager.utils;
 
 namespace BlackBoxTest;
@@ -14,7 +11,7 @@ public partial class MainTest
     private int _digStep;
     private IntVector3? _digTarget;
 
-    [utils.Test(DisplayName = "方块操作测试"), Order(4)]
+    [TestCase, Order(4)]
     public async Task Dig()
     {
         var tcpClient = GetClient();
@@ -25,8 +22,8 @@ public partial class MainTest
         var chunk = Array.Empty<long>();
         tcpClient.ReceiveEvent += (type, bytes) =>
         {
-            if (type != (int)PackType.Chunk && type != (int)PackType.BlockChange) return;
-            if (type == (int)PackType.BlockChange)
+            if (type != (int)PackType.ChunkPack && type != (int)PackType.BlockChangePack) return;
+            if (type == (int)PackType.BlockChangePack)
             {
                 var data = BlockChange.Parser.ParseFrom(bytes);
                 Assert.Multiple(() =>

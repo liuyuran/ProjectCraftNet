@@ -42,11 +42,11 @@ public static class NetworkEvents
                 Msg = text
             };
             var data = msg.ToByteArray();
-            SendEvent?.Invoke(socketId, PackType.Chat, data);
+            SendEvent?.Invoke(socketId, PackType.ChatPack, data);
         }
         catch (Exception e)
         {
-            Logger.LogError("{}", Localize(ModId, "Error when sending PackType: {0}, {1}", PackType.Chat, e.Message));
+            Logger.LogError("{}", Localize(ModId, "Error when sending PackType: {0}, {1}", PackType.ChatPack, e.Message));
         }
     }
 
@@ -58,7 +58,7 @@ public static class NetworkEvents
             return;
         }
 
-        if (packType == (int)PackType.Ping)
+        if (packType == (int)PackType.PingPack)
         {
             // 心跳包不需要处理
             var now = DateTimeOffset.Now;

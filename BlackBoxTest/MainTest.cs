@@ -7,6 +7,7 @@ using ProjectCraftNet;
 namespace BlackBoxTest;
 
 [TestFixture(TestName = "基础测试", Category = "黑盒测试")]
+[Parallelizable(ParallelScope.None)]
 public partial class MainTest
 {
     private Thread _workThread = null!;
@@ -21,7 +22,7 @@ public partial class MainTest
             Program.Main(["-c", Path.Combine(testDic, @"BlackBoxTest\config.toml")]);
         });
         _workThread.Start();
-        CraftNet.MapInitEvent.WaitOne(60000);
+        Assert.That(CraftNet.ServerInitEvent.WaitOne(600000), Is.True);
     }
 
     [OneTimeTearDown]
@@ -40,7 +41,7 @@ public partial class MainTest
     /// <summary>
     /// 测试登入登出机制
     /// </summary>
-    [utils.Test(DisplayName = "登入登出测试"), Order(1)]
+    [Order(1)]
     [TestCase("kamoeth", "123456", false, TestName = "成功")]
     [TestCase("kamoeth", "fake", true, TestName = "失败")]
     public async Task LoginAndLogout(string username, string password, bool shouldFail)
@@ -53,13 +54,13 @@ public partial class MainTest
         {
             switch (type)
             {
-                case (int)PackType.Shutdown:
+                case (int)PackType.ShutdownPack:
                     if (shouldFail) loginEvent.Set();
                     break;
-                case (int)PackType.Connect:
+                case (int)PackType.ConnectPack:
                     if (!shouldFail) loginEvent.Set();
                     break;
-                case (int)PackType.BlockDefine:
+                case (int)PackType.BlockDefinePack:
                     if (shouldFail) break;
                     var data = BlockDefine.Parser.ParseFrom(bytes);
                     Assert.That(data.Items, Is.Not.Empty);

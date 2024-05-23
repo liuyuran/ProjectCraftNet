@@ -19,6 +19,8 @@ public partial class GameContext : DbContext
 
     public virtual DbSet<Chunk> Chunks { get; set; }
 
+    public virtual DbSet<Inventory> Inventories { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<World> Worlds { get; set; }
@@ -60,6 +62,8 @@ public partial class GameContext : DbContext
 
             entity.ToTable("chunk", tb => tb.HasComment("区块数据"));
 
+            entity.HasIndex(e => new { e.WorldId, e.Pos }, "chunk_world_id_pos_index");
+
             entity.Property(e => e.PosX)
                 .HasComment("X轴坐标")
                 .HasColumnName("pos_x");
@@ -73,6 +77,29 @@ public partial class GameContext : DbContext
             entity.Property(e => e.Data)
                 .HasComment("区块数据")
                 .HasColumnName("data");
+            entity.Property(e => e.Pos)
+                .HasMaxLength(500)
+                .HasDefaultValueSql("''::character varying")
+                .HasComment("坐标索引")
+                .HasColumnName("pos");
+        });
+
+        modelBuilder.Entity<Inventory>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.SlotKey }).HasName("inventory_pk");
+
+            entity.ToTable("inventory", tb => tb.HasComment("背包"));
+
+            entity.Property(e => e.UserId)
+                .HasComment("用户id")
+                .HasColumnName("user_id");
+            entity.Property(e => e.SlotKey)
+                .HasMaxLength(200)
+                .HasComment("背包类型")
+                .HasColumnName("slot_key");
+            entity.Property(e => e.SlotValue)
+                .HasComment("背包内容")
+                .HasColumnName("slot_value");
         });
 
         modelBuilder.Entity<User>(entity =>

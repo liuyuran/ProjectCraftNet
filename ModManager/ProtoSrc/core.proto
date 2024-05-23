@@ -10,3 +10,18 @@ message Connect {
 message ChatAndBroadcast {
   string msg = 1;
 }
+
+message InventoryItemInfoMsg {
+  int64 ItemId = 1;
+  int64 ItemCount = 2;
+  string ItemClob = 3;
+}
+
+message InventoryItemMsg {
+  int64 InventoryId = 1;
+  repeated InventoryItemInfoMsg items = 2;
+}
+
+message InventoryMsg {
+  repeated InventoryItemMsg items = 1;
+}

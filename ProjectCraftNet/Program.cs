@@ -17,7 +17,6 @@ public static class Program
 {
     private static readonly ILogger Logger = SysLogger.GetLogger(typeof(Program));
     public static string ModId => "core-system";
-    private static readonly AutoResetEvent ClosingEvent = new(false);
 
     // ReSharper disable once ClassNeverInstantiated.Local
     private class CommandLineOptions
@@ -56,18 +55,18 @@ public static class Program
         Console.CancelKeyPress += (_, _) =>
         {
             CleanUp();
-            ClosingEvent.Set();
+            CraftNet.ClosingEvent.Set();
         };
         
         AppDomain.CurrentDomain.ProcessExit += (_, _) =>
         {
             CleanUp();
-            ClosingEvent.Set();
+            CraftNet.ClosingEvent.Set();
         };
 
         try
         {
-            ClosingEvent.WaitOne();
+            CraftNet.ClosingEvent.WaitOne();
         }
         catch (ThreadInterruptedException e)
         {

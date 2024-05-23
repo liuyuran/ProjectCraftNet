@@ -46,7 +46,8 @@ public class GameCore(Config config)
         var systems = new Group<float>(
             "core-system",
             new ChunkGenerateSystem(world),
-            new ArchiveSystem(world)
+            new ArchiveSystem(world),
+            new UserJoinSystem(world)
         );
         systems.Initialize();
         Logger.LogInformation("{}", Localize(ModId, "startup.loading_init_chunk"));
@@ -58,39 +59,7 @@ public class GameCore(Config config)
             systems.BeforeUpdate(in deltaTime);
             systems.Update(in deltaTime);
             systems.AfterUpdate(in deltaTime);
-            while (UserManager.WaitToJoin.Count > 0)
-            {
-                var entity = world.Create(Archetypes.Player);
-                var sockId = UserManager.WaitToJoin.Dequeue();
-                var userInfo = UserManager.GetUserInfo(sockId);
-                if (userInfo == null) continue;
-                var position = userInfo.Position;
-                var gameMod = userInfo.GameMode;
-                var chunkSize = config.Core!.ChunkSize;
-                world.Set(entity, new Position
-                {
-                    ChunkPos = new IntVector3(
-                        (int)(position.X / chunkSize),
-                        (int)(position.Y / chunkSize),
-                        (int)(position.Z / chunkSize)
-                    ),
-                    InChunkPos = new Vector3(
-                        position.X % chunkSize,
-                        position.Y % chunkSize,
-                        position.Z % chunkSize
-                    )
-                });
-                world.Set(entity, new Player { UserId = userInfo.UserId, GameMode = gameMod, IsSystem = false});
-                userInfo.PlayerEntity = entity;
-                NetworkEvents.FireSendEvent(userInfo.ClientInfo.SocketId, PackType.Connect, Array.Empty<byte>());
-            }
-
-            while (UserManager.WaitToLeave.Count > 0)
-            {
-                var entity = UserManager.WaitToLeave.Dequeue();
-                world.Destroy(entity);
-            }
-
+            
             // 调节逻辑帧率，等待下一个Tick
             var now = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             var elapsed = now - lastTickMillis;
@@ -124,6 +93,7 @@ public class GameCore(Config config)
 
     private static bool OnGameEventsOnArchiveEvent(ArchiveEvent @event)
     {
+        NetworkEvents.FireSendTextEvent(-1, Localize(ModId, "saving_to_database"));
         var world = ModManager.state.CraftNet.Instance.World.World;
         ArchiveManager.SaveUserInfo(world);
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
@@ -146,6 +116,7 @@ public class GameCore(Config config)
             ArchiveManager.SaveChunkInfo(world, worldId, chunkPos.ToArray());
         }
 
+        NetworkEvents.FireSendTextEvent(-1, Localize(ModId, "saved_to_database"));
         return true;
     }
 
@@ -166,13 +137,16 @@ public class GameCore(Config config)
             return false;
         }
 
-        NetworkEvents.FireSendEvent(socketId, PackType.Chat, buffer);
+        NetworkEvents.FireSendEvent(socketId, PackType.ChatPack, buffer);
         return true;
     }
 
+    /// <summary>
+    /// 注册基础包监听
+    /// </summary>
     private void RegistryCorePackEvent()
     {
-        NetworkPackBus.Subscribe(PackType.ServerStatus, (info, _) =>
+        NetworkPackBus.Subscribe(PackType.ServerStatusPack, (info, _) =>
         {
             var currentProcess = Process.GetCurrentProcess();
             var status = new ServerStatus
@@ -186,9 +160,9 @@ public class GameCore(Config config)
                 Tps = (long)Math.Floor(_tickPerSecond),
                 Ping = UserManager.GetUserInfo(info.SocketId)?.ClientInfo.Ping ?? 0
             };
-            NetworkEvents.FireSendEvent(info.SocketId, PackType.ServerStatus, status.ToByteArray());
+            NetworkEvents.FireSendEvent(info.SocketId, PackType.ServerStatusPack, status.ToByteArray());
         });
-        NetworkPackBus.Subscribe(PackType.Shutdown, (_, _) =>
+        NetworkPackBus.Subscribe(PackType.ShutdownPack, (_, _) =>
         {
             Logger.LogInformation("{}", Localize(ModId, "Server shutting down"));
             _stopping = true;

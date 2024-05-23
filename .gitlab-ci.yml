@@ -3,7 +3,6 @@ services:
   - docker:dind
 
 variables:
-  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
   CONTAINER_NAME: game-server
 
 stages:
@@ -13,7 +12,7 @@ stages:
 release-test:
   stage: release
   script:
-    - docker build -t $CONTAINER_RELEASE_IMAGE:nightly .
+    - docker build -t $CI_REGISTRY_IMAGE:nightly .
   only:
     - /^release\/.*$/
 
@@ -22,14 +21,14 @@ deploy-test:
   script:
     - docker container inspect $CONTAINER_NAME && docker stop $CONTAINER_NAME
     - docker container inspect $CONTAINER_NAME && docker rm $CONTAINER_NAME
-    - docker run -d --name $CONTAINER_NAME -p 13000:13000 $CONTAINER_RELEASE_IMAGE:nightly
+    - docker run -d --restart always --name $CONTAINER_NAME -p 13000:13000 $CI_REGISTRY_IMAGE:nightly
   only:
     - /^release\/.*$/
 
 release:
   stage: release
   script:
-    - docker build -t $CONTAINER_RELEASE_IMAGE:$CI_COMMIT_REF_NAME .
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME .
   only:
     - tags
 
@@ -38,6 +37,6 @@ deploy:
   script:
     - docker container inspect $CONTAINER_NAME && docker stop $CONTAINER_NAME
     - docker container inspect $CONTAINER_NAME && docker rm $CONTAINER_NAME
-    - docker run -d --name $CONTAINER_NAME -p 13000:13000 $CONTAINER_RELEASE_IMAGE:$CI_COMMIT_REF_NAME
+    - docker run -d --restart always --name $CONTAINER_NAME -p 13000:13000 $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   only:
     - tags

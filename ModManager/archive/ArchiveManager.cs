@@ -16,7 +16,7 @@ namespace ModManager.archive;
 public class ArchiveManager
 {
     private static readonly ILogger Logger = SysLogger.GetLogger(typeof(ArchiveManager));
-
+    
     public static void SaveUserInfo(World world)
     {
         using var dbContext = new CoreDbContext();
@@ -89,6 +89,7 @@ public class ArchiveManager
             chunk.PosX = item.Pos.X;
             chunk.PosY = item.Pos.Y;
             chunk.PosZ = item.Pos.Z;
+            chunk.Pos = $"{chunk.PosX},{chunk.PosY},{chunk.PosZ}";
             var jsonData = JsonSerializer.Serialize(item.Data);
             chunk.Data = jsonData;
             if (created)
@@ -116,5 +117,30 @@ public class ArchiveManager
             select chunk;
         var chunkData = query.FirstOrDefault();
         return chunkData == null ? null : JsonSerializer.Deserialize<long[]>(chunkData.Data);
+    }
+    
+    public static Dictionary<IntVector3, long[]> TryGetAllChunkData(long worldId, HashSet<IntVector3> chunkPos)
+    {
+        if (chunkPos.Count == 0) return new Dictionary<IntVector3, long[]>();
+        var posList = chunkPos.Select(pos => $"{pos.X},{pos.Y},{pos.Z}").ToList();
+        using var dbContext = new CoreDbContext();
+        var query = from chunk in dbContext.Chunks.Where(chunk => chunk.WorldId == worldId && posList.Contains(chunk.Pos))
+            select new
+            {
+                chunk.PosX,
+                chunk.PosY,
+                chunk.PosZ,
+                chunk.Data
+            };
+        var chunkData = query.ToList();
+        var result = new Dictionary<IntVector3, long[]>();
+        foreach (var data in chunkData)
+        {
+            var tData = JsonSerializer.Deserialize<long[]>(data.Data);
+            if (tData == null) continue;
+            result[new IntVector3(data.PosX, data.PosY, data.PosZ)] = tData;
+        }
+
+        return result;
     }
 }
