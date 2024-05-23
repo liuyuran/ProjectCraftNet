@@ -1,7 +1,7 @@
 ﻿using Tomlyn;
 using Tomlyn.Model;
 
-namespace ModManager.localization;
+namespace ModManager.game.localization;
 
 /// <summary>
 /// 本地化管理器，用于加载和管理本地化文件
@@ -141,6 +141,6 @@ public class LocalizationManager
             return string.Format(key, args);
         }
 
-        return !localization.TryGetValue(key, out var value) ? key : string.Format(value.LocalizedString, args);
+        return string.Format(!localization.TryGetValue(key, out var value) ? key : value.LocalizedString, args);
     }
 }

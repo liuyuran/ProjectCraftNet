@@ -1,9 +1,20 @@
 ﻿[core]
+title = "就爱听相声"
 mod-path = "../CoreMod/bin/Debug"
 max-player = 20
 localization-path = "./resources/localization"
 log-level = "debug"
+max-tps = 20
+sight = 2
+chunk-size = 64
 
 [network-tcp]
 host = "127.0.0.1"
 port = 13000
+
+[database]
+host = "127.0.0.1"
+port = 6543
+username = "postgres"
+password = "example"
+db = "game"

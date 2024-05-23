@@ -1,7 +1,6 @@
-﻿using ModManager;
-using Tomlyn;
+﻿using Tomlyn;
 
-namespace ProjectCraftNet.config;
+namespace ModManager.config;
 
 /// <summary>
 /// 读取全局配置文件的工具类
