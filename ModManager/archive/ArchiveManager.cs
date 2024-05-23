@@ -122,11 +122,16 @@ public class ArchiveManager
     public static Dictionary<IntVector3, long[]> TryGetAllChunkData(long worldId, HashSet<IntVector3> chunkPos)
     {
         if (chunkPos.Count == 0) return new Dictionary<IntVector3, long[]>();
-        List<string> posList = chunkPos.Select(pos => $"{pos.X},{pos.Y},{pos.Z}").ToList();
+        var posList = chunkPos.Select(pos => $"{pos.X},{pos.Y},{pos.Z}").ToList();
         using var dbContext = new CoreDbContext();
-        var query = from chunk in dbContext.Chunks
-            where chunk.WorldId == worldId && posList.Contains(chunk.Pos)
-            select chunk;
+        var query = from chunk in dbContext.Chunks.Where(chunk => chunk.WorldId == worldId && posList.Contains(chunk.Pos))
+            select new
+            {
+                chunk.PosX,
+                chunk.PosY,
+                chunk.PosZ,
+                chunk.Data
+            };
         var chunkData = query.ToList();
         var result = new Dictionary<IntVector3, long[]>();
         foreach (var data in chunkData)

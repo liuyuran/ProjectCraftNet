@@ -10,7 +10,7 @@ namespace ModManager.ecs.systems;
 public class ArchiveSystem(World world) : BaseSystem<World, float>(world)
 {
     private ILogger Logger { get; } = SysLogger.GetLogger(typeof(ArchiveSystem));
-    private const long ArchiveInterval = 1000L * 60 * 5;
+    private const long ArchiveInterval = 1000L * 60 * 1;
     private readonly World _world = world;
     private long _lastArchiveTime;
 

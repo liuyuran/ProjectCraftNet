@@ -26,6 +26,7 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
     public override void Update(in float deltaTime)
     {
         _existChunkPosition.Clear();
+        var needGenerate = new HashSet<IntVector3>();
         var sight = ConfigUtil.Instance.GetConfig().Core!.Sight;
         var playerQuery = new QueryDescription().WithAll<Player, Position>();
         var chunkQuery = new QueryDescription().WithAll<ChunkBlockData, Position>();
@@ -33,15 +34,15 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
         _world.Query(in playerQuery, (ref Position position) =>
         {
             var chunkPos = position.ChunkPos;
-            GenerateRangeChunkByCenterPosition(chunkPos, sight);
+            needGenerate.UnionWith(GenerateRangeChunkByCenterPosition(chunkPos, sight));
         });
-        GenerateRangeChunkByCenterPosition(new IntVector3(0, 0, 0), sight);
-        CraftNet.MapInitEvent.Set();
+        needGenerate.UnionWith(GenerateRangeChunkByCenterPosition(new IntVector3(0, 0, 0), sight));
+        if (needGenerate.Count == 0) CraftNet.MapInitEvent.Set();
     }
 
-    private void GenerateRangeChunkByCenterPosition(IntVector3? centerPosition, int range)
+    private HashSet<IntVector3> GenerateRangeChunkByCenterPosition(IntVector3? centerPosition, int range)
     {
-        if (centerPosition == null) return;
+        if (centerPosition == null) return [];
         var needGenerate = new HashSet<IntVector3>();
         for (var x = -range; x < range; x++)
         {
@@ -58,6 +59,7 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
         }
 
         TryGenerateChunkByCenterPositions(needGenerate);
+        return needGenerate;
     }
 
     private void TryGenerateChunkByCenterPositions(HashSet<IntVector3> centerPosition)
@@ -90,7 +92,7 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
                 Z = pos.Z
             }, data);
         }
-        var other = needQuery.Except(queryResult.Keys);
+        var other = centerPosition.Except(queryResult.Keys).ToList();
         foreach (var pos in other)
         {
             TryGenerateChunkByCenterPosition(pos);
@@ -99,20 +101,19 @@ public class ChunkGenerateSystem(World world) : BaseSystem<World, float>(world)
 
     private void TryGenerateChunkByCenterPosition(IntVector3 centerPosition)
     {
-        if (_generatingChunk.Contains(centerPosition)) return;
-        var entity = _world.Create(Archetypes.Chunk);
-        _world.Set(entity, new Position
-        {
-            ChunkPos = centerPosition,
-            InChunkPos = new Vector3()
-        });
         var data = ChunkGeneratorManager.GenerateChunkBlockData(0, centerPosition);
         if (data == null)
         {
             _generatingChunk.Add(centerPosition);
             return;
         }
-
+        
+        var entity = _world.Create(Archetypes.Chunk);
+        _world.Set(entity, new Position
+        {
+            ChunkPos = centerPosition,
+            InChunkPos = new Vector3()
+        });
         _generatingChunk.Remove(centerPosition);
         var chunkData = new long[data.Length];
         for (var i = 0; i < data.Length; i++)

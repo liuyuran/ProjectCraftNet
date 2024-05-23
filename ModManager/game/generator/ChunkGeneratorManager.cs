@@ -79,17 +79,20 @@ public class ChunkGeneratorManager
     /// <returns>区块数据，如果正在生成中则返回null</returns>
     public static BlockData[]? GenerateChunkBlockData(long worldId, IntVector3 chunkPosition)
     {
-        if (Instance._generatedChunks.TryGetValue(new QueueItem(worldId, chunkPosition), out var result))
+        var queueItem = new QueueItem(worldId, chunkPosition);
+        if (Instance._generatedChunks.Remove(queueItem, out var result))
         {
-            Instance._generatedChunks.Remove(new QueueItem(worldId, chunkPosition));
             return result;
         }
+
         if (Instance._generators.ContainsKey(worldId))
         {
-            Instance._generatingChunks.Enqueue(new QueueItem(worldId, chunkPosition));
+            if (!Instance._generatingChunks.Contains(queueItem)) Instance._generatingChunks.Enqueue(queueItem);
             return null;
         }
+
         Logger.LogWarning("No chunk generator found for world {}", worldId);
         throw new NoSuchChunkGenerator(worldId);
+
     }
 }
